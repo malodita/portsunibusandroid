@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<tabs>
+    <tab
+        icon="@drawable/ic_timetable_black_24dp"
+        id="@+id/tab_timetable"
+        title="Timetable"
+        />
+    <tab
+        icon="@drawable/ic_place_black_24dp"
+        id="@+id/tab_place"
+        title="Here"
+        />
+    <tab
+        icon="@drawable/ic_map_black_24dp"
+        id="@+id/tab_find"
+        title="Find Stop"
+        />
+</tabs>

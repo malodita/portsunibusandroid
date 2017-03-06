@@ -1,0 +1,64 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/timetableFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.malcolm.portsmouthunibus.TimetableFragment"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="@dimen/activity_margin"
+            android:id="@+id/spinner">
+
+        </android.support.v7.widget.AppCompatSpinner>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:scrollbars="vertical"
+            android:visibility="gone"
+            android:layout_below="@+id/spinner"
+            />
+    </RelativeLayout>
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:text="@string/error_no_timetable_selected"
+    android:visibility="gone"
+    android:textSize="@dimen/text_primary_size"
+    android:id="@+id/no_timetable"
+    />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timetable_fab"
+        android:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:visibility="gone"
+        app:backgroundTint="@color/accent"
+        app:rippleColor="@color/accent_muted"
+        android:src="@drawable/ic_timetable_white_24dp"
+        app:layout_anchor="@id/recycler_view"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_margin="@dimen/activity_margin"
+        app:fabSize="auto"/>
+
+
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Todo: Finish this-->
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Reset to Defaults">
+
+        <com.malcolm.portsmouthunibus.settings.AlertDialogPreference
+            android:key="@string/preferences_home_bus_stop_key"
+            android:summary="Resets the chosen default stop selected."
+            android:title="Reset Home Stop"
+            />
+        <com.malcolm.portsmouthunibus.settings.AlertDialogPreference
+            android:key="@string/preference_shortcuts_reset"
+            android:summary="This is only available to phones running Android 7.1 and above."
+            android:title="Clear shortcuts"
+            android:enabled="false"
+            />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <Preference android:title="About">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.malcolm.portsmouthunibus"
+            android:targetClass="com.malcolm.portsmouthunibus.settings.AboutActivity"/>
+    </Preference>
+
+</android.support.v7.preference.PreferenceScreen>

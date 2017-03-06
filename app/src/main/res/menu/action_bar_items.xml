@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- "Mark Favorite", should appear as action button if possible -->
+    <item
+        android:id="@+id/default_stop_icon"
+        android:icon="@drawable/ic_home_white_24dp"
+        android:title="@string/set_home_stop"
+        app:showAsAction="ifRoom">
+
+    </item>
+
+    <!-- Settings, should always be in the overflow -->
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never">
+    </item>
+
+<!--    <item
+        android:id="@+id/night_mode"
+        android:title="@string/toggle_night_mode"
+        app:showAsAction="never">
+    </item>-->
+
+
+</menu>

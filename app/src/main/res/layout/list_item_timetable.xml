@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:transitionName="default"
+    android:orientation="vertical"
+    android:id="@+id/card_view_recyclerview"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/outer_linear_layour_recyclerview"
+        android:foreground="?android:attr/selectableItemBackground"
+
+        >
+
+        <LinearLayout
+            android:id="@+id/inner_linear_layout_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingLeft="@dimen/margin"
+            android:background="?android:selectableItemBackground"
+            >
+
+
+            <TextView
+                android:id="@+id/depart_time_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:gravity="center|left"
+                android:textSize="@dimen/text_primary_size"
+                tools:text="12:00"/>
+
+            <TextView
+                android:id="@+id/destination_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="@dimen/text_secondary_size"
+                tools:text="To Cambridge Road (University Library)"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
