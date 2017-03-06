@@ -137,7 +137,6 @@ public class TimetableFragment extends Fragment implements
             }
         } else {
             adapter.swapData(array);
-            //Tester
         }
     }
 
