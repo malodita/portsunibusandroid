@@ -56,7 +56,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private MapView mapView;
     Unbinder unbinder;
     private GoogleMap googleMap;
-    private BusStops locations = BusStops.getInstance();
     private String[] stopList;
     private FirebaseAnalytics firebaseAnalytics;
     private int currentNightMode;
@@ -129,7 +128,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             return;
         }
         googleMap.setMyLocationEnabled(true);
-        ArrayList<LatLng> list = locations.makeArrayOfStops();
+        ArrayList<LatLng> list = BusStops.makeArrayOfStops();
         for (int i = 0; i < list.size(); i++){
             googleMap.addMarker(new MarkerOptions().position(list.get(i))
                     .title(stopList[i])).setTag(i);
@@ -142,7 +141,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.day_json));
         }
-        setUpMarkers(googleMap, locations.makeArrayOfStops());
+        setUpMarkers(googleMap, BusStops.makeArrayOfStops());
         googleMap.setOnInfoWindowClickListener(this);
         this.googleMap = googleMap;
     }
