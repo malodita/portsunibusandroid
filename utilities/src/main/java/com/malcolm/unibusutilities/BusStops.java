@@ -8,38 +8,28 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 /**
- * A small class which holds all the bus stop locations. It exists as a SINGLETON to
+ * A small class which holds all the bus stop locations. It exposes static methods
  * prevent unneccesary object creation and provides methods to make a stop array and to find
  * and return the location fo the closest stop.
  */
 
 public final class BusStops {
     private static final String TAG = "BusStopLocations";
-    private final LatLng LANGSTONE = new LatLng(50.79618265, -1.04210624);
-    private final LatLng LOCKSWAY = new LatLng(50.79337835, -1.05708995);
-    private final LatLng GOLDSMITHMILTON = new LatLng(50.79257583, -1.05841332);
-    private final LatLng GOLDSMITHLIDL = new LatLng(50.794932, -1.069818);
-    private final LatLng GOLDSMITHOPPLIDL = new LatLng(50.794973, -1.069486);
-    private final LatLng GOLDSMITHFRATTON = new LatLng(50.796089, -1.075942);
-    private final LatLng GOLDSMITHFAWCETT = new LatLng(50.795931, -1.075994);
-    private final LatLng WINSTONCHURCHILLHOTEL = new LatLng(50.795563, -1.092330);
-    private final LatLng CAMBRIDGEROAD = new LatLng(50.794552, -1.097006);
-    private final LatLng WINSTONCHURCHILLLAW = new LatLng(50.795592, -1.092266);
+    private static final LatLng LANGSTONE = new LatLng(50.79618265, -1.04210624);
+    private static final LatLng LOCKSWAY = new LatLng(50.79337835, -1.05708995);
+    private static final LatLng GOLDSMITHMILTON = new LatLng(50.79257583, -1.05841332);
+    private static final LatLng GOLDSMITHLIDL = new LatLng(50.794932, -1.069818);
+    private static final LatLng GOLDSMITHOPPLIDL = new LatLng(50.794973, -1.069486);
+    private static final LatLng GOLDSMITHFRATTON = new LatLng(50.796089, -1.075942);
+    private static final LatLng GOLDSMITHFAWCETT = new LatLng(50.795931, -1.075994);
+    private static final LatLng WINSTONCHURCHILLHOTEL = new LatLng(50.795563, -1.092330);
+    private static final LatLng CAMBRIDGEROAD = new LatLng(50.794552, -1.097006);
+    private static final LatLng WINSTONCHURCHILLLAW = new LatLng(50.795592, -1.092266);
     //Centred locations
-    private final LatLng GOLDSMITHLIDLCENTRE = new LatLng(50.79507785, -1.06974676);
-    private final LatLng GOLDSMITHFRATTONCENTRE = new LatLng(50.7961137, -1.0759583);
-    private final LatLng WINSTONCHURCHILLROADCENTRE = new LatLng(50.795462, -1.092276);
-    private static BusStops instance;
+    private static final LatLng GOLDSMITHLIDLCENTRE = new LatLng(50.79507785, -1.06974676);
+    private static final LatLng GOLDSMITHFRATTONCENTRE = new LatLng(50.7961137, -1.0759583);
+    private static final LatLng WINSTONCHURCHILLROADCENTRE = new LatLng(50.795462, -1.092276);
 
-    private BusStops() {
-    }
-
-    public static synchronized BusStops getInstance() {
-        if (instance == null) {
-            instance = new BusStops();
-        }
-        return instance;
-    }
 
     /**
      * Helper method for that gets the closest stop to the current location the user
@@ -52,7 +42,7 @@ public final class BusStops {
      * @return The location of the closest stop as a Location object or null if over 3km out.
      */
     @Nullable
-    public Location getClosestStop(Location currentLocation) {
+    public static Location getClosestStop(Location currentLocation) {
         ArrayList<Location> stopLocations = new ArrayList<>();
         Location langstone = new Location("Langstone");
         langstone.setLatitude(LANGSTONE.latitude);
@@ -103,7 +93,7 @@ public final class BusStops {
      *
      * @return An ArrayList of bus stops
      */
-    public ArrayList<LatLng> makeArrayOfStops() {
+    public static ArrayList<LatLng> makeArrayOfStops() {
         ArrayList<LatLng> latLngList = new ArrayList<>();
         latLngList.add(LANGSTONE);
         latLngList.add(LOCKSWAY);

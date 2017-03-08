@@ -178,7 +178,6 @@ utilities/src/test/
 /app/src/main/assets/materialaboutlibrary.html
 /app/src/main/assets/butterknife.html
 /app/src/main/assets/leakcanary.html
-.gitignore
 .idea/codeStyleSettings.xml
 .idea/compiler.xml
 .idea/copyright/

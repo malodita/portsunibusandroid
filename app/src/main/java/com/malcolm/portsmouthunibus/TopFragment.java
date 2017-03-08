@@ -84,7 +84,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     private Unbinder unbinder;
     private Location closest;
     private DatabaseHelper databaseHelper;
-    private BusStops busStopPlaces = BusStops.getInstance();
     private Boolean isInstantCardDisplayed = false;
     private String[] busStops;
     private Call<ResponseSchema> call;
@@ -328,7 +327,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         try {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
-                closest = busStopPlaces.getClosestStop(lastLocation);
+                closest = BusStops.getClosestStop(lastLocation);
                 getDirections(lastLocation, closest);
             }
         } catch (SecurityException e) {
