@@ -32,7 +32,7 @@ public final class BusStops {
 
 
     /**
-     * Helper method for that gets the closest stop to the current location the user
+     * Obtains the closest stop to the current location the user
      * is in. WARNING: This method only works up to 3000 metres away from the closest stop. Any
      * further out and it will throw a null item for location. This possibility should be dealt
      * with
