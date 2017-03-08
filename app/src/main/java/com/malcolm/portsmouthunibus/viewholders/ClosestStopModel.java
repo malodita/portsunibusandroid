@@ -37,9 +37,9 @@ public class ClosestStopModel extends EpoxyModelWithHolder<ClosestStopModel.Clos
                     holder.timeHero.setTextSize(34);
                     holder.timeHero.setTypeface(Typeface.DEFAULT_BOLD);
                     holder.timeHero.setText(R.string.arrival_now);
-
                     break;
                 case 1:
+                    holder.timeHero.setText(timeHero);
                     holder.minutes.setText(R.string.one_minute);
                     break;
                 default:
