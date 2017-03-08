@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 /**
- * A small class which holds all the bus stop locations. It exposes static methods
+ * A small class which holds all the bus stop locations. It exposes static methods to
  * prevent unneccesary object creation and provides methods to make a stop array and to find
  * and return the location fo the closest stop.
  */

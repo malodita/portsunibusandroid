@@ -63,9 +63,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class TopFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema> {
     public final int DEFAULT_VALUE = 0;

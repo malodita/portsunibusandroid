@@ -14,7 +14,7 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- * Created by Malcolm on 28/01/2017.
+ * The model for the closest stop aka InstantCard
  */
 
 public class ClosestStopModel extends EpoxyModelWithHolder<ClosestStopModel.ClosestStopHolder> {

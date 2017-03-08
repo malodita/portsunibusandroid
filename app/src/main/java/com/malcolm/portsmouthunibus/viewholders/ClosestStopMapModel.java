@@ -32,7 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- * Created by Malcolm on 28/01/2017.
+ * The model for the map card
  */
 
 public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapModel.MapViewHolder> implements OnMapReadyCallback {
