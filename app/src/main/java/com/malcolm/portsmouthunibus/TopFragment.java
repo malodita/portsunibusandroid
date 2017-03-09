@@ -2,6 +2,7 @@ package com.malcolm.portsmouthunibus;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -124,11 +125,11 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     /**
-     * Sets up the home card. Info is placed in an array of type object in following order
-     * <p> 0 - Boolean: If the stop to set to 'No stop selected' meaning no stop info needed
-     * </p> 1 - String: The identity of the selected stop including no stop selected
-     * <p> 2 - String: (OPTIONAL) The string with the time to report taken from the array of stop times.
-     * </p> This array is a field as this is subsequently used to set the initial state of the card, it does
+     * Sets up the home card. Info is placed in an array of type object in following order <p> 0 -
+     * Boolean: If the stop to set to 'No stop selected' meaning no stop info needed </p> 1 -
+     * String: The identity of the selected stop including no stop selected <p> 2 - String:
+     * (OPTIONAL) The string with the time to report taken from the array of stop times. </p> This
+     * array is a field as this is subsequently used to set the initial state of the card, it does
      * not take care of updating it {@link HomeCardTask which is left to a runnable task}.
      *
      * @return An array list suitable for use as an initial payload for the home card
@@ -149,18 +150,15 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     /**
-     * Sets up the map card. Info is placed in an array of type object in following order
-     * <p> 0 - int: If google play services is available
-     * </p> 1 - int: If play services error is resolvable or not
-     * <p> 2 - int: If location permission has been granted
-     * <p> 3 - int: If device GPS is on or not</p>
-     * </p> 4 - MapStyleOptions: The layout to be used by the googlemap should night mode be enabled.
-     * <p> 5 - int: If night mode is enabled so that night resources may be loaded for the polyline
-     * <p>
-     * This method is only called once to help determine if the map requires setting up or not.
-     * Updating the map is done by a chain pf methods starting from {@link #onConnected(Bundle)}
-     * in the case that the current location is obtainable</P>
-     *</p>
+     * Sets up the map card. Info is placed in an array of type object in following order <p> 0 -
+     * int: If google play services is available </p> 1 - int: If play services error is resolvable
+     * or not <p> 2 - int: If location permission has been granted <p> 3 - int: If device GPS is on
+     * or not</p> </p> 4 - MapStyleOptions: The layout to be used by the googlemap should night mode
+     * be enabled. <p> 5 - int: If night mode is enabled so that night resources may be loaded for
+     * the polyline <p> This method is only called once to help determine if the map requires
+     * setting up or not. Updating the map is done by a chain pf methods starting from {@link
+     * #onConnected(Bundle)} in the case that the current location is obtainable</P> </p>
+     *
      * @return An array list suitable to use as an initial payload for the maps card
      */
     private ArrayList<Object> makeMapCard() {
@@ -202,7 +200,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         recyclerView.setAdapter(adapter);
         this.recyclerView = recyclerView;
     }
-
 
 
     /**
@@ -303,7 +300,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             }
         }
         //If the instantCard was previously displayed, it will restart as well
-        if (isInstantCardDisplayed && instantCard != null){
+        if (isInstantCardDisplayed && instantCard != null) {
             handler.post(instantCard);
         }
     }
@@ -357,7 +354,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             location = responseSchema.getLocation();
         }
         long cacheTime = System.currentTimeMillis() - cacheDate;
-        if (lastLocation.distanceTo(closest) < 90){
+        if (lastLocation.distanceTo(closest) < 90) {
             sendMapInfoToAdapter(closest.getProvider());
         } else if (cacheTime > 120000 || cacheDate == 0) {
             sendDirectionsRequest(lastLocation, closest);
@@ -389,7 +386,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         }
     }
 
-    private void sendMapInfoToAdapter(String provider){
+    private void sendMapInfoToAdapter(String provider) {
         ArrayList<Object> list = new ArrayList<>();
         list.add(provider);
         double time = -1;
@@ -440,7 +437,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     @Override
     public void onResponse(Call<ResponseSchema> call, Response<ResponseSchema> response) {
         ResponseSchema responseSchema = response.body();
-        if (!responseSchema.getStatus().equals("OK")){
+        if (!responseSchema.getStatus().equals("OK")) {
             //If the API is not returning the required response for any reason
             adapter.noConnection();
             return;
@@ -498,27 +495,31 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         adapter.noInternet();
         if (getContext() != null) {
             Snackbar snackbar = Snackbar.make(layout,
-                "Error getting response from server", Snackbar.LENGTH_LONG);
+                    "Error getting response from server", Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
-            FirebaseCrash.log(TAG + "Error making API request");
+            FirebaseCrash.log(TAG + ": Error making API request");
         }
 
     }
 
     /**
-     * Sets up the instantCard card and associated handler, {@link InstantCardTask most of the work is done in the asynctask
-     * associated with the runnable} {@link InstantCard}. Info is placed in an array of type object in
-     * following order <p> 0: timeHero </p> 1: stopHero <p> This method will only be called if the
-     * user is within 60 metres of a stop. </p>
+     * Sets up the instantCard card and associated handler, {@link InstantCardTask most of the work
+     * is done in the asynctask associated with the runnable} {@link InstantCard}. Info is placed in
+     * an array of type object in following order <p> 0: timeHero </p> 1: stopHero <p> This method
+     * will only be called if the user is within 60 metres of a stop. </p>
      */
     private void setupInstantCard() {
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        if (day == Calendar.SATURDAY|| day == Calendar.SUNDAY){
+            return;
+        }
         ArrayList<Integer> arrayList = databaseHelper.getTimesForArray("[" + closest.getProvider() + "]");
-        if (arrayList == null){
+        if (arrayList == null) {
             Snackbar snackbar = Snackbar.make(layout, "Error displaying the closest stop card", Snackbar.LENGTH_SHORT);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
-            FirebaseCrash.report(new Throwable("No result was returned by DatabaseHelper"));
+            FirebaseCrash.report(new Throwable("No result was returned by DatabaseHelper to set up the Instant Card"));
             return;
         }
         String time = getTimeToStop(arrayList);
@@ -617,8 +618,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     /**
-     * This class manipulates the home card to act as a countdown until the next bus. Only one instance
-     * is needed so it is static as to prevent resource leaking
+     * This class manipulates the home card to act as a countdown until the next bus. Only one
+     * instance is needed so it is static as to prevent resource leaking
      */
     private static class HomeCardTask implements Runnable {
 
@@ -639,8 +640,9 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         }
 
         /**
-         * Repeating every 2 seconds, it updates the home card with the countdown. It packs its information
-         * into an array which is sent to the adapter
+         * Repeating every 2 seconds, it updates the home card with the countdown. It packs its
+         * information into an array which is sent to the adapter
+         *
          * @param parent The top fragment instance
          */
         void homeStopRunnableTask(TopFragment parent) {
@@ -670,9 +672,11 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             this.list = list;
         }
 
+        @SuppressLint("SwitchIntDef")
         @Override
         public void run() {
             if (parent != null) {
+
                 new InstantCardTask(parent, list).execute();
                 parent.get().handler.postDelayed(this, 5000);
             }
@@ -691,8 +695,9 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
 
         /**
          * Creates the task
+         *
          * @param parent The topFragment instance
-         * @param array An array of stop times to be searched
+         * @param array  An array of stop times to be searched
          */
         InstantCardTask(WeakReference<TopFragment> parent, ArrayList<Integer> array) {
             fragment = parent.get();
@@ -704,7 +709,11 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             ArrayList<Object> list = new ArrayList<Object>();
             String time = fragment.getTimeToStop(array);
             list.add(time);
-            list.add(fragment.closest.getProvider());
+            if (fragment.closest.getProvider().equals("IMS Eastney (Departures)")){
+                list.add("IMS Eastney (To university)");
+            } else {
+                list.add(fragment.closest.getProvider());
+            }
             return list;
         }
 
