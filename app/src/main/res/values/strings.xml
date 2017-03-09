@@ -37,6 +37,8 @@
     <string name="error_GPS_off">Device GPS is turned off</string>
     <string name="error_no_connection">No internet connection available</string>
     <string name="error_route_display">Cannot display route</string>
+    <string name="error_eastney">The Eastney service does not run during weekends or holidays</string>
+
 
     <!--Strings related to preferences-->
 
@@ -113,6 +115,8 @@
             >Goldsmith Avenue opp Lidl</item>
         <item
             >Goldsmith Avenue adj Milton Park</item>
+        <item
+            >IMS Eastney</item>
     </string-array>
 
     <string-array name="bus_stops_shortcuts_short">
@@ -136,6 +140,8 @@
             >Goldsmith opp Lidl</item>
         <item
             >Milton Park</item>
+        <item
+            >Eastney</item>
     </string-array>
 
     <string-array name="bus_stops_shortcuts_long">
@@ -159,6 +165,8 @@
             >Goldsmith Avenue opp Lidl</item>
         <item
             >Milton Park</item>
+        <item
+            >IMS Eastney</item>
     </string-array>
 
     <string-array name="bus_stops_all">
@@ -186,6 +194,8 @@
             >Goldsmith Avenue adj Milton Park</item>
         <item
             >Langstone</item>
+        <item
+            >IMS Eastney</item>
     </string-array>
 
     <string-array name="bus_stops_markers">
@@ -203,6 +213,8 @@
             >Cambridge Road for Student Union</item>
         <item
             >Goldsmith Avenue for Milton Park</item>
+        <item
+            >IMS Eastney</item>
     </string-array>
 
 
