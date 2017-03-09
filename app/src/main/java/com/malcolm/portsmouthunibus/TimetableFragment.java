@@ -37,6 +37,7 @@ import com.malcolm.unibusutilities.Times;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,16 +87,17 @@ public class TimetableFragment extends Fragment implements
         SharedPreferences currentHomeStopPref = getActivity().getSharedPreferences(getString(R.string.preferences_home_bus_stop_key), 0);
         onboardingStatus = getActivity().getSharedPreferences(getString(R.string.onboarding_3_key), 0);
         setUpSpinner(spinner);
-        int stopToShow = currentHomeStopPref.getInt(getString(R.string.preferences_home_bus_stop_key), 0);
+        int stopToShow = currentHomeStopPref.getInt(getString(R.string.preferences_home_bus_stop_key), 2);
         if (getArguments() != null) {
             stopToShow = getArguments().getInt(getString(R.string.shortcut_specific_timetable));
-            setUpRecyclerView(recyclerView, stopToShow);
+            setUpRecyclerView(recyclerView, 0, true);
+            spinner.setOnItemSelectedListener(this);
             spinner.setSelection(stopToShow, true);
         } else {
-            setUpRecyclerView(recyclerView, stopToShow);
+            setUpRecyclerView(recyclerView, stopToShow + 1, false);
             spinner.setSelection(stopToShow - 1, true);
+            spinner.setOnItemSelectedListener(this);
         }
-        spinner.setOnItemSelectedListener(this);
         return rootView;
     }
 
@@ -120,24 +122,22 @@ public class TimetableFragment extends Fragment implements
      * @param recyclerView The recyclerview to be set up.
      * @param stop         The stop to use for the database search
      */
-    private void setUpRecyclerView(RecyclerView recyclerView, int stop) {
+    private void setUpRecyclerView(RecyclerView recyclerView, int stop, boolean shortcutUsed) {
         if (stop == 0) {
             return;
         }
-        ArrayList<Times> array = databaseHelper.getTimesArray(stop);
-        if (adapter == null) {
-            try {
-                recyclerView.setVisibility(View.VISIBLE);
+        if (!shortcutUsed) {
+            ArrayList<Times> array = databaseHelper.getTimesArray(stop);
+            if (adapter == null) {
                 recyclerView.setHasFixedSize(true);
                 adapter = new TimetableFragmentAdapter(getContext(), array);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            } catch (NullPointerException n) {
-                n.printStackTrace();
+            } else {
+                adapter.swapData(array);
             }
-        } else {
-            adapter.swapData(array);
         }
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -162,16 +162,25 @@ public class TimetableFragment extends Fragment implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         int newStopToShow;
-        if (position < 5) {
-            newStopToShow = position + 1;
-        } else {
+        if (position == 10) {
+            int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            if (day == Calendar.SATURDAY || day == Calendar.SUNDAY) {
+                recyclerView.setVisibility(View.GONE);
+                noTimetable.setText(R.string.error_eastney);
+                noTimetable.setVisibility(View.VISIBLE);
+                return;
+            }
+            newStopToShow = 1;
+        } else if (position < 5) {
             newStopToShow = position + 2;
+        } else {
+            newStopToShow = position + 3;
         }
         ArrayAdapter<CharSequence> spinnerArray = ArrayAdapter.createFromResource(getContext(), R.array.bus_stops_all,
                 R.layout.spinner_top);
         Bundle bundle = new Bundle();
         stopToSave = position;
-        setUpRecyclerView(recyclerView, newStopToShow);
+        setUpRecyclerView(recyclerView, newStopToShow, false);
         noTimetable.setVisibility(View.GONE);
         bundle.putString("new_stop", spinnerArray.getItem(newStopToShow).toString());
         firebaseAnalytics.logEvent("timetable_changed_stop", bundle);
