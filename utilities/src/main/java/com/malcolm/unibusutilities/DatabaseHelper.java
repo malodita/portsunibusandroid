@@ -30,8 +30,9 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
     private static final String DB_WEEKEND_NAME = "timetable_weekend.sqlite";
-    private static final String DB_WEEKDAY_NAME = "timetable_normal.sqlite";
+    private static final String DB_WEEKDAY_NAME = "timetable_weekday_normal.sqlite";
     private static final String DB_HOLIDAY_NAME = "timetable_holiday.sqlite";
+    private static final String DB_WEEKDAY_WED_NAME= "timetable_weekday_wednesday.sqlite";
     //Term dates
     private static final String EASTER2017START = "31-03-2017";
     private static final String EASTER2017END = "24-04-2017";
@@ -42,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String EASTER2018START = "30-03-2018";
     private static final String EASTER2018END = "23-04-2018";
     private static String DB_NAME;
-    private static String DB_PATH = "";
+    private static String DB_PATH;
     private static DatabaseHelper instance;
     private final Context context;
     private SQLiteDatabase myDatabase;
@@ -104,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else if (today.after(christmas17.get(0)) && today.before(christmas17.get(christmas17.size() - 1))) {
             name = DB_HOLIDAY_NAME;
             return name;
-        } else if (today.after(easter18.get(0)) && today.before(easter18.get(easter18.size()-1))){
+        } else if (today.after(easter18.get(0)) && today.before(easter18.get(easter18.size() - 1))) {
             name = DB_HOLIDAY_NAME;
         } else {
             int day = calendar.get(Calendar.DAY_OF_WEEK);
@@ -114,6 +115,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     break;
                 case Calendar.SUNDAY:
                     name = DB_WEEKEND_NAME;
+                    break;
+                case Calendar.WEDNESDAY:
+                    name = DB_WEEKDAY_WED_NAME;
                     break;
                 default:
                     name = DB_WEEKDAY_NAME;
@@ -199,7 +203,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String myPath = DB_PATH + DB_NAME;
         try {
             myDatabase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-        } catch (SQLiteException e){
+        } catch (SQLiteException e) {
             Log.e(TAG, "Error opening database");
             e.printStackTrace();
 
@@ -240,7 +244,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     if (cursor.moveToFirst()) {
                         do {
                             int targetTime = cursor.getInt(0);
-                            arrayList.add(targetTime);
+                            if (targetTime != 0) {
+                                arrayList.add(targetTime);
+                            }
                         } while (cursor.moveToNext());
                     }
                 }
@@ -262,8 +268,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * time until the next bus arrives at the home stop. After opening the database using the helper
      * class, it then takes the value for this in a switch statement and depending on the value will
      * set the rawQuery for the database search to give all the times in the column for the result.
-     * <P>
-     *     This overloaded method instead uses the integer for the stopId which is then searched
+     * <p>
+     * This overloaded method instead uses the integer for the stopId which is then searched
      * </P>
      *
      * @param stopId The integer representation of the bus stop
@@ -302,7 +308,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Obtains the stop for {@link DatabaseHelper} to search for displaying the home stop
+     *
      * @param homeStopId The id of the stop retrieved
+     *
      * @return A formatted string for the search to use
      */
     private String getStopToShow(int homeStopId) {
@@ -352,18 +360,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         boolean databaseOpened = openDatabase();
         if (databaseOpened) {
             try {
-                cursor = queryData("select * from Timetable");
+                cursor = queryData("select * from Timetable order by id");
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
-                            Times times = new Times();
-                            times.setDestination(cursor.getColumnName(stop));
-                            times.setTime(formatTime(cursor.getString(stop)));
-                            times.setId(cursor.getInt(0));
-                            if (cursor.getInt(0) == 39 && stop >= 7) {
-                                arrayList.add(times);
-                            } else {
-                                arrayList.add(times);
+                            if (cursor.getString(stop) != null) {
+                                Times times = new Times();
+                                times.setDestination(cursor.getColumnName(stop));
+                                times.setTime(formatTime(cursor.getString(stop)));
+                                times.setId(cursor.getInt(0));
+                                if (cursor.getInt(0) == 47 && stop >= 7) {
+                                    arrayList.add(times);
+                                } else {
+                                    arrayList.add(times);
+                                }
                             }
                         } while (cursor.moveToNext());
                     }
@@ -390,25 +400,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<Times> getDataForList(int busId) {
+        Log.d(TAG, "getDataForList: " + busId);
         ArrayList<Times> array = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
         boolean databaseOpened = openDatabase();
         if (databaseOpened) {
             try {
-                cursor = queryData("select * from Timetable where id=" + busId);
+                cursor = queryData("select * from Timetable where id=" + busId + " order by id");
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
-                        if (busId == 39) {
-                            for (int i = 7; i <= 12; i++) {
-                                Times times = new Times();
-                                times.setDestination(cursor.getColumnName(i));
-                                times.setTime(formatTime(cursor.getString(i)));
-                                array.add(times);
-                            }
-                        } else {
-                            for (int i = 1; i <= 12; i++) {
-                                Log.d(TAG, "getDataForList: " + cursor.getString(i));
+                        for (int i = 1; i <= 14; i++) {
+                            Log.d(TAG, "getDataForList: " + cursor.getString(i));
+                            if (cursor.getString(i) != null) {
                                 Times times = new Times();
                                 times.setDestination(cursor.getColumnName(i));
                                 times.setTime(formatTime(cursor.getString(i)));
