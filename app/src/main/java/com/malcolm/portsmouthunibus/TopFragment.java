@@ -357,7 +357,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             location = responseSchema.getLocation();
         }
         long cacheTime = System.currentTimeMillis() - cacheDate;
-        if (lastLocation.distanceTo(closest) < 90) {
+        if (lastLocation.distanceTo(closest) < 120) {
             sendMapInfoToAdapter(closest.getProvider());
         } else if (cacheTime > 120000 || cacheDate == 0) {
             sendDirectionsRequest(lastLocation, closest);
@@ -382,7 +382,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             adapter.locationReady(list);
         }
         float distance = lastLocation.distanceTo(closest);
-        if (distance <= 30) {
+        if (distance <= 40) {
             setupInstantCard();
         } else {
             removeInstantCard();
