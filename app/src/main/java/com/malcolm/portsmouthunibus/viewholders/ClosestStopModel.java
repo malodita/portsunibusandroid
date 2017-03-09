@@ -49,12 +49,19 @@ public class ClosestStopModel extends EpoxyModelWithHolder<ClosestStopModel.Clos
                     holder.timeHero.setTextSize(TypedValue.COMPLEX_UNIT_SP, 84);
                     holder.timeHero.setText(timeHero);
             }
+        } else if (Integer.valueOf(timeHero) == Integer.MAX_VALUE) {
+            holder.error.setText(R.string.error_no_buses);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.title.setVisibility(View.GONE);
+            holder.timeHero.setVisibility(View.GONE);
+            holder.stopHero.setVisibility(View.GONE);
+            holder.minutes.setVisibility(View.GONE);
         } else {
-            holder.minutes.setVisibility(View.VISIBLE);
-            holder.timeHero.setText(R.string.hour_plus);
+                holder.minutes.setVisibility(View.VISIBLE);
+                holder.timeHero.setText(R.string.hour_plus);
 
+            }
         }
-    }
 
     @Override
     public boolean shouldSaveViewState() {
@@ -71,7 +78,12 @@ public class ClosestStopModel extends EpoxyModelWithHolder<ClosestStopModel.Clos
         TextView timeHero;
         @BindView(R.id.mini_time_hero_minutes)
         TextView minutes;
-        @BindView(R.id.mini_stop_hero) TextView stopHero;
+        @BindView(R.id.mini_stop_hero)
+        TextView stopHero;
+        @BindView(R.id.mini_title)
+        TextView title;
+        @BindView(R.id.mini_error_text)
+        TextView error;
 
 
     }

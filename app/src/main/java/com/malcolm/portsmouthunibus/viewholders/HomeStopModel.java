@@ -30,7 +30,6 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
     Boolean visibility;
 
 
-
     @Override
     public void bind(final HomeStopHolder holder) {
         super.bind(holder);
@@ -50,7 +49,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
     public void bind(final HomeStopHolder holder, List<Object> payloads) {
         ArrayList<Object> array = (ArrayList<Object>) payloads.get(0);
         String payload = array.get(0).toString();
-        if (payload.equals(Boolean.TRUE.toString())){
+        if (payload.equals(Boolean.TRUE.toString())) {
             holder.stopHero.setVisibility(View.GONE);
             holder.intro.setVisibility(View.GONE);
             holder.timeHero.setVisibility(View.GONE);
@@ -69,7 +68,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
         updateViewHolder(holder, payload);
     }
 
-    private void updateViewHolder(HomeStopHolder holder){
+    private void updateViewHolder(HomeStopHolder holder) {
         if (Integer.valueOf(timeHero) < 60) {
             switch (Integer.valueOf(timeHero)) {
                 case 0:
@@ -89,6 +88,13 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
                     holder.timeHero.setText(timeHero);
                     break;
             }
+        } else if (Integer.valueOf(timeHero) == Integer.MAX_VALUE) {
+            holder.intro.setVisibility(View.GONE);
+            holder.error.setText(R.string.error_no_buses_home);
+            holder.stopHero.setVisibility(View.GONE);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.timeHero.setVisibility(View.GONE);
+            holder.minutes.setVisibility(View.GONE);
         } else {
             holder.intro.setVisibility(View.VISIBLE);
             holder.timeHero.setVisibility(View.VISIBLE);
@@ -100,7 +106,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
     }
 
     private void updateViewHolder(final HomeStopHolder holder, final String payload) {
-        if (holder.stopHero.getVisibility() != View.VISIBLE){
+        if (holder.stopHero.getVisibility() != View.VISIBLE) {
             holder.stopHero.setVisibility(View.VISIBLE);
             holder.error.setVisibility(View.GONE);
             holder.timeHero.setVisibility(View.VISIBLE);
@@ -129,6 +135,13 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
                     holder.timeHero.setTextSize(TypedValue.COMPLEX_UNIT_SP, 84);
                     holder.minutes.setText(R.string.minutes);
             }
+        } else if (Integer.valueOf(payload) == Integer.MAX_VALUE) {
+            holder.intro.setVisibility(View.GONE);
+            holder.error.setText(R.string.error_no_buses_home);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.stopHero.setVisibility(View.GONE);
+            holder.timeHero.setVisibility(View.GONE);
+            holder.minutes.setVisibility(View.GONE);
         } else {
             holder.intro.setVisibility(View.VISIBLE);
             holder.timeHero.setVisibility(View.VISIBLE);
