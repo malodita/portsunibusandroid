@@ -32,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_WEEKEND_NAME = "timetable_weekend.sqlite";
     private static final String DB_WEEKDAY_NAME = "timetable_weekday_normal.sqlite";
     private static final String DB_HOLIDAY_NAME = "timetable_holiday.sqlite";
-    private static final String DB_WEEKDAY_WED_NAME= "timetable_weekday_wednesday.sqlite";
+    private static final String DB_WEEKDAY_WED_NAME = "timetable_weekday_wednesday.sqlite";
     //Term dates
     private static final String EASTER2017START = "31-03-2017";
     private static final String EASTER2017END = "24-04-2017";
@@ -90,38 +90,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @SuppressLint("SwitchIntDef")
     private String getDBName() {
         Calendar calendar = Calendar.getInstance();
-        List<Date> easter17 = makeDateArray(EASTER2017START, EASTER2017END);
-        List<Date> summer17 = makeDateArray(SUMMER2017START, SUMMER2017END);
-        List<Date> christmas17 = makeDateArray(CHRISTMAS2017START, CHRISTMAS2017END);
-        List<Date> easter18 = makeDateArray(EASTER2018START, EASTER2018END);
-        Date today = calendar.getTime();
         String name;
-        if (today.after(easter17.get(0)) && today.before(easter17.get(easter17.size() - 1))) {
-            name = DB_HOLIDAY_NAME;
-            return name;
-        } else if (today.after(summer17.get(0)) && today.before(summer17.get(summer17.size() - 1))) {
-            name = DB_HOLIDAY_NAME;
-            return name;
-        } else if (today.after(christmas17.get(0)) && today.before(christmas17.get(christmas17.size() - 1))) {
-            name = DB_HOLIDAY_NAME;
-            return name;
-        } else if (today.after(easter18.get(0)) && today.before(easter18.get(easter18.size() - 1))) {
+        if (TermDates.isItAHoliday()) {
             name = DB_HOLIDAY_NAME;
         } else {
-            int day = calendar.get(Calendar.DAY_OF_WEEK);
-            switch (day) {
-                case Calendar.SATURDAY:
-                    name = DB_WEEKEND_NAME;
-                    break;
-                case Calendar.SUNDAY:
-                    name = DB_WEEKEND_NAME;
-                    break;
-                case Calendar.WEDNESDAY:
+            if (TermDates.isItTheWeekend()) {
+                name = DB_WEEKEND_NAME;
+            } else {
+                int day = calendar.get(Calendar.DAY_OF_WEEK);
+                if (day == Calendar.WEDNESDAY) {
                     name = DB_WEEKDAY_WED_NAME;
-                    break;
-                default:
+                } else {
                     name = DB_WEEKDAY_NAME;
-                    break;
+                }
             }
         }
         return name;
