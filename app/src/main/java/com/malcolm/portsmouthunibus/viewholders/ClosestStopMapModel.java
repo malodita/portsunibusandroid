@@ -52,7 +52,6 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
     int nightMode;
     @EpoxyAttribute
     int gps;
-    private BusStopUtils utils = BusStopUtils.getInstance();
     private MapViewHolder holder;
     private String provider;
     private ArrayList<Object> mapObjects;
@@ -159,13 +158,13 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
         if (time == -1) {
             Location location = (Location) mapObjects.get(2);
             targetLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            utils.drawPolyline(googleMap, nightMode, null, null, targetLocation);
-            holder.timeHero.setText(utils.setTimeAndDistanceToClosestStop(time));
+            BusStopUtils.drawPolyline(googleMap, nightMode, null, null, targetLocation);
+            holder.timeHero.setText(BusStopUtils.setTimeAndDistanceToClosestStop(time));
         } else {
             String polyline = (String) mapObjects.get(2);
             final List<LatLng> decodedList = PolyUtil.decode(polyline);
-            utils.drawPolyline(googleMap, nightMode, time, decodedList, null);
-            holder.timeHero.setText(utils.setTimeAndDistanceToClosestStop(time));
+            BusStopUtils.drawPolyline(googleMap, nightMode, time, decodedList, null);
+            holder.timeHero.setText(BusStopUtils.setTimeAndDistanceToClosestStop(time));
             int last = (decodedList.size() - 1);
             targetLocation = new LatLng(decodedList.get(last).latitude, decodedList.get(last).longitude);
         }
