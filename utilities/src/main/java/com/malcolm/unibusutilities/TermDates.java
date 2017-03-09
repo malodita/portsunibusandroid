@@ -23,6 +23,8 @@ public final class TermDates {
     private static final String CHRISTMAS2017END = "08-01-2018";
     private static final String EASTER2018START = "30-03-2018";
     private static final String EASTER2018END = "23-04-2018";
+    private static final String SUMMER2018START = "01-06-2018";
+    private static final String SUMMER2018END = "14-09-2018";//Provisional
 
 
     public static boolean isItAHoliday(){
