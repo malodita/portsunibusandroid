@@ -33,11 +33,11 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.adapters.TimetableFragmentAdapter;
 import com.malcolm.unibusutilities.DatabaseHelper;
+import com.malcolm.unibusutilities.TermDates;
 import com.malcolm.unibusutilities.Times;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -163,11 +163,11 @@ public class TimetableFragment extends Fragment implements
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         int newStopToShow;
         if (position == 10) {
-            int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-            if (day == Calendar.SATURDAY || day == Calendar.SUNDAY) {
+            if (TermDates.isItAHoliday() || TermDates.isItTheWeekend()) {
                 recyclerView.setVisibility(View.GONE);
                 noTimetable.setText(R.string.error_eastney);
                 noTimetable.setVisibility(View.VISIBLE);
+                adapter.clearData();
                 return;
             }
             newStopToShow = 1;
