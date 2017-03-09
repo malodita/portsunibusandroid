@@ -196,3 +196,5 @@ gradlew.bat
 wearable/
 app/src/main/res/colors/
 app/src/test/
+/app/src/main/assets/timetable_weekday_wednesday.sqlite
+/app/src/main/assets/timetable_weekday_normal.sqlite
