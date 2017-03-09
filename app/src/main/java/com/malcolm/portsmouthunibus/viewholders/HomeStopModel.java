@@ -100,6 +100,8 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
             holder.timeHero.setVisibility(View.VISIBLE);
             holder.minutes.setVisibility(View.VISIBLE);
             holder.error.setVisibility(View.GONE);
+            holder.timeHero.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+            holder.timeHero.setTextSize(TypedValue.COMPLEX_UNIT_SP, 84);
             holder.timeHero.setText(R.string.hour_plus);
             holder.minutes.setText(R.string.minutes);
         }
@@ -148,6 +150,8 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
             holder.minutes.setVisibility(View.VISIBLE);
             holder.error.setVisibility(View.GONE);
             holder.timeHero.setText(R.string.hour_plus);
+            holder.timeHero.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+            holder.timeHero.setTextSize(TypedValue.COMPLEX_UNIT_SP, 84);
             holder.minutes.setText(R.string.minutes);
         }
     }
