@@ -25,6 +25,7 @@ public final class BusStops {
     private static final LatLng WINSTONCHURCHILLHOTEL = new LatLng(50.795563, -1.092330);
     private static final LatLng CAMBRIDGEROAD = new LatLng(50.794552, -1.097006);
     private static final LatLng WINSTONCHURCHILLLAW = new LatLng(50.795592, -1.092266);
+    private static final LatLng IMSEASTNEY = new LatLng(50.795075, -1.030000);
     //Centred locations
     private static final LatLng GOLDSMITHLIDLCENTRE = new LatLng(50.79507785, -1.06974676);
     private static final LatLng GOLDSMITHFRATTONCENTRE = new LatLng(50.7961137, -1.0759583);
@@ -68,6 +69,9 @@ public final class BusStops {
         Location winstonChurchillLaw = new Location("Winston Churchill Avenue (adj Law Courts)");
         winstonChurchillLaw.setLatitude(WINSTONCHURCHILLLAW.latitude);
         winstonChurchillLaw.setLongitude(WINSTONCHURCHILLLAW.longitude);
+        Location imsEastney = new Location("IMS Eastney");
+        imsEastney.setLatitude(IMSEASTNEY.latitude);
+        imsEastney.setLongitude(IMSEASTNEY.longitude);
         stopLocations.add(langstone);
         stopLocations.add(locksway);
         stopLocations.add(goldsmithLidl);
@@ -76,6 +80,7 @@ public final class BusStops {
         stopLocations.add(winstonChurchill);
         stopLocations.add(winstonChurchillLaw);
         stopLocations.add(cambridgeRoad);
+        stopLocations.add(imsEastney);
         float best = 3000;
         Location closest = null;
         for (int i = 0; i < stopLocations.size(); i++) {
@@ -102,6 +107,7 @@ public final class BusStops {
         latLngList.add(WINSTONCHURCHILLROADCENTRE);
         latLngList.add(CAMBRIDGEROAD);
         latLngList.add(GOLDSMITHMILTON);
+        latLngList.add(IMSEASTNEY);
         return latLngList;
     }
 }
