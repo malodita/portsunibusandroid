@@ -28,17 +28,6 @@ import java.util.List;
 
 public final class BusStopUtils {
     private static final String TAG = "BusStopUtils";
-    private static BusStopUtils instance;
-
-    private BusStopUtils() {
-    }
-
-    public static synchronized BusStopUtils getInstance() {
-        if (instance == null) {
-            instance = new BusStopUtils();
-        }
-        return instance;
-    }
 
     /**
      * Converts the time from a figure displayed in seconds to one displayed in minutes. It also
@@ -50,7 +39,7 @@ public final class BusStopUtils {
      * @return the time in minutes
      */
     @SuppressLint("SimpleDateFormat")
-    public String formatTime(int timeToConvert) {
+    public static String formatTime(int timeToConvert) {
         String finalTime = null;
         Date temp;
         try {
@@ -102,7 +91,7 @@ public final class BusStopUtils {
      *
      * @throws JSONException If the array has an issue
      */
-    public void drawPolyline(GoogleMap map, int nightMode, @Nullable Double time, @Nullable List<LatLng> list,
+    public static void drawPolyline(GoogleMap map, int nightMode, @Nullable Double time, @Nullable List<LatLng> list,
                              @Nullable LatLng singleLocation) {
         if (map == null) {
             return;
@@ -155,7 +144,7 @@ public final class BusStopUtils {
         }
     }
 
-    private LatLngBounds makeBounds(List<LatLng> list){
+    private static LatLngBounds makeBounds(List<LatLng> list){
         LatLngBounds.Builder builder = LatLngBounds.builder();
         for (int i = 0; i < list.size(); i++){
             builder.include(list.get(i));
@@ -169,7 +158,7 @@ public final class BusStopUtils {
      *
      * @return A string with the full statement to be displayed
      */
-    public String setTimeAndDistanceToClosestStop(Double time) {
+    public static String setTimeAndDistanceToClosestStop(Double time) {
         int newTime = time.intValue();
         if (newTime == -1){
             //If the person is near the closest stop
