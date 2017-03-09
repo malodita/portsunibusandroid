@@ -48,7 +48,11 @@ public class TimetableFragmentAdapter extends RecyclerView.Adapter<TimetableItem
     @Override
     public int getItemCount() {
         return times.size();
+    }
 
+    public void clearData(){
+        times.clear();
+        notifyDataSetChanged();
     }
 
     public void swapData(List<Times> list){
