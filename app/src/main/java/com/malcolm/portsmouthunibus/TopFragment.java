@@ -40,6 +40,7 @@ import com.malcolm.portsmouthunibus.utilities.BusStopUtils;
 import com.malcolm.portsmouthunibus.utilities.ResponseParser;
 import com.malcolm.unibusutilities.BusStops;
 import com.malcolm.unibusutilities.DatabaseHelper;
+import com.malcolm.unibusutilities.TermDates;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.io.File;
@@ -510,9 +511,10 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * will only be called if the user is within 60 metres of a stop. </p>
      */
     private void setupInstantCard() {
-        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        if (day == Calendar.SATURDAY|| day == Calendar.SUNDAY){
-            return;
+        if (closest.getProvider().equals("IMS Eastney (Departures)")) {
+            if (TermDates.isItAHoliday() || TermDates.isItTheWeekend()) {
+                return;
+            }
         }
         ArrayList<Integer> arrayList = databaseHelper.getTimesForArray("[" + closest.getProvider() + "]");
         if (arrayList == null) {
