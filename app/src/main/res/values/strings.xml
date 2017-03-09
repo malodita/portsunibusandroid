@@ -31,7 +31,8 @@
     <string name="play_services_update">An update to Google Play Services is required for location services</string>
     <string name="error_no_timetable_selected">Please select a timetable to view</string>
     <string name="error_no_location">Location not found</string>
-    <string name="error_no_buses">No buses are scheduled to run today!</string>
+    <string name="error_no_buses">No more buses are scheduled to stop here today</string>
+    <string name="error_no_buses_home">No more buses are scheduled to stop at your home stop today</string>
     <string name="error_not_in_portsmouth">Are you in Portsmouth? :/</string>
     <string name="error_no_stop_selected">No Stop Selected</string>
     <string name="error_GPS_off">Device GPS is turned off</string>
