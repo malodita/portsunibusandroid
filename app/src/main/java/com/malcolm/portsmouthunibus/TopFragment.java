@@ -213,7 +213,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * @return A string with the formatted final time
      */
     private String getTimeToStop(ArrayList<Integer> times) {
-        String finalTime;
         int currentTime = getCurrentTime();
         //int nearest = -1;
         int bestSoFar = Integer.MAX_VALUE;
@@ -228,8 +227,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 }
             }
         }
-        finalTime = BusStopUtils.getInstance().formatTime(bestSoFar);
-        return finalTime;
+        return BusStopUtils.formatTime(bestSoFar);
+
     }
 
     /**
