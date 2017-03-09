@@ -227,8 +227,11 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 }
             }
         }
-        return BusStopUtils.formatTime(bestSoFar);
-
+        if (bestSoFar != Integer.MAX_VALUE) {
+            return BusStopUtils.formatTime(bestSoFar);
+        } else {
+            return String.valueOf(bestSoFar);
+        }
     }
 
     /**
