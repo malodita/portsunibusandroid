@@ -73,7 +73,9 @@
                 android:textSize="@dimen/text_minute_hero_size"
                 app:layout_constraintLeft_toLeftOf="@+id/mini_stop_hero"
                 app:layout_constraintTop_toBottomOf="@+id/mini_stop_hero"
-                tools:text="8"/>
+                tools:text="8"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="16dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
