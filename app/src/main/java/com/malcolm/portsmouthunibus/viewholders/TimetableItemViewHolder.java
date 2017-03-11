@@ -1,13 +1,14 @@
 package com.malcolm.portsmouthunibus.viewholders;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.detail.DetailActivity;
 
@@ -22,6 +23,7 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
     public TextView timeTextView;
     public TextView destinationTextView;
     public int position;
+    private FirebaseAnalytics analytics;
 
 
     /**
@@ -37,20 +39,24 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
         destinationTextView = (TextView) itemView.findViewById(R.id.destination_recycler);
         LinearLayout layout = (LinearLayout) itemView.findViewById(R.id.inner_linear_layout_recyclerview);
         layout.setOnClickListener(this);
-
-
+        analytics = FirebaseAnalytics.getInstance(context);
     }
 
 
     @Override
     public void onClick(View view) {
         Intent i = new Intent(view.getContext(), DetailActivity.class);
-        Activity activity = (Activity) view.getContext();
+        //Activity activity = (Activity) view.getContext();
       /*  ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
                 destinationTextView, "default");*/
+        Bundle bundle = new Bundle();
+        bundle.putInt("listPosition", position);
+        bundle.putString("stop", destinationTextView.getText().toString());
+        bundle.putString("time", timeTextView.getText().toString());
         i.putExtra("listPosition", position);
         i.putExtra("stop", destinationTextView.getText());
         i.putExtra("time", timeTextView.getText());
+        analytics.logEvent(context.getString(R.string.firebase_timetable_detail_request), bundle);
         context.startActivity(i);
         //context.startActivity(i, options.toBundle());
         //Todo: When transitions are fixed, reenable
