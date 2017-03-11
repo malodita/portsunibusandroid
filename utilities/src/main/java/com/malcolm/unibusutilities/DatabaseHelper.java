@@ -171,7 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     copyDatabase();
                     myDatabase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
                 } catch (IOException e){
-                    Log.e(TAG, "openDatabase: Error writing new database");
+                    Log.e(TAG, "Error writing new database");
                 }
             }
         }
