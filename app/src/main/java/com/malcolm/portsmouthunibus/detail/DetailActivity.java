@@ -43,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
          * This gets the position that was clicked from the intent to be used to
          * display the correct timetable
          */
-        int valueToGet = i.getIntExtra(getString(R.string.intent_listPosition), 1);
+        int valueToGet = i.getIntExtra(getString(R.string.intent_list_position), 1);
         setActivityTitle(i);
         ArrayList<Times> array = DatabaseHelper.getInstance(this).getDataForList(valueToGet);
         setUpRecyclerView(mRecyclerView, array);
