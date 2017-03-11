@@ -41,7 +41,7 @@
     <string name="error_eastney">The Eastney service does not run during weekends or holidays</string>
 
 
-    <!--Strings related to preferences-->
+    <!--Strings related to preferences and intents-->
 
     <string name="preferences_home_bus_stop_key" translatable="false">com.malcolm.portsmouthunibus.homebusstop</string>
     <string name="preferences_instant_timetable_key" translatable="false">com.malcolm.portsmouthunibus.instanttimetable</string>
@@ -49,13 +49,14 @@
     <string name="onboarding_2_key" translatable="false">com.malcolm.portsmouthunibus.onboarding2</string>
     <string name="onboarding_3_key" translatable="false">com.malcolm.portsmouthunibus.onboarding3</string>
     <string name="preference_shortcuts_reset">com.malcolm.portsmouthunibus.shortcuts</string>
-    <string name="location_key" translatable="false">com.malcolm.portsmouthunibus.locationkey</string>
     <string name="shortcut_home_timetable_name_long">Home Timetable</string>
     <string name="shortcut_home_timetable_name_short">Home Stop</string>
     <string name="shortcut_home_timetable">home_timetable</string>
     <string name="shortcut_specific_timetable">specific_timetable</string>
     <string name="shortcut_home_timetable_action">com.malcolm.portsmouthunibus.VIEW.TIMETABLE</string>
     <string name="shortcut_specific_timetable_action">com.malcolm.portsmouthunibus.VIEW.TIMETABLE.SPECIFIC</string>
+    <string name="intent_list_position">listPosition</string>
+
 
     <!--Strings related to firebase analytics-->
     <string name="firebase_stop_id">stop_id</string>
@@ -64,7 +65,7 @@
     <string name="firebase_home_shortcut_used">home_shortcut_used</string>
     <string name="firebase_specific_shortcut_used">specific_shortcut_used</string>
     <string name="firebase_map_marker_click">map_marker_click</string>
-    <string name="intent_listPosition">listPosition</string>
+    <string name="firebase_timetable_detail_request">timetable_detail_requested</string>
 
 
     <string-array name="bus_stops_home">
