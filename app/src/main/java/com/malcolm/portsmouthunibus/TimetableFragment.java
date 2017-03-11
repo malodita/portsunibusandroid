@@ -163,7 +163,7 @@ public class TimetableFragment extends Fragment implements
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         int newStopToShow;
         if (position == 10) {
-            if (TermDates.isItAHoliday() || TermDates.isItTheWeekend()) {
+            if (TermDates.isHoliday() || TermDates.isWeekend()) {
                 recyclerView.setVisibility(View.GONE);
                 noTimetable.setText(R.string.error_eastney);
                 noTimetable.setVisibility(View.VISIBLE);

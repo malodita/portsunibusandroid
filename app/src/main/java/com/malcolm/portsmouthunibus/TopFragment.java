@@ -514,7 +514,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      */
     private void setupInstantCard() {
         if (closest.getProvider().equals("IMS Eastney (Departures)")) {
-            if (TermDates.isItAHoliday() || TermDates.isItTheWeekend()) {
+            if (TermDates.isHoliday() || TermDates.isWeekend()) {
                 return;
             }
         }
