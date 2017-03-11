@@ -11,6 +11,7 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -63,8 +64,8 @@ public class TimetableFragment extends Fragment implements
     FloatingActionButton floatingActionButton;
     @BindView(R.id.timetableFragment)
     CoordinatorLayout layout;
-    private SharedPreferences onboardingStatus;
     private DatabaseHelper databaseHelper;
+    private SharedPreferences sharedPreferences;
 
 
     public TimetableFragment() {
@@ -75,6 +76,13 @@ public class TimetableFragment extends Fragment implements
     public void onAttach(Context context) {
         //For the sake of getting a context
         super.onAttach(context);
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_name), Context.MODE_PRIVATE);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -85,7 +93,6 @@ public class TimetableFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_timetable, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         SharedPreferences currentHomeStopPref = getActivity().getSharedPreferences(getString(R.string.preferences_home_bus_stop_key), 0);
-        onboardingStatus = getActivity().getSharedPreferences(getString(R.string.onboarding_3_key), 0);
         setUpSpinner(spinner);
         int stopToShow = currentHomeStopPref.getInt(getString(R.string.preferences_home_bus_stop_key), 2);
         if (getArguments() != null) {
@@ -229,7 +236,7 @@ public class TimetableFragment extends Fragment implements
      */
     @TargetApi(Build.VERSION_CODES.N_MR1)
     private void buildDialog() {
-        Boolean onboarding = onboardingStatus.getBoolean(getString(R.string.onboarding_3_key), false);
+        Boolean onboarding = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_3_key), false);
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setTitle("Add Shortcut")
                 .setMessage(R.string.dialog_create_shortcut)
@@ -287,8 +294,8 @@ public class TimetableFragment extends Fragment implements
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
                         super.onTargetDismissed(view, userInitiated);
-                        onboardingStatus.edit()
-                                .putBoolean(getString(R.string.onboarding_3_key), true)
+                        sharedPreferences.edit()
+                                .putBoolean(getString(R.string.preferences_onboarding_3_key), true)
                                 .apply();
                     }
                 });

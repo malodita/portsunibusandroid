@@ -24,14 +24,15 @@ import java.util.Arrays;
 
 public class AlertDialogPreferenceCompat extends PreferenceDialogFragmentCompat {
 
-    AlertDialogPreference alertDialogPreference = null;
     private final String homeBusStop = "com.malcolm.portsmouthunibus.homebusstop";
     private final String shortcuts = "com.malcolm.portsmouthunibus.shortcuts";
     private static final String TAG = "AlertDialogPreference";
 
     /**
      * Static factory method to create the fragment the dialog is displayed in
+     *
      * @param key The key of the preference
+     *
      * @return a new fragment instance displaying the dialog
      */
     public static AlertDialogPreferenceCompat newInstance(
@@ -48,7 +49,7 @@ public class AlertDialogPreferenceCompat extends PreferenceDialogFragmentCompat 
     public void onCreate(Bundle savedInstanceState) {
         AlertDialogPreference preference = (AlertDialogPreference) getPreference();
         String key = preference.getKey();
-        switch (key){
+        switch (key) {
             case homeBusStop:
                 preference.setDialogMessage("Are you sure you want to reset your home stop?");
                 break;
@@ -84,36 +85,32 @@ public class AlertDialogPreferenceCompat extends PreferenceDialogFragmentCompat 
 
     }
 
-    /**
-     * Deals with what is selected after the dialog is closed
-     * @param positiveResult
-     */// FIXME: 03/02/2017 One day sort out the proper method to persist shared prefs
+    private void resetShortcut(String shortcut){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            ShortcutManager shortcutManager = getActivity().getSystemService(ShortcutManager.class);
+            shortcutManager.disableShortcuts(Arrays.asList(shortcut));
+            shortcutManager.removeDynamicShortcuts(Arrays.asList(shortcut));
+        }
+    }
+
     @Override
     public void onDialogClosed(boolean positiveResult) {
-        if (positiveResult){
-            DialogPreference preference = getPreference();
-            if (preference instanceof AlertDialogPreference){
-                AlertDialogPreference alert = (AlertDialogPreference) preference;
-                ShortcutManager shortcutManager;
-                switch (alert.getKey()){
-                    case homeBusStop:
-                        getActivity().getSharedPreferences(homeBusStop, 0).edit().putInt(homeBusStop, 0).apply();
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                            shortcutManager = getActivity().getSystemService(ShortcutManager.class);
-                            shortcutManager.disableShortcuts(Arrays.asList(getString(R.string.shortcut_home_timetable)));
-                            shortcutManager.removeDynamicShortcuts(Arrays.asList(getString(R.string.shortcut_home_timetable)));
-                        }
-                        break;
-                    case shortcuts:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                            shortcutManager = getActivity().getSystemService(ShortcutManager.class);
-                            shortcutManager.disableShortcuts(Arrays.asList(getString(R.string.shortcut_specific_timetable)));
-                            shortcutManager.removeDynamicShortcuts(Arrays.asList(getString(R.string.shortcut_specific_timetable)));
-                        }
-                    default:
-                        break;
-                }
+        DialogPreference preference = getPreference();
+        if (preference instanceof AlertDialogPreference) {
+            AlertDialogPreference alert = (AlertDialogPreference) preference;
+            switch (alert.getKey()) {
+                case homeBusStop:
+                    alert.setResult(positiveResult);
+                    resetShortcut(getString(R.string.shortcut_home_timetable));
+                    break;
+                case shortcuts:
+                    if (positiveResult) {
+                        resetShortcut(getString(R.string.shortcut_specific_timetable));
+                    }
+                default:
+                    break;
             }
         }
     }
 }
+

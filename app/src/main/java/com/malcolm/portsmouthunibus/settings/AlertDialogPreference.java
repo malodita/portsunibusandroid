@@ -24,7 +24,6 @@ public class AlertDialogPreference extends DialogPreference {
 
     //Used to set the layout of the dialog to this file
     private int layout = R.layout.dialog_reset_confirmation;
-    private int result;
 
     public AlertDialogPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -47,6 +46,12 @@ public class AlertDialogPreference extends DialogPreference {
     public void onBindViewHolder(PreferenceViewHolder holder) {
 
         super.onBindViewHolder(holder);
+    }
+
+    public void setResult(boolean positiveResult) {
+        if (positiveResult) {
+            persistInt(0);
+        }
     }
 
     @Override

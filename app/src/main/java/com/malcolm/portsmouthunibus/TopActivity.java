@@ -60,23 +60,35 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     BottomBar bottomBar;
     @BindView(R.id.placeholder)
     CoordinatorLayout layout;
-    private SharedPreferences currentHomeStopPref;
     private int stopToShow;
     private FirebaseAnalytics firebaseAnalytics;
+    private SharedPreferences sharedPreferences;
+    private boolean nightMode;
+
+    /**
+     * Static method to enable DayNight
+     */
+    static void nightModeSwitching(boolean mode) {
+        if (mode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        SharedPreferences onboardingStatus = getSharedPreferences(getString(R.string.onboarding_key), 0);
-        boolean onboarding = onboardingStatus.getBoolean("onboarding", false);
+        sharedPreferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        boolean onboarding = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_key), false);
         //If initial app onboarding has happened or not to set the content screen
         if (!onboarding) {
             startOnboarding();
         } else {
-            SharedPreferences onboarding2Status = getSharedPreferences(getString(R.string.onboarding_2_key), 0);
-            boolean onboarding2 = onboarding2Status.getBoolean("onboarding2", false);
-            nightModeSwitching();
+            boolean onboarding2 = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2_key), false);
+            nightMode = sharedPreferences.getBoolean(getString(R.string.preferences_night_mode), true);
+            nightModeSwitching(nightMode);
             setContentView(R.layout.activity_top);
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
@@ -87,9 +99,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 isGooglePlayServicesAvailable(this);
             }
             ButterKnife.bind(this);
-            currentHomeStopPref = this.getSharedPreferences(getString(R.string.preferences_home_bus_stop_key), 0);
-            int defaultValue = 1;
-            stopToShow = currentHomeStopPref.getInt(getString(R.string.preferences_home_bus_stop_key), defaultValue);
+            stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), 1);
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.icons));
             toolbar.inflateMenu(R.menu.action_bar_items);
             setSupportActionBar(toolbar);
@@ -124,13 +134,6 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     }
 
     /**
-     * Static method to enable DayNight
-     */
-    static void nightModeSwitching() {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-    }
-
-    /**
      * Google play services check, if the app fails it will prompt the user to update or install
      * services. This is the master check, other checks in the fragments will simply not load the
      * elements affected.
@@ -149,6 +152,16 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        boolean newNightMode  = sharedPreferences.getBoolean(getString(R.string.preferences_night_mode), true);
+        if (newNightMode != nightMode){
+            nightModeSwitching(newNightMode);
+            recreate();
+        }
+        super.onResume();
     }
 
     /**
@@ -258,9 +271,8 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         sequence.listener(new TapTargetSequence.Listener() {
             @Override
             public void onSequenceFinish() {
-                SharedPreferences settings = getSharedPreferences(getString(R.string.onboarding_2_key), 0);
-                settings.edit()
-                        .putBoolean("onboarding2", true)
+                sharedPreferences.edit()
+                        .putBoolean(getString(R.string.preferences_onboarding_2_key), true)
                         .apply();
             }
 
@@ -385,13 +397,13 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 int selected = which + 1;
-                                int current = currentHomeStopPref.getInt(getString(R.string.preferences_home_bus_stop_key), 0);
+                                int current = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), 0);
                                 if (selected == current) {
                                     return;
                                 }
                                 String[] array = getResources().getStringArray(R.array.bus_stops_home);
                                 firebaseLog(getString(R.string.firebase_home_stop_changed), getString(R.string.firebase_stop_id), array[selected]);
-                                currentHomeStopPref.edit().putInt(getString(R.string.preferences_home_bus_stop_key), selected).apply();
+                                sharedPreferences.edit().putInt(getString(R.string.preferences_home_bus_stop_key), selected).apply();
                                 Snackbar snackbar = Snackbar.make(layout, "Home Stop changed", Snackbar.LENGTH_SHORT);
                                 snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
                                 snackbar.show();

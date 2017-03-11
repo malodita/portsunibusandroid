@@ -1,7 +1,5 @@
 package com.malcolm.portsmouthunibus.adapters;
 
-import android.support.annotation.Nullable;
-
 import com.airbnb.epoxy.EpoxyAdapter;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.malcolm.portsmouthunibus.viewholders.ClosestStopMapModel;
@@ -23,7 +21,7 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     private final ClosestStopMapModel map;
     private final ClosestStopModel instant = new ClosestStopModel();
 
-    public TopFragmentAdapter(ArrayList<Object> homeCard, @Nullable ArrayList<Object> mapCard) {
+    public TopFragmentAdapter(ArrayList<Object> homeCard, ArrayList<Object> mapCard) {
         enableDiffing();
         if (homeCard != null && !Boolean.parseBoolean(homeCard.get(0).toString())) {
             home = new HomeStopModel_()
@@ -34,13 +32,14 @@ public class TopFragmentAdapter extends EpoxyAdapter {
                     .stopHero(homeCard.get(1).toString())
                     .timeHero(homeCard.get(2).toString());
         }
-        int playServices = (int) mapCard.get(0);
-        int resolvable = (int) mapCard.get(1);
-        int location = (int) mapCard.get(2);
-        int gps = (int) mapCard.get(3);
-        if (mapCard.size() > 4) {
-            MapStyleOptions options = (MapStyleOptions) mapCard.get(4);
-            int nightMode = (int) mapCard.get(5);
+        boolean mapsCardAllowed = (Boolean) mapCard.get(0);
+        int playServices = (int) mapCard.get(1);
+        int resolvable = (int) mapCard.get(2);
+        int location = (int) mapCard.get(3);
+        int gps = (int) mapCard.get(4);
+        if (mapCard.size() > 5) {
+            MapStyleOptions options = (MapStyleOptions) mapCard.get(5);
+            int nightMode = (int) mapCard.get(6);
             map = new ClosestStopMapModel_()
                     .playServices(playServices)
                     .playServicesError(resolvable)
@@ -55,34 +54,41 @@ public class TopFragmentAdapter extends EpoxyAdapter {
                     .locationPermission(location)
                     .gps(gps);
         }
-        addModels(home, map);
+        if (mapsCardAllowed) {
+            addModels(home, map);
+        } else {
+            addModel(home);
+        }
     }
 
-    public void invalidateHomeCard(){
+    public void invalidateHomeCard() {
         ArrayList<Boolean> list = new ArrayList<>();
         list.add(true);
         notifyModelChanged(home, list);
     }
 
-    public void locationReady(ArrayList<Object> list){
+    public void locationReady(ArrayList<Object> list) {
+        if (!map.isShown()){
+            addModel(map);
+        }
         notifyModelChanged(map, list);
     }
 
-    public void updateTimeHero(ArrayList newInfo){
+    public void updateTimeHero(ArrayList newInfo) {
         notifyModelChanged(home, newInfo);
     }
 
 
-    public void instantCard(ArrayList<Object> array){
+    public void instantCard(ArrayList<Object> array) {
         //Check to ensure that reinsert doesnt happen if already displayed
-        if (models.size() < 3) {
-            insertModelBefore(instant, map);
+        if (!instant.isShown()) {
+            insertModelAfter(instant, home);
         } else {
             notifyModelChanged(instant, array);
         }
     }
 
-    public void removeInstant(){
+    public void removeInstant() {
         removeModel(instant);
     }
 
@@ -100,5 +106,11 @@ public class TopFragmentAdapter extends EpoxyAdapter {
 
     public void closeToStop(ArrayList info) {
         notifyModelChanged(map, info);
+    }
+
+    public void hideMapsCard() {
+        if (map.isShown()){
+            removeModel(map);
+        }
     }
 }

@@ -64,6 +64,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class TopFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema> {
@@ -87,6 +89,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     private String[] busStops;
     private Call<ResponseSchema> call;
     private InstantCard instantCard;
+    private boolean isMapsCardShown;
+    private SharedPreferences sharedPreferences;
 
     public TopFragment() {
         // Required empty public constructor
@@ -99,6 +103,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 & Configuration.UI_MODE_NIGHT_MASK;
         busStops = getResources().getStringArray(R.array.bus_stops_home_selected);
         databaseHelper = DatabaseHelper.getInstance(getContext());
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
     }
 
     @Override
@@ -106,8 +111,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_top, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        SharedPreferences currentHomeStopPref = getActivity().getSharedPreferences(getString(R.string.preferences_home_bus_stop_key), 0);
-        stopToShow = currentHomeStopPref.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
+        stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
         googleApiClient = new GoogleApiClient.Builder(getContext().getApplicationContext())
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
@@ -124,6 +128,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         ArrayList<Object> mapsCard = makeMapCard();
         setupRecyclerView(recyclerView, homeCard, mapsCard);
     }
+
+
 
     /**
      * Sets up the home card. Info is placed in an array of type object in following order <p> 0 -
@@ -164,6 +170,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      */
     private ArrayList<Object> makeMapCard() {
         ArrayList<Object> arrayList = new ArrayList<>();
+        arrayList.add(sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true));
         arrayList.add(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()));
         arrayList.add(isGooglePlayServicesAvailable(getActivity()));
         int permission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
@@ -179,6 +186,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         }
         arrayList.add(setNightModeLayout());
         arrayList.add(currentNightMode);
+
         return arrayList;
     }
 
@@ -289,8 +297,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences home = getActivity().getSharedPreferences(getString(R.string.preferences_home_bus_stop_key), 0);
-        int currentHome = home.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
+        int currentHome = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
         //Checks the previous value of the stop to show
         if (stopToShow != 0) {
             //Checks if this value has been changed
@@ -305,6 +312,10 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         //If the instantCard was previously displayed, it will restart as well
         if (isInstantCardDisplayed && instantCard != null) {
             handler.post(instantCard);
+        }
+        boolean mapCard = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
+        if (!mapCard){
+            adapter.hideMapsCard();
         }
     }
 
@@ -325,7 +336,13 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
                 closest = BusStops.getClosestStop(lastLocation);
-                getDirections(lastLocation, closest);
+                boolean isMapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
+                if (isMapCardAllowed) {
+                    getDirections(lastLocation, closest);
+                } else {
+                    adapter.hideMapsCard();
+                    instantCardCheck(lastLocation, closest);
+                }
             }
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -345,6 +362,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * @param closest      The location and tag of the closest stop
      */
     private void getDirections(@NonNull Location lastLocation, Location closest) {
+        isMapsCardShown = true;
         if (closest == null) {
             adapter.notInPortsmouth();
             return;
@@ -381,7 +399,11 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             list.add(summary);
             adapter.locationReady(list);
         }
-        float distance = lastLocation.distanceTo(closest);
+        instantCardCheck(lastLocation, closest);
+    }
+
+    private void instantCardCheck(Location location, Location closest){
+        float distance = location.distanceTo(closest);
         if (distance <= 40) {
             setupInstantCard();
         } else {
@@ -562,8 +584,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * immediately
      */
     public void changeHomeCard() {
-        SharedPreferences currentHomeStopPref = getActivity().getSharedPreferences(getString(R.string.preferences_home_bus_stop_key), 0);
-        stopToShow = currentHomeStopPref.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
+        stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
         stopTimes = databaseHelper.getTimesForArray(stopToShow);
         if (homeRunnable != null) {
             handler.removeCallbacks(homeRunnable);
