@@ -16,13 +16,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Contains database access logic and exposes some helper methods for use by other modules
@@ -33,31 +30,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_WEEKDAY_NAME = "timetable_weekday_normal.sqlite";
     private static final String DB_HOLIDAY_NAME = "timetable_holiday.sqlite";
     private static final String DB_WEEKDAY_WED_NAME = "timetable_weekday_wednesday.sqlite";
-    //Term dates
-    private static final String EASTER2017START = "31-03-2017";
-    private static final String EASTER2017END = "24-04-2017";
-    private static final String SUMMER2017START = "02-06-2017";
-    private static final String SUMMER2017END = "25-09-2017";
-    private static final String CHRISTMAS2017START = "15-12-2017";
-    private static final String CHRISTMAS2017END = "08-01-2018";
-    private static final String EASTER2018START = "30-03-2018";
-    private static final String EASTER2018END = "23-04-2018";
     private static String DB_NAME;
     private static String DB_PATH;
+    @SuppressLint("StaticFieldLeak")
     private static DatabaseHelper instance;
     private final Context context;
     private SQLiteDatabase myDatabase;
 
-    private DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context, boolean isWearable) {
         super(context, null, null, 1);
-        DB_PATH = ContextCompat.getDataDir(context) + "/databases/";
+        if (isWearable) {
+            DB_PATH = context.getFilesDir().getPath();
+        } else {
+            DB_PATH = ContextCompat.getDataDir(context) + "/databases/";
+        }
         this.context = context;
         checkAndCopyDatabase();
     }
 
+    /**
+     * Obtains an instance suitable for phones
+     * @param context The calling context
+     * @return A database instance for phones
+     */
     public static synchronized DatabaseHelper getInstance(Context context) {
         if (instance == null) {
-            instance = new DatabaseHelper(context.getApplicationContext());
+            instance = new DatabaseHelper(context.getApplicationContext(), false);
+        }
+        return instance;
+    }
+
+    /**
+     * Obtains an instance suitable for wearable devices.
+     * @param context The calling context
+     * @return A database instance for wearable devices
+     */
+    public static synchronized DatabaseHelper getWearableInstance(Context context){
+        if (instance == null) {
+            instance = new DatabaseHelper(context.getApplicationContext(), true);
         }
         return instance;
     }
@@ -77,7 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (dbExist) {
             return;
         }
-        getWritableDatabase();
+        this.getWritableDatabase();
         try {
             copyDatabase();
         } catch (IOException e) {
@@ -124,60 +134,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void copyDatabase() throws IOException {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                InputStream myInput = null;
-                try {
-                    myInput = context.getAssets().open(DB_NAME);
-                    String outFileName = DB_PATH + DB_NAME;
-                    OutputStream myOutput = new FileOutputStream(outFileName);
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = myInput.read(buffer)) > 0) {
-                        myOutput.write(buffer, 0, length);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    InputStream myInput;
+                    try {
+                        myInput = context.getAssets().open(DB_NAME);
+                        String outFileName = DB_PATH + DB_NAME;
+                        OutputStream myOutput = new FileOutputStream(outFileName);
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = myInput.read(buffer)) > 0) {
+                            myOutput.write(buffer, 0, length);
+                        }
+                        myOutput.flush();
+                        myOutput.close();
+                        myInput.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    myOutput.flush();
-                    myOutput.close();
-                    myInput.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-            }
-        }).start();
-    }
-
-    private List<Date> makeDateArray(String start, String end) {
-        ArrayList<Date> dates = new ArrayList<>();
-        @SuppressLint("SimpleDateFormat") DateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
-
-        Date date1 = null;
-        Date date2 = null;
-
-        try {
-            date1 = df1.parse(start);
-            date2 = df1.parse(end);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date1);
-
-
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(date2);
-
-        while (!cal1.after(cal2)) {
-            dates.add(cal1.getTime());
-            cal1.add(Calendar.DATE, 1);
-            cal1.clear(Calendar.HOUR);
-            cal1.clear(Calendar.HOUR_OF_DAY);
-            cal1.clear(Calendar.MINUTE);
-            cal1.clear(Calendar.SECOND);
-            cal1.clear(Calendar.MILLISECOND);
-        }
-        return dates;
+            }).start();
     }
 
     private boolean openDatabase() {
@@ -204,11 +181,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method parses through the timetable at the selected home stop in order to count down the
+     * <P>
+     * This method parses through the timetable at the selected stop in order to count down the
      * time until the next bus arrives at the home stop. After opening the database using the helper
      * class, it then takes the value for this in a switch statement and depending on the value will
-     * set the rawQuery for the database search to give all the times in the column for the result.
-     *
+     * set the query for the database search to give all the times in the column for the result.
+     *</P>
+     * <p>
+     * Unlike the alternative method {@link #getTimesForArray(int)}, this will be able to search any stop
+     * as long as the correct string has been passed into the method (This string must be in brackets)
+     * </p>
      * @param stop The string used to search the database
      *
      * @return An arraylist of Integers representing the times the bus will stop in seconds
@@ -217,8 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Integer> arrayList = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
-        boolean databaseOpened = openDatabase();
-        if (databaseOpened) {
+        if (openDatabase()) {
             try {
                 cursor = queryData("select " + stop + " from Timetable");
                 if (cursor != null) {
@@ -245,13 +226,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method parses through the timetable at the selected home stop in order to count down the
+     * <p>This method parses through the timetable at the selected stopId in order to count down the
      * time until the next bus arrives at the home stop. After opening the database using the helper
      * class, it then takes the value for this in a switch statement and depending on the value will
-     * set the rawQuery for the database search to give all the times in the column for the result.
+     * set the query for the database search to give all the times in the column for the result.
+     * </p>
      * <p>
-     * This overloaded method instead uses the integer for the stopId which is then searched
-     * </P>
+     * This method only works for obtaining the array for a home stop as the id check will only obtain
+     * one of these stop. Use {@link #getTimesForArray(String) the alternative method} if you wish
+     * to search any stop.
+     * </p>
      *
      * @param stopId The integer representation of the bus stop
      *
@@ -262,8 +246,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Integer> arrayList = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
-        boolean databaseOpened = openDatabase();
-        if (databaseOpened) {
+        if (openDatabase()) {
             try {
                 cursor = queryData("select " + stop + " from Timetable");
                 if (cursor != null) {
@@ -288,7 +271,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Obtains the stop for {@link DatabaseHelper} to search for displaying the home stop
+     * Obtains the stop {@link #getTimesForArray(int) to search the database here}
      *
      * @param homeStopId The id of the stop retrieved
      *
@@ -317,8 +300,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This method opens and obtains the entire database and parses it to find the stops that mathch
-     * the correct stop to show. It then formats the times and adds to the arrayList (after clearing
+     * This method opens and obtains the entire database and parses it to find the stops that match
+     * the correct stop. It then formats the times and adds to the arrayList (after clearing
      * the list beforehand from previous run results. I could split the method for a v2 but it
      * doesn't seem necessary due to the lack of the need for independent methods like in
      * TopFragment. the fragment refreshes. <p>In TopFragment, only the data from one stop is used
@@ -326,20 +309,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * does not refresh and this method is linked to a selection event for a spinner to display all
      * the stop times for a location </p> Nullable since if no stop is selected, the entire view
      * should be replaced with a prompt to select the stop. Also no asyncTask/Runnable has been used
-     * for this since it is not a huge database task database contains no more than 40 rows
+     * for this since it is not a huge database task database contains no more than 50 rows
      *
      * @param stop The stop to display, if zero then it skips getting the array
      *
      * @return An arrayList of times ready for the adapter to use or null if no default stop is
      * selected
+     * //Todo: Change javadoc
      */
     @Nullable
     public ArrayList<Times> getTimesArray(int stop) {
         ArrayList<Times> arrayList = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
-        boolean databaseOpened = openDatabase();
-        if (databaseOpened) {
+        if (openDatabase()) {
             try {
                 cursor = queryData("select * from Timetable order by id");
                 if (cursor != null) {
@@ -385,8 +368,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Times> array = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
-        boolean databaseOpened = openDatabase();
-        if (databaseOpened) {
+        if (openDatabase()) {
             try {
                 cursor = queryData("select * from Timetable where id=" + busId + " order by id");
                 if (cursor != null) {
