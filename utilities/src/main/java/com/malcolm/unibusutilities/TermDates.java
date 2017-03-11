@@ -27,7 +27,7 @@ public final class TermDates {
     private static final String SUMMER2018END = "14-09-2018";//Provisional
 
 
-    public static boolean isItAHoliday(){
+    public static boolean isHoliday(){
         Date today = Calendar.getInstance().getTime();
         List<Date> easter17 = makeDateArray(EASTER2017START, EASTER2017END);
         List<Date> summer17 = makeDateArray(SUMMER2017START, SUMMER2017END);
@@ -44,7 +44,7 @@ public final class TermDates {
     }
 
     @SuppressLint("SwitchIntDef")
-    public static boolean isItTheWeekend(){
+    public static boolean isWeekend(){
         int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         switch (day){
             case Calendar.SATURDAY:

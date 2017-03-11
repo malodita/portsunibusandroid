@@ -101,10 +101,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String getDBName() {
         Calendar calendar = Calendar.getInstance();
         String name;
-        if (TermDates.isItAHoliday()) {
+        if (TermDates.isHoliday()) {
             name = DB_HOLIDAY_NAME;
         } else {
-            if (TermDates.isItTheWeekend()) {
+            if (TermDates.isWeekend()) {
                 name = DB_WEEKEND_NAME;
             } else {
                 int day = calendar.get(Calendar.DAY_OF_WEEK);
