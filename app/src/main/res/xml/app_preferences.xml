@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--Todo: Finish this-->
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Appearance">
+        <SwitchPreference
+            android:title="Night mode"
+            android:summaryOff="Uses the day theme only"
+            android:summaryOn="Switches to a dark theme at night"
+            android:key="@string/preferences_night_mode"
+            android:defaultValue="true"/>
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Cards">
+        <SwitchPreference
+            android:title="Show map card"
+            android:summaryOff="The card with your closest stop is hidden"
+            android:summaryOn="The card with your closest stop is shown"
+            android:key="@string/preferences_maps_card"
+            android:defaultValue="true"/>
+    </android.support.v7.preference.PreferenceCategory>
     <android.support.v7.preference.PreferenceCategory
         android:title="Reset to Defaults">
 
         <com.malcolm.portsmouthunibus.settings.AlertDialogPreference
             android:key="@string/preferences_home_bus_stop_key"
             android:summary="Resets the chosen default stop selected."
-            android:title="Reset Home Stop"
+            android:title="Reset home stop"
             />
         <com.malcolm.portsmouthunibus.settings.AlertDialogPreference
             android:key="@string/preference_shortcuts_reset"
@@ -16,9 +33,7 @@
             android:title="Clear shortcuts"
             android:enabled="false"
             />
-
     </android.support.v7.preference.PreferenceCategory>
-
     <Preference android:title="About">
         <intent
             android:action="android.intent.action.VIEW"
