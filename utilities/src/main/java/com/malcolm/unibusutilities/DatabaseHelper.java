@@ -87,7 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (dbExist) {
             return;
         }
-        this.getWritableDatabase();
+        this.getReadableDatabase();
         try {
             copyDatabase();
         } catch (IOException e) {
@@ -97,7 +97,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    @SuppressLint("SwitchIntDef")
     private String getDBName() {
         Calendar calendar = Calendar.getInstance();
         String name;
@@ -164,7 +163,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } catch (SQLiteException e) {
             Log.e(TAG, "Error opening database");
             e.printStackTrace();
-
+        }
+        if (myDatabase != null){
+            int version = myDatabase.getVersion();
+            if (version < BuildConfig.VERSION_CODE){
+                try {
+                    copyDatabase();
+                    myDatabase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+                } catch (IOException e){
+                    Log.e(TAG, "openDatabase: Error writing new database");
+                }
+            }
         }
         return myDatabase != null;
     }
@@ -364,7 +373,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<Times> getDataForList(int busId) {
-        Log.d(TAG, "getDataForList: " + busId);
         ArrayList<Times> array = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
@@ -374,7 +382,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         for (int i = 1; i <= 14; i++) {
-                            Log.d(TAG, "getDataForList: " + cursor.getString(i));
                             if (cursor.getString(i) != null) {
                                 Times times = new Times();
                                 times.setDestination(cursor.getColumnName(i));
