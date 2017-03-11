@@ -443,6 +443,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         if (!responseSchema.getStatus().equals("OK")) {
             //If the API is not returning the required response for any reason
             adapter.noConnection();
+            FirebaseCrash.log(TAG + "API request not returned correctly");
             return;
         }
         //Adds the current time to the response body which is used for caching purposes
