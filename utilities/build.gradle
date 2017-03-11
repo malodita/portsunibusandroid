@@ -7,6 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
+        //DO NOT UPDATE THE VERSION CODE UNLESS YOU CHANGE THE DATABASE
         versionCode 3
         versionName "3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
