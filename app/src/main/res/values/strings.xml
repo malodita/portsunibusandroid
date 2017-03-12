@@ -37,6 +37,8 @@
     <string name="error_no_connection">No internet connection available</string>
     <string name="error_route_display">Cannot display route</string>
     <string name="error_eastney">The Eastney service does not run during weekends or holidays</string>
+    <string name="error_bank_holiday">The bus service does not run on bank holidays</string>
+
 
 
     <!--Strings related to preferences, shortcuts and intents-->
