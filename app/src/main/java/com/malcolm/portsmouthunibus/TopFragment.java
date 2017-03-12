@@ -367,7 +367,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * set up or removed.</p>
      *
      * @param lastLocation The last location recorded
-     * @param closest      The location and tag of the closest stop
+     * @param closest      The location of the closest stop
      */
     private void getDirections(@NonNull Location lastLocation, Location closest) {
         if (closest == null) {
@@ -566,7 +566,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                 ObjectOutput out;
                 try {
-                    out = new ObjectOutputStream(new FileOutputStream(new File(getContext().getCacheDir().getAbsolutePath()) + "/response.srl"));
+                    out = new ObjectOutputStream(new FileOutputStream(new File(getContext().getCacheDir().getAbsolutePath()) + "response.srl"));
                     out.writeObject(response);
                     out.flush();
                     out.close();
