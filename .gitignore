@@ -193,8 +193,15 @@ app/src/debug/
 gradle/wrapper/gradle-wrapper.jar
 gradlew
 gradlew.bat
-wearable/
 app/src/main/res/colors/
 app/src/test/
 /app/src/main/assets/timetable_weekday_wednesday.sqlite
 /app/src/main/assets/timetable_weekday_normal.sqlite
+app/src/main/java/com/malcolm/portsmouthunibus/presenter/
+utilities/.gitignore
+/wearable/
+/app/portsmouth-uni-b-1482878048775-firebase-crashreporting-hqbai-cda9b59a80.json
+app/portsmouth-uni-b-1482878048775-firebase-crashreporting-hqbai-cda9b59a80.json
+/app/firebase-crashreportingservice.json
+/keystore.properties
+/settings.gradle
