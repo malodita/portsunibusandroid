@@ -194,7 +194,9 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
 
     @Override
     public void unbind(MapViewHolder holder) {
-        super.unbind(holder);
+        if (holder.mapView != null) {
+            holder.mapView.onDestroy();
+        }
         if (googleMap != null) {
             googleMap.clear();
             googleMap.setOnMapClickListener(null);
@@ -205,6 +207,7 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
                 e.printStackTrace();
             }
         }
+        super.unbind(holder);
     }
 
     @Override
