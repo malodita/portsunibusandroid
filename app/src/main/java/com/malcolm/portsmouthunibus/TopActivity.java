@@ -402,9 +402,9 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                                     return;
                                 }
                                 String[] array = getResources().getStringArray(R.array.bus_stops_home);
-                                firebaseLog(getString(R.string.firebase_home_stop_changed), getString(R.string.firebase_stop_id), array[selected]);
+                                firebaseLog(getString(R.string.firebase_home_stop_changed), getString(R.string.firebase_stop_id), array[selected - 1]);
                                 sharedPreferences.edit().putInt(getString(R.string.preferences_home_bus_stop_key), selected).apply();
-                                Snackbar snackbar = Snackbar.make(layout, "Home Stop changed", Snackbar.LENGTH_SHORT);
+                                Snackbar snackbar = Snackbar.make(layout, "Home stop changed", Snackbar.LENGTH_SHORT);
                                 snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
                                 snackbar.show();
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {

@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,6 +72,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema> {
     public final int DEFAULT_VALUE = 0;
     public final String TAG = "Top Fragment";
+    private final Handler handler = new Handler();
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.top_fragment_coordinator)
@@ -79,7 +81,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     private int stopToShow;
     private int currentNightMode;
     private Runnable homeRunnable;
-    private final Handler handler = new Handler();
     private TopFragmentAdapter adapter;
     private ArrayList<Integer> stopTimes;
     private Unbinder unbinder;
@@ -89,7 +90,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     private String[] busStops;
     private Call<ResponseSchema> call;
     private InstantCard instantCard;
-    private boolean isMapsCardShown;
     private SharedPreferences sharedPreferences;
 
     public TopFragment() {
@@ -130,12 +130,14 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
 
-
     /**
      * Sets up the home card. Info is placed in an array of type object in following order <p> 0 -
      * Boolean: If the stop to set to 'No stop selected' meaning no stop info needed </p> 1 -
      * String: The identity of the selected stop including no stop selected <p> 2 - String:
-     * (OPTIONAL) The string with the time to report taken from the array of stop times. </p> This
+     * (OPTIONAL) The string with the time to report taken from the array of stop times. </p>
+     * <p>
+     * 3 - Boolean: If the term date is a holiday
+     * </p>
      * array is a field as this is subsequently used to set the initial state of the card, it does
      * not take care of updating it {@link HomeCardTask which is left to a runnable task}.
      *
@@ -152,6 +154,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             array.add(true);
             array.add(stopList[stopToShow]);
             array.add(stop);
+            array.add(TermDates.isBankHoliday());
         }
         return array;
     }
@@ -314,7 +317,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             handler.post(instantCard);
         }
         boolean mapCard = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-        if (!mapCard){
+        if (!mapCard) {
             adapter.hideMapsCard();
         }
     }
@@ -324,30 +327,35 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * such as on rotation) it will post the runnable rather than create a new one.
      */
     public void updateTimeHero() {
-        if (homeRunnable == null) {
-            homeRunnable = new HomeCardTask(this);
+        if (!TermDates.isBankHoliday()) {
+            if (homeRunnable == null) {
+                homeRunnable = new HomeCardTask(this);
+            }
+            handler.post(homeRunnable);
         }
-        handler.post(homeRunnable);
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        try {
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if (lastLocation != null) {
-                closest = BusStops.getClosestStop(lastLocation);
-                boolean isMapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-                if (isMapCardAllowed) {
-                    getDirections(lastLocation, closest);
-                } else {
-                    adapter.hideMapsCard();
-                    instantCardCheck(lastLocation, closest);
-                }
-            }
-        } catch (SecurityException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Location permission not granted!", Toast.LENGTH_SHORT).show();
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(getContext(), "Location permission not granted", Toast.LENGTH_SHORT).show();
+            return;
         }
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (lastLocation != null) {
+            closest = BusStops.getClosestStop(lastLocation);
+            boolean isMapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
+            if (isMapCardAllowed) {
+                getDirections(lastLocation, closest);
+            } else {
+                adapter.hideMapsCard();
+            }
+            instantCardCheck(lastLocation, closest);
+        }
+
     }
 
     /**
@@ -362,7 +370,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * @param closest      The location and tag of the closest stop
      */
     private void getDirections(@NonNull Location lastLocation, Location closest) {
-        isMapsCardShown = true;
         if (closest == null) {
             adapter.notInPortsmouth();
             return;
@@ -399,25 +406,15 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             list.add(summary);
             adapter.locationReady(list);
         }
-        instantCardCheck(lastLocation, closest);
     }
 
-    private void instantCardCheck(Location location, Location closest){
+    private void instantCardCheck(Location location, Location closest) {
         float distance = location.distanceTo(closest);
         if (distance <= 40) {
-            setupInstantCard();
+            isInstantCardDisplayed = setupInstantCard();
         } else {
             removeInstantCard();
         }
-    }
-
-    private void sendMapInfoToAdapter(String provider) {
-        ArrayList<Object> list = new ArrayList<>();
-        list.add(provider);
-        double time = -1;
-        list.add(time);
-        list.add(closest);
-        adapter.closeToStop(list);
     }
 
     /**
@@ -442,6 +439,20 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     /**
+     * If the device is fairly close to the nearest stop, it will manually add the information to
+     * the maps card instead of sending an API request for directions
+     * @param provider The name of the closest stop
+     */
+    private void sendMapInfoToAdapter(String provider) {
+        ArrayList<Object> list = new ArrayList<>();
+        list.add(provider);
+        double time = -1;
+        list.add(time);
+        list.add(closest);
+        adapter.closeToStop(list);
+    }
+
+    /**
      * This method sends an API request using retrofit. Two callbacks are implemented by the class
      * depending on if a response is successful
      */
@@ -459,8 +470,61 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         call.enqueue(this);
     }
 
+    /**
+     * Sets up the instantCard card and associated handler, {@link InstantCardTask most of the work
+     * is done in the asynctask associated with the runnable} {@link InstantCard}. Info is placed in
+     * an array of type object in following order <p> 0: timeHero </p> 1: stopHero <p> This method
+     * will only be called if the user is within 60 metres of a stop. </p> It also checks if the closest
+     * stop is IMS Eastney (if the date is not a weekday) as well as if it is a bank holiday
+     *
+     * @return A boolean indicating success establishing the instant card
+     */
+    private boolean setupInstantCard() {
+        if (TermDates.isBankHoliday()) {
+            return false;
+        }
+        if (closest.getProvider().equals("IMS Eastney (Departures)")) {
+            if (TermDates.isHoliday() || TermDates.isWeekend()) {
+                return false;
+            }
+        }
+        ArrayList<Integer> arrayList = databaseHelper.getTimesForArray("[" + closest.getProvider() + "]");
+        if (arrayList == null) {
+            Snackbar snackbar = Snackbar.make(layout, "Error displaying the closest stop card", Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
+            snackbar.show();
+            FirebaseCrash.report(new Throwable("No result was returned by DatabaseHelper to set up the Instant Card"));
+            return false;
+        }
+        String time = getTimeToStop(arrayList);
+        ArrayList<Object> list = new ArrayList<>();
+        list.add(time);
+        list.add(closest.getProvider());
+        adapter.instantCard(list);
+        if (instantCard == null) {
+            instantCard = new InstantCard(this, arrayList);
+            handler.post(instantCard);
+        }
+        return true;
+    }
+
+    /**
+     * Removes the instantCard card and disables the runnable associated with it
+     */
+    private void removeInstantCard() {
+        if (isInstantCardDisplayed) {
+            adapter.removeInstant();
+            handler.removeCallbacks(instantCard);
+            isInstantCardDisplayed = false;
+        }
+    }
+
     @Override
     public void onResponse(Call<ResponseSchema> call, Response<ResponseSchema> response) {
+        if (!response.isSuccessful()) {
+            //If the response is not code 200-300
+            return;
+        }
         ResponseSchema responseSchema = response.body();
         if (!responseSchema.getStatus().equals("OK")) {
             //If the API is not returning the required response for any reason
@@ -476,12 +540,11 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         String polyline = route.getOverviewPolyline().getPoints();
         Double time = route.getLegs().get(0).getDuration().getValue();
         ArrayList<Object> list = new ArrayList<>();
-                   /*Packs into locationReady() method in this order
-                0 - String: The name of the closest stop
-                1 - Double: Time to closest stop
-                2 - String:Polyline
-                3 - String: Route summary (Not currently used)
-                 */
+        /*Packs into locationReady() method in this order
+        0 - String: The name of the closest stop
+        1 - Double: Time to closest stop
+        2 - String: Polyline
+        3 - String: Route summary (Not currently used)*/
         list.add(closest.getProvider());
         list.add(time);
         list.add(polyline);
@@ -529,61 +592,19 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     }
 
-    /**
-     * Sets up the instantCard card and associated handler, {@link InstantCardTask most of the work
-     * is done in the asynctask associated with the runnable} {@link InstantCard}. Info is placed in
-     * an array of type object in following order <p> 0: timeHero </p> 1: stopHero <p> This method
-     * will only be called if the user is within 60 metres of a stop. </p>
-     */
-    private void setupInstantCard() {
-        if (closest.getProvider().equals("IMS Eastney (Departures)")) {
-            if (TermDates.isHoliday() || TermDates.isWeekend()) {
-                return;
-            }
-        }
-        ArrayList<Integer> arrayList = databaseHelper.getTimesForArray("[" + closest.getProvider() + "]");
-        if (arrayList == null) {
-            Snackbar snackbar = Snackbar.make(layout, "Error displaying the closest stop card", Snackbar.LENGTH_SHORT);
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
-            snackbar.show();
-            FirebaseCrash.report(new Throwable("No result was returned by DatabaseHelper to set up the Instant Card"));
-            return;
-        }
-        String time = getTimeToStop(arrayList);
-        ArrayList<Object> list = new ArrayList<>();
-        list.add(time);
-        list.add(closest.getProvider());
-        adapter.instantCard(list);
-        if (instantCard == null) {
-            instantCard = new InstantCard(this, arrayList);
-            handler.post(instantCard);
-        }
-        isInstantCardDisplayed = true;
-    }
-
     @Override
     public void onConnectionSuspended(int i) {
         adapter.noConnection();
     }
 
     /**
-     * Removes the instantCard card and disables any runnables associated with it
-     */
-    private void removeInstantCard() {
-        if (isInstantCardDisplayed) {
-            adapter.removeInstant();
-            handler.removeCallbacks(instantCard);
-            isInstantCardDisplayed = false;
-        }
-
-    }
-
-    /**
-     * Changes stopToShow allowing for the home card to be changed according to the new home stop
-     * selected. It removes the callbacks for the runnable and restarts it so that it may update
-     * immediately
+     * Changes the home card according to the new home stop selected.
+     * It removes the callbacks for the runnable and restarts it so that it may update immediately
      */
     public void changeHomeCard() {
+        if (TermDates.isBankHoliday()) {
+            return;
+        }
         stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
         stopTimes = databaseHelper.getTimesForArray(stopToShow);
         if (homeRunnable != null) {
@@ -657,11 +678,9 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
 
         @Override
         public void run() {
-            if (weakReference != null) {
-                final TopFragment topFragment = weakReference.get();
-                if (topFragment != null) {
-                    homeStopRunnableTask(topFragment);
-                }
+            final TopFragment topFragment = weakReference.get();
+            if (topFragment != null) {
+                homeStopRunnableTask(topFragment);
             }
         }
 
@@ -702,7 +721,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         @Override
         public void run() {
             if (parent != null) {
-
                 new InstantCardTask(parent, list).execute();
                 parent.get().handler.postDelayed(this, 5000);
             }
@@ -735,7 +753,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             ArrayList<Object> list = new ArrayList<Object>();
             String time = fragment.getTimeToStop(array);
             list.add(time);
-            if (fragment.closest.getProvider().equals("IMS Eastney (Departures)")){
+            if (fragment.closest.getProvider().equals("IMS Eastney (Departures)")) {
                 list.add("IMS Eastney (To university)");
             } else {
                 list.add(fragment.closest.getProvider());
