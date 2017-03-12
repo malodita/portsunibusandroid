@@ -36,7 +36,7 @@ public class ResponseSchema implements Serializable {
     }
 
     public Location getLocation() {
-        return location;
+        return getRoutes().get(0).getLegs().get(0).getStartLocation().getLocation();
     }
 
     public void setLocation(Location location) {
