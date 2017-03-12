@@ -1,5 +1,6 @@
 package com.malcolm.portsmouthunibus.settings;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
@@ -7,17 +8,17 @@ import android.view.LayoutInflater;
 import android.webkit.WebView;
 
 import com.danielstone.materialaboutlibrary.MaterialAboutActivity;
-import com.danielstone.materialaboutlibrary.model.MaterialAboutActionItem;
+import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
+import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList;
-import com.danielstone.materialaboutlibrary.model.MaterialAboutTitleItem;
 import com.malcolm.portsmouthunibus.BuildConfig;
 import com.malcolm.portsmouthunibus.R;
 
 public class AboutActivity extends MaterialAboutActivity {
 
     @Override
-    protected MaterialAboutList getMaterialAboutList() {
+    protected MaterialAboutList getMaterialAboutList(Context context) {
         MaterialAboutCard.Builder app = new MaterialAboutCard.Builder()
                 .title("About");
 
@@ -130,7 +131,7 @@ public class AboutActivity extends MaterialAboutActivity {
                         displayLicensesDialog("epoxy.html");
                     }
                 }).build());
-        
+
         MaterialAboutCard.Builder personal = new MaterialAboutCard.Builder().title("Developer");
         personal.addItem(new MaterialAboutActionItem.Builder()
                 .text("Malcolm Odita")
@@ -166,8 +167,7 @@ public class AboutActivity extends MaterialAboutActivity {
                 .addCard(personal.build())
                 .addCard(licenses.build())
                 .addCard(thanks.build())
-                .build();
-    }
+                .build();    }
 
 
     @Override
