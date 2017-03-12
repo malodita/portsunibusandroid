@@ -17,7 +17,6 @@ public class ResponseSchema implements Serializable {
     @SerializedName("status")
     private String status;
     private long time;
-    private Location location;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     private final static long serialVersionUID = 2988541670284738700L;
 
@@ -36,11 +35,11 @@ public class ResponseSchema implements Serializable {
     }
 
     public Location getLocation() {
+        if(status.equals("OK")){
         return getRoutes().get(0).getLegs().get(0).getStartLocation().getLocation();
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
+        } else {
+            return null;
+        }
     }
 
     public String getStatus() {
