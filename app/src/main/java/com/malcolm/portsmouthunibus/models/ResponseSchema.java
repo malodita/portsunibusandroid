@@ -35,8 +35,9 @@ public class ResponseSchema implements Serializable {
     }
 
     public Location getLocation() {
-        if(status.equals("OK")){
-        return getRoutes().get(0).getLegs().get(0).getStartLocation().getLocation();
+        if (getRoutes().get(0) != null && getRoutes().get(0).getLegs().get(0) != null
+                && getRoutes().get(0).getLegs().get(0).getStartLocation() != null){
+            return getRoutes().get(0).getLegs().get(0).getStartLocation().getLocation();
         } else {
             return null;
         }
