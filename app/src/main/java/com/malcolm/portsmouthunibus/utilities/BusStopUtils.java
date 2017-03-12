@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This file contains methods to format
+ * This class contains some useful methods relating to formatting time and displaying maps and information
  */
 
 public final class BusStopUtils {
@@ -75,7 +76,7 @@ public final class BusStopUtils {
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            FirebaseCrash.log(TAG + "Parsing time failed");
+            FirebaseCrash.log(TAG + ": Parsing time failed");
             FirebaseCrash.report(e);
         }
         return finalTime;
@@ -91,11 +92,8 @@ public final class BusStopUtils {
      *
      * @throws JSONException If the array has an issue
      */
-    public static void drawPolyline(GoogleMap map, int nightMode, @Nullable Double time, @Nullable List<LatLng> list,
-                             @Nullable LatLng singleLocation) {
-        if (map == null) {
-            return;
-        }
+    public static void drawPolyline(@NonNull GoogleMap map, int nightMode, @Nullable Double time, @Nullable List<LatLng> list,
+                                    @Nullable LatLng singleLocation) {
         if (singleLocation != null) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(singleLocation, 16f));
             MarkerOptions markerOptions = new MarkerOptions()
@@ -104,7 +102,6 @@ public final class BusStopUtils {
         } else {
             String formattedTime = formatTime(time.intValue());
             int last = (list.size() - 1);
-            LatLng currentLocation = list.get(0);
             LatLng targetLocation = list.get(last);
             int color;
             if (nightMode == Configuration.UI_MODE_NIGHT_YES) {
