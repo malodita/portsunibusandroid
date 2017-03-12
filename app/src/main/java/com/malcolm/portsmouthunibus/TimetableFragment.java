@@ -93,9 +93,8 @@ public class TimetableFragment extends Fragment implements
         firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
         View rootView = inflater.inflate(R.layout.fragment_timetable, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        SharedPreferences currentHomeStopPref = getActivity().getSharedPreferences(getString(R.string.preferences_home_bus_stop_key), 0);
         setUpSpinner(spinner);
-        int stopToShow = currentHomeStopPref.getInt(getString(R.string.preferences_home_bus_stop_key), 2);
+        int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), 2);
         if (getArguments() != null) {
             stopToShow = getArguments().getInt(getString(R.string.shortcut_specific_timetable));
             setUpRecyclerView(recyclerView, 0, true);
