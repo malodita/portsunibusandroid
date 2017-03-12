@@ -30,7 +30,8 @@ public class TopFragmentAdapter extends EpoxyAdapter {
         } else {
             home = new HomeStopModel_().visibility(true)
                     .stopHero(homeCard.get(1).toString())
-                    .timeHero(homeCard.get(2).toString());
+                    .timeHero(homeCard.get(2).toString())
+                    .isHoliday(Boolean.parseBoolean(homeCard.get(3).toString()));
         }
         boolean mapsCardAllowed = (Boolean) mapCard.get(0);
         int playServices = (int) mapCard.get(1);
@@ -80,9 +81,14 @@ public class TopFragmentAdapter extends EpoxyAdapter {
 
 
     public void instantCard(ArrayList<Object> array) {
-        //Check to ensure that reinsert doesnt happen if already displayed
-        if (!instant.isShown()) {
-            insertModelAfter(instant, home);
+        //Check to see if instant card is already added
+        if (!models.contains(instant)) {
+            //If it is not added, check to see where to insert
+            if (map.isShown()) {
+                insertModelAfter(instant, home);
+            } else {
+                addModel(instant);
+            }
         } else {
             notifyModelChanged(instant, array);
         }
