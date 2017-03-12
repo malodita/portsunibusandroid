@@ -270,12 +270,16 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         sequence.targets(targets);
         sequence.listener(new TapTargetSequence.Listener() {
             @Override
+            public void onSequenceStep(TapTarget lastTarget) {
+
+            }
+
+            @Override
             public void onSequenceFinish() {
                 sharedPreferences.edit()
                         .putBoolean(getString(R.string.preferences_onboarding_2_key), true)
                         .apply();
             }
-
             @Override
             public void onSequenceCanceled(TapTarget lastTarget) {
             }

@@ -545,6 +545,10 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     public void onResponse(Call<ResponseSchema> call, Response<ResponseSchema> response) {
         if (!response.isSuccessful()) {
             //If the response is not code 200-300
+            Snackbar snackbar = Snackbar.make(layout, getString(R.string.error_server_response), Snackbar.LENGTH_LONG);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
+            snackbar.show();
+            adapter.noConnection();
             return;
         }
         ResponseSchema responseSchema = response.body();
@@ -606,7 +610,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         adapter.noInternet();
         if (getContext() != null) {
             Snackbar snackbar = Snackbar.make(layout,
-                    "Error getting response from server", Snackbar.LENGTH_LONG);
+                    getString(R.string.error_server_response), Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
             FirebaseCrash.log(TAG + ": Error making API request");
