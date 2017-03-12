@@ -381,7 +381,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor = queryData("select * from Timetable where id=" + busId + " order by id");
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
-                        for (int i = 1; i <= 14; i++) {
+                        for (int i = 1; i < cursor.getColumnCount(); i++) {
                             if (cursor.getString(i) != null) {
                                 Times times = new Times();
                                 times.setDestination(cursor.getColumnName(i));
