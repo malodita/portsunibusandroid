@@ -27,7 +27,9 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
     @EpoxyAttribute
     String stopHero;
     @EpoxyAttribute
-    Boolean visibility;
+    boolean visibility;
+    @EpoxyAttribute
+    boolean isHoliday;
 
 
     @Override
@@ -39,6 +41,12 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
             holder.minutes.setVisibility(View.GONE);
             holder.error.setVisibility(View.VISIBLE);
             holder.error.setText(stopHero);
+        } else if (isHoliday) {
+            holder.intro.setVisibility(View.GONE);
+            holder.timeHero.setVisibility(View.GONE);
+            holder.minutes.setVisibility(View.GONE);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.error.setText(R.string.error_bank_holiday);
         } else {
             holder.stopHero.setText(stopHero);
             updateViewHolder(holder);
