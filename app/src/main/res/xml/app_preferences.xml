@@ -4,20 +4,20 @@
     <android.support.v7.preference.PreferenceCategory
         android:title="Appearance">
         <SwitchPreference
-            android:title="Night mode"
+            android:defaultValue="true"
+            android:key="@string/preferences_night_mode"
             android:summaryOff="Uses the day theme only"
             android:summaryOn="Switches to a dark theme at night"
-            android:key="@string/preferences_night_mode"
-            android:defaultValue="true"/>
+            android:title="Night mode"/>
     </android.support.v7.preference.PreferenceCategory>
     <android.support.v7.preference.PreferenceCategory
         android:title="Cards">
         <SwitchPreference
-            android:title="Show map card"
+            android:defaultValue="true"
+            android:key="@string/preferences_maps_card"
             android:summaryOff="The card with your closest stop is hidden"
             android:summaryOn="The card with your closest stop is shown"
-            android:key="@string/preferences_maps_card"
-            android:defaultValue="true"/>
+            android:title="Show map card"/>
     </android.support.v7.preference.PreferenceCategory>
     <android.support.v7.preference.PreferenceCategory
         android:title="Reset to Defaults">
@@ -28,17 +28,19 @@
             android:title="Reset home stop"
             />
         <com.malcolm.portsmouthunibus.settings.AlertDialogPreference
+            android:enabled="false"
             android:key="@string/preference_shortcuts_reset"
             android:summary="This is only available to phones running Android 7.1 and above."
             android:title="Clear shortcuts"
-            android:enabled="false"
             />
     </android.support.v7.preference.PreferenceCategory>
-    <Preference android:title="About">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.malcolm.portsmouthunibus"
-            android:targetClass="com.malcolm.portsmouthunibus.settings.AboutActivity"/>
-    </Preference>
-
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Other">
+        <Preference android:title="About">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.malcolm.portsmouthunibus.settings.AboutActivity"
+                android:targetPackage="com.malcolm.portsmouthunibus"/>
+        </Preference>
+    </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>
