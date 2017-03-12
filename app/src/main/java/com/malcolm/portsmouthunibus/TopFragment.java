@@ -384,7 +384,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         long cacheTime = System.currentTimeMillis() - cacheDate;
         if (lastLocation.distanceTo(closest) < 120) {
             sendMapInfoToAdapter(closest.getProvider());
-        } else if (cacheTime > 120000 || cacheDate == 0) {
+        } else if (cacheTime > 180000 || cacheDate == 0) {
             sendDirectionsRequest(lastLocation, closest);
         } else if (location != null && lastLocation.distanceTo(location) > 600) {
             sendDirectionsRequest(lastLocation, closest);
