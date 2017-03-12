@@ -375,37 +375,57 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             return;
         }
         long cacheDate = 0;
-        Location location = null;
+        Location cachedLocation = null;
         ResponseSchema responseSchema = retrieveResponseFromCache();
         if (responseSchema != null) {
             cacheDate = responseSchema.getTime();
-            location = responseSchema.getLocation();
+            cachedLocation = responseSchema.getLocation();
         }
         long cacheTime = System.currentTimeMillis() - cacheDate;
-        if (lastLocation.distanceTo(closest) < 120) {
-            sendMapInfoToAdapter(closest.getProvider());
-        } else if (cacheTime > 180000 || cacheDate == 0) {
-            sendDirectionsRequest(lastLocation, closest);
-        } else if (location != null && lastLocation.distanceTo(location) > 600) {
-            sendDirectionsRequest(lastLocation, closest);
+        //If the cache exists
+        if (cachedLocation != null) {
+            //If the distance between the last location and  the closest stop < 120 metres
+            if (lastLocation.distanceTo(closest) < 120){
+                //If so a near warning is sent
+                sendMapInfoToAdapter(closest.getProvider());
+            } else {//Greater than 120 metres
+                //If the distance between the cached location and last location < 150 metres
+                if (cachedLocation.distanceTo(lastLocation) < 150){
+                    //The cached location is sent
+                    sendCachedLocationToAdapter(responseSchema, closest);
+                } else {
+                    if (cacheTime > 180000){
+                        //If the cached item has expired
+                        sendDirectionsRequest(lastLocation, closest);
+                    } else {
+                        sendCachedLocationToAdapter(responseSchema, closest);
+                    }
+                }
+            }
         } else {
-            Route route = responseSchema.getRoutes().get(0);
-            String summary = route.getSummary();
-            String polyline = route.getOverviewPolyline().getPoints();
-            double time = route.getLegs().get(0).getDuration().getValue();
-            ArrayList<Object> list = new ArrayList<>();
+            //If it doesn't exist a API request is sent
+            sendDirectionsRequest(lastLocation, closest);
+        }
+    }
+
+
+    private void sendCachedLocationToAdapter(ResponseSchema responseSchema, Location closest){
+        Route route = responseSchema.getRoutes().get(0);
+        String summary = route.getSummary();
+        String polyline = route.getOverviewPolyline().getPoints();
+        double time = route.getLegs().get(0).getDuration().getValue();
+        ArrayList<Object> list = new ArrayList<>();
             /*Packs into locationReady() in this order
                 0 - String: The name of the closest stop
                 1 - Double: Time to closest stop
                 2 - String: Polyline
                 3 - String: Route summary (Not currently used)
             */
-            list.add(closest.getProvider());
-            list.add(time);
-            list.add(polyline);
-            list.add(summary);
-            adapter.locationReady(list);
-        }
+        list.add(closest.getProvider());
+        list.add(time);
+        list.add(polyline);
+        list.add(summary);
+        adapter.locationReady(list);
     }
 
     private void instantCardCheck(Location location, Location closest) {
@@ -441,6 +461,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     /**
      * If the device is fairly close to the nearest stop, it will manually add the information to
      * the maps card instead of sending an API request for directions
+     *
      * @param provider The name of the closest stop
      */
     private void sendMapInfoToAdapter(String provider) {
@@ -474,8 +495,9 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * Sets up the instantCard card and associated handler, {@link InstantCardTask most of the work
      * is done in the asynctask associated with the runnable} {@link InstantCard}. Info is placed in
      * an array of type object in following order <p> 0: timeHero </p> 1: stopHero <p> This method
-     * will only be called if the user is within 60 metres of a stop. </p> It also checks if the closest
-     * stop is IMS Eastney (if the date is not a weekday) as well as if it is a bank holiday
+     * will only be called if the user is within 60 metres of a stop. </p> It also checks if the
+     * closest stop is IMS Eastney (if the date is not a weekday) as well as if it is a bank
+     * holiday
      *
      * @return A boolean indicating success establishing the instant card
      */
