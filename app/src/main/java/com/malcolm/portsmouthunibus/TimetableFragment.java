@@ -66,6 +66,7 @@ public class TimetableFragment extends Fragment implements
     CoordinatorLayout layout;
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreferences;
+    private boolean spinnerReady = false;
 
 
     public TimetableFragment() {
@@ -189,8 +190,11 @@ public class TimetableFragment extends Fragment implements
         stopToSave = position;
         setUpRecyclerView(recyclerView, newStopToShow, false);
         noTimetable.setVisibility(View.GONE);
-        bundle.putString("new_stop", spinnerArray.getItem(newStopToShow).toString());
-        firebaseAnalytics.logEvent("timetable_changed_stop", bundle);
+        if (spinnerReady) {
+            bundle.putString("new_stop", spinnerArray.getItem(newStopToShow).toString());
+            firebaseAnalytics.logEvent("timetable_changed_stop", bundle);
+        }
+        spinnerReady = true;
     }
 
     @Override
