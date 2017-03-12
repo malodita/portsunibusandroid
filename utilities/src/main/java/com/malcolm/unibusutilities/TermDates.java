@@ -15,6 +15,8 @@ import java.util.List;
  */
 
 public final class TermDates {
+    private static final DateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
+    //Uni dates
     private static final String EASTER2017START = "31-03-2017";
     private static final String EASTER2017END = "24-04-2017";
     private static final String SUMMER2017START = "02-06-2017";
@@ -26,8 +28,30 @@ public final class TermDates {
     private static final String SUMMER2018START = "01-06-2018";
     private static final String SUMMER2018END = "14-09-2018";//Provisional
 
+    //Bank holidays
+    private static final String EASTERMONDAY2017 = "17-04-2017";
+    private static final String GOODFRIDAY2017 = "14-04-2017";
+    private static final String EARLYMAY2017 = "01-05-2017";
+    private static final String SPRING2017 = "29-05-2017";
+    private static final String SUMMER2017 = "28-08-2017";
+    private static final String CHRISTMASDAY2017 = "25-12-2017";
+    private static final String BOXINGDAY2017 = "26-12-2017";
+    private static final String NEWYEARS2018 = "01-01-2018";
+    private static final String GOODFRIDAY2018 = "30-03-2018";
+    private static final String EASTERMONDAY2018 = "02-04-2018";
+    private static final String EARLYMAY2018 = "07-05-2018";
+    private static final String SPRING2018 = "28-05-2018";
+    private static final String SUMMER2018 = "27-08-2018";
+    private static final String CHRISTMASDAY2018 = "25-12-2018";
+    private static final String BOXINGDAY2018 = "26-12-2018";
 
-    public static boolean isHoliday(){
+    private static final String[] BANKHOLIDAYS = new String[]{
+            GOODFRIDAY2017, EASTERMONDAY2017, EARLYMAY2017, SPRING2017, SUMMER2017, CHRISTMASDAY2017,
+            BOXINGDAY2017, NEWYEARS2018, GOODFRIDAY2018, EASTERMONDAY2018, EARLYMAY2018, SPRING2018,
+            SUMMER2018, CHRISTMASDAY2018, BOXINGDAY2018};
+
+
+    public static boolean isHoliday() {
         Date today = Calendar.getInstance().getTime();
         List<Date> easter17 = makeDateArray(EASTER2017START, EASTER2017END);
         List<Date> summer17 = makeDateArray(SUMMER2017START, SUMMER2017END);
@@ -44,9 +68,9 @@ public final class TermDates {
     }
 
     @SuppressLint("SwitchIntDef")
-    public static boolean isWeekend(){
+    public static boolean isWeekend() {
         int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        switch (day){
+        switch (day) {
             case Calendar.SATURDAY:
                 return true;
             case Calendar.SUNDAY:
@@ -54,12 +78,32 @@ public final class TermDates {
             default:
                 return false;
         }
+    }
 
+    public static boolean isBankHoliday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear(Calendar.HOUR);
+        calendar.clear(Calendar.HOUR_OF_DAY);
+        calendar.clear(Calendar.MINUTE);
+        calendar.clear(Calendar.SECOND);
+        calendar.clear(Calendar.MILLISECOND);
+        Date today = calendar.getTime();
+        try {
+            for (String BANKHOLIDAY : BANKHOLIDAYS) {
+                Date holiday = (df1.parse(BANKHOLIDAY));
+                if (today.compareTo(holiday) == 0) {
+                    return true;
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private static List<Date> makeDateArray(String start, String end) {
         ArrayList<Date> dates = new ArrayList<>();
-        @SuppressLint("SimpleDateFormat") DateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
+        @SuppressLint("SimpleDateFormat")
 
         Date date1 = null;
         Date date2 = null;
@@ -79,13 +123,13 @@ public final class TermDates {
         cal2.setTime(date2);
 
         while (!cal1.after(cal2)) {
-            dates.add(cal1.getTime());
-            cal1.add(Calendar.DATE, 1);
             cal1.clear(Calendar.HOUR);
             cal1.clear(Calendar.HOUR_OF_DAY);
             cal1.clear(Calendar.MINUTE);
             cal1.clear(Calendar.SECOND);
             cal1.clear(Calendar.MILLISECOND);
+            cal1.add(Calendar.DATE, 1);
+            dates.add(cal1.getTime());
         }
         return dates;
     }
