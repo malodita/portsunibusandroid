@@ -67,6 +67,7 @@
     <string name="firebase_specific_shortcut_used" translatable="false">specific_shortcut_used</string>
     <string name="firebase_map_marker_click" translatable="false">map_marker_click</string>
     <string name="firebase_timetable_detail_request" translatable="false">timetable_detail_requested</string>
+    <string name="error_server_response">Error getting response from server</string>
 
 
     <string-array name="bus_stops_home">
