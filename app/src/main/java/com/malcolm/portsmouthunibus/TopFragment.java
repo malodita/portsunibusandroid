@@ -26,7 +26,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -340,15 +339,13 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            Toast.makeText(getContext(), "Location permission not granted", Toast.LENGTH_SHORT).show();
             return;
         }
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
             closest = BusStops.getClosestStop(lastLocation);
-            boolean isMapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-            if (isMapCardAllowed) {
+            boolean mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
+            if (mapCardAllowed) {
                 getDirections(lastLocation, closest);
             } else {
                 adapter.hideMapsCard();
@@ -388,9 +385,9 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             if (lastLocation.distanceTo(closest) < 120){
                 //If so a near warning is sent
                 sendMapInfoToAdapter(closest.getProvider());
-            } else {//Greater than 120 metres
-                //If the distance between the cached location and last location < 150 metres
-                if (cachedLocation.distanceTo(lastLocation) < 150){
+            } else {
+                //If the distance between the cached location and last location < 100 metres
+                if (cachedLocation.distanceTo(lastLocation) < 100){
                     //The cached location is sent
                     sendCachedLocationToAdapter(responseSchema, closest);
                 } else {
@@ -430,7 +427,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     private void instantCardCheck(Location location, Location closest) {
         float distance = location.distanceTo(closest);
-        if (distance <= 40) {
+        if (distance <= 45) {
             isInstantCardDisplayed = setupInstantCard();
         } else {
             removeInstantCard();
