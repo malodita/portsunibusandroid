@@ -83,13 +83,13 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     private TopFragmentAdapter adapter;
     private ArrayList<Integer> stopTimes;
     private Unbinder unbinder;
-    private Location closest;
     private DatabaseHelper databaseHelper;
     private Boolean isInstantCardDisplayed = false;
     private String[] busStops;
     private Call<ResponseSchema> call;
     private InstantCard instantCard;
     private SharedPreferences sharedPreferences;
+    private Location closest;
 
     public TopFragment() {
         // Required empty public constructor
@@ -343,14 +343,15 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         }
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
-            closest = BusStops.getClosestStop(lastLocation);
+            Location closestStop = BusStops.getClosestStop(lastLocation);
+            closest = closestStop;
             boolean mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
             if (mapCardAllowed) {
-                getDirections(lastLocation, closest);
+                getDirections(lastLocation, closestStop);
             } else {
                 adapter.hideMapsCard();
             }
-            instantCardCheck(lastLocation, closest);
+            instantCardCheck(lastLocation, closestStop);
         }
 
     }
@@ -364,7 +365,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * set up or removed.</p>
      *
      * @param lastLocation The last location recorded
-     * @param closest      The location of the closest stop
+     * @param closest      The location of the closest stop, if null the method will exit early
      */
     private void getDirections(@NonNull Location lastLocation, Location closest) {
         if (closest == null) {
@@ -384,7 +385,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             //If the distance between the last location and  the closest stop < 120 metres
             if (lastLocation.distanceTo(closest) < 120){
                 //If so a near warning is sent
-                sendMapInfoToAdapter(closest.getProvider());
+                sendMapInfoToAdapter(closest);
             } else {
                 //If the distance between the cached location and last location < 100 metres
                 if (cachedLocation.distanceTo(lastLocation) < 100){
@@ -426,9 +427,12 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     private void instantCardCheck(Location location, Location closest) {
+        if (closest == null){
+            return;
+        }
         float distance = location.distanceTo(closest);
         if (distance <= 45) {
-            isInstantCardDisplayed = setupInstantCard();
+            isInstantCardDisplayed = setupInstantCard(closest);
         } else {
             removeInstantCard();
         }
@@ -459,11 +463,11 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * If the device is fairly close to the nearest stop, it will manually add the information to
      * the maps card instead of sending an API request for directions
      *
-     * @param provider The name of the closest stop
+     * @param closest The closest stop
      */
-    private void sendMapInfoToAdapter(String provider) {
+    private void sendMapInfoToAdapter(Location closest) {
         ArrayList<Object> list = new ArrayList<>();
-        list.add(provider);
+        list.add(closest.getProvider());
         double time = -1;
         list.add(time);
         list.add(closest);
@@ -498,7 +502,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      *
      * @return A boolean indicating success establishing the instant card
      */
-    private boolean setupInstantCard() {
+    private boolean setupInstantCard(Location closest) {
         if (TermDates.isBankHoliday()) {
             return false;
         }
