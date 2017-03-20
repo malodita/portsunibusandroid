@@ -40,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private DatabaseHelper(Context context, boolean isWearable) {
         super(context, null, null, 1);
         if (isWearable) {
-            DB_PATH = context.getFilesDir().getPath();
+            DB_PATH = context.getFilesDir().getPath() + "/";
         } else {
             DB_PATH = ContextCompat.getDataDir(context) + "/databases/";
         }
@@ -200,11 +200,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Unlike the alternative method {@link #getTimesForArray(int)}, this will be able to search any stop
      * as long as the correct string has been passed into the method (This string must be in brackets)
      * </p>
-     * @param stop The string used to search the database
+     * @param busStop The string used to search the database
      *
      * @return An arraylist of Integers representing the times the bus will stop in seconds
      */
-    public ArrayList<Integer> getTimesForArray(String stop) {
+    public ArrayList<Integer> getTimesForArray(String busStop) {
+        String stop = "[" + busStop + "]";
         ArrayList<Integer> arrayList = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
@@ -327,7 +328,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * //Todo: Change javadoc
      */
     @Nullable
-    public ArrayList<Times> getTimesArray(int stop) {
+    public ArrayList<Times> getTimesArray(int stop, boolean is24Hours) {
         ArrayList<Times> arrayList = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
@@ -340,7 +341,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             if (cursor.getString(stop) != null) {
                                 Times times = new Times();
                                 times.setDestination(cursor.getColumnName(stop));
-                                times.setTime(formatTime(cursor.getString(stop)));
+                                times.setTime(formatTime(cursor.getString(stop), is24Hours));
                                 times.setId(cursor.getInt(0));
                                 if (cursor.getInt(0) == 47 && stop >= 7) {
                                     arrayList.add(times);
@@ -372,7 +373,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return arrayList;
     }
 
-    public ArrayList<Times> getDataForList(int busId) {
+    public ArrayList<Times> getDataForList(int busId, boolean is24Hours) {
         ArrayList<Times> array = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
@@ -385,7 +386,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             if (cursor.getString(i) != null) {
                                 Times times = new Times();
                                 times.setDestination(cursor.getColumnName(i));
-                                times.setTime(formatTime(cursor.getString(i)));
+                                times.setTime(formatTime(cursor.getString(i), is24Hours));
                                 array.add(times);
                             }
                         }
@@ -406,21 +407,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return array;
     }
 
-    private String formatTime(String input) throws ParseException {
-        String output;
-        if (Build.VERSION.SDK_INT >= 24) {
-            android.icu.text.SimpleDateFormat before = new android.icu.text.SimpleDateFormat("s");
-            Date date = before.parse(input);
-            android.icu.text.SimpleDateFormat after = new android.icu.text.SimpleDateFormat("HH:mm");
-            output = (after.format(date));
+    private String formatTime(String input, boolean is24Hours) throws ParseException {
+        StringBuilder output = new StringBuilder();
+        if (is24Hours) {
+            if (Build.VERSION.SDK_INT >= 24) {
+                android.icu.text.SimpleDateFormat before = new android.icu.text.SimpleDateFormat("s");
+                Date date = before.parse(input);
+                android.icu.text.SimpleDateFormat after = new android.icu.text.SimpleDateFormat("HH:mm");
+                output.append(after.format(date));
+            } else {
+                java.text.SimpleDateFormat before = new java.text.SimpleDateFormat("s");
+                Date date = before.parse(input);
+                java.text.SimpleDateFormat after = new java.text.SimpleDateFormat("HH:mm");
+                after.format(date);
+                output.append(after.format(date));
+            }
         } else {
-            java.text.SimpleDateFormat before = new java.text.SimpleDateFormat("s");
-            Date date = before.parse(input);
-            java.text.SimpleDateFormat after = new java.text.SimpleDateFormat("HH:mm");
-            after.format(date);
-            output = (after.format(date));
+            if (Build.VERSION.SDK_INT >= 24) {
+                android.icu.text.SimpleDateFormat before = new android.icu.text.SimpleDateFormat("s");
+                Date date = before.parse(input);
+                android.icu.text.SimpleDateFormat after = new android.icu.text.SimpleDateFormat("h:mm");
+                output.append(after.format(date));
+            } else {
+                java.text.SimpleDateFormat before = new java.text.SimpleDateFormat("s");
+                Date date = before.parse(input);
+                java.text.SimpleDateFormat after = new java.text.SimpleDateFormat("h:mm");
+                after.format(date);
+                output.append(after.format(date));
+            }
+            if (Integer.valueOf(input) >= 43200){
+                output.append(" pm");
+            } else {
+                output.append(" am");
+            }
         }
-        return output;
+        return output.toString();
     }
 }
 

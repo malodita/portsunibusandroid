@@ -14,7 +14,7 @@ import com.malcolm.portsmouthunibus.R;
  * Created by Malcolm on 26/12/2016. The settings fragment attached to the SettingsActivity
  */
 
-public class PreferencesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PreferencesFragment extends PreferenceFragmentCompat{
     private final String homeBusStopPref = "com.malcolm.portsmouthunibus.homebusstop";
     private final String shortcutsPref = "com.malcolm.portsmouthunibus.shortcuts";
     private final String nightMode = "com.malcolm.portsmouthunibus.nightmode";
@@ -35,8 +35,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Sha
     @Override
     public void onResume() {
         super.onResume();
-        // FIXME: 03/02/2017 Shared prefs still broken
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -63,12 +61,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Sha
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 }

@@ -64,6 +64,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     private FirebaseAnalytics firebaseAnalytics;
     private SharedPreferences sharedPreferences;
     private boolean nightMode;
+    private boolean timeFormat;
 
     /**
      * Static method to enable DayNight
@@ -81,13 +82,14 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         super.onCreate(savedInstanceState);
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         sharedPreferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
-        boolean onboarding = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_key), false);
+        boolean onboarding = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding), false);
         //If initial app onboarding has happened or not to set the content screen
         if (!onboarding) {
             startOnboarding();
         } else {
-            boolean onboarding2 = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2_key), false);
+            boolean onboarding2 = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
             nightMode = sharedPreferences.getBoolean(getString(R.string.preferences_night_mode), true);
+            timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
             nightModeSwitching(nightMode);
             setContentView(R.layout.activity_top);
             if (ContextCompat.checkSelfPermission(this,
@@ -99,7 +101,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 isGooglePlayServicesAvailable(this);
             }
             ButterKnife.bind(this);
-            stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), 1);
+            stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 1);
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.icons));
             toolbar.inflateMenu(R.menu.action_bar_items);
             setSupportActionBar(toolbar);
@@ -157,7 +159,8 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     @Override
     protected void onResume() {
         boolean newNightMode  = sharedPreferences.getBoolean(getString(R.string.preferences_night_mode), true);
-        if (newNightMode != nightMode){
+        boolean newTimeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
+        if (newNightMode != nightMode || newTimeFormat != timeFormat){
             nightModeSwitching(newNightMode);
             recreate();
         }
@@ -222,7 +225,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 "Home is where the heart is", "Tap me to set your home stop")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
-                .textColor(R.color.icons)
+                .textColor(R.color.textview_inverse_color)
                 .transparentTarget(true)
                 .drawShadow(true)
                 .cancelable(false)
@@ -231,7 +234,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 "Tap me", "To view timetables for all stops")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
-                .textColor(R.color.icons)
+                .textColor(R.color.textview_inverse_color)
                 .transparentTarget(true)
                 .drawShadow(true)
                 .cancelable(true)
@@ -242,7 +245,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                     "If you want to see stop locations", "Enable the location permission for the app in your phone settings")
                     .targetCircleColor(R.color.primary)
                     .outerCircleColor(R.color.onboarding_2_outer_circle)
-                    .textColor(R.color.icons)
+                    .textColor(R.color.textview_inverse_color)
                     .cancelable(true)
                     .transparentTarget(true)
                     .drawShadow(true)
@@ -252,7 +255,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                     "Tap me", "To view all the stop locations")
                     .targetCircleColor(R.color.primary)
                     .outerCircleColor(R.color.onboarding_2_outer_circle)
-                    .textColor(R.color.icons)
+                    .textColor(R.color.textview_inverse_color)
                     .transparentTarget(true)
                     .drawShadow(true)
                     .cancelable(false)
@@ -262,7 +265,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 "A quick note", "Buses can sometimes run late, especially at rush hour!")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
-                .textColor(R.color.icons)
+                .textColor(R.color.textview_inverse_color)
                 .transparentTarget(true)
                 .cancelable(true)
                 .drawShadow(true)
@@ -277,7 +280,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             @Override
             public void onSequenceFinish() {
                 sharedPreferences.edit()
-                        .putBoolean(getString(R.string.preferences_onboarding_2_key), true)
+                        .putBoolean(getString(R.string.preferences_onboarding_2), true)
                         .apply();
             }
             @Override
@@ -401,13 +404,13 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 int selected = which + 1;
-                                int current = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), 0);
+                                int current = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 0);
                                 if (selected == current) {
                                     return;
                                 }
                                 String[] array = getResources().getStringArray(R.array.bus_stops_home);
                                 firebaseLog(getString(R.string.firebase_home_stop_changed), getString(R.string.firebase_stop_id), array[selected - 1]);
-                                sharedPreferences.edit().putInt(getString(R.string.preferences_home_bus_stop_key), selected).apply();
+                                sharedPreferences.edit().putInt(getString(R.string.preferences_home_bus_stop), selected).apply();
                                 Snackbar snackbar = Snackbar.make(layout, "Home stop changed", Snackbar.LENGTH_SHORT);
                                 snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
                                 snackbar.show();

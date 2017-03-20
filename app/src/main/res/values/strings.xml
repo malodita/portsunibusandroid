@@ -43,13 +43,14 @@
 
     <!--Strings related to preferences, shortcuts and intents-->
     <string name="preferences_name">com.malcolm.portsmouthunibus_preferences</string>
-    <string name="preferences_home_bus_stop_key" translatable="false">com.malcolm.portsmouthunibus.homebusstop</string>
+    <string name="preferences_home_bus_stop" translatable="false">com.malcolm.portsmouthunibus.homebusstop</string>
     <string name="preferences_maps_card" translatable="false">com.malcolm.portsmouthunibus.mapscard</string>
     <string name="preferences_night_mode" translatable="false">com.malcolm.portsmouthunibus.nightmode</string>
-    <string name="preferences_onboarding_key" translatable="false">com.malcolm.portsmouthunibus.onboarding</string>
-    <string name="preferences_onboarding_2_key" translatable="false">com.malcolm.portsmouthunibus.onboarding2</string>
-    <string name="preferences_onboarding_3_key" translatable="false">com.malcolm.portsmouthunibus.onboarding3</string>
-    <string name="preference_shortcuts_reset" translatable="false">com.malcolm.portsmouthunibus.shortcuts</string>
+    <string name="preferences_onboarding" translatable="false">com.malcolm.portsmouthunibus.onboarding</string>
+    <string name="preferences_onboarding_2" translatable="false">com.malcolm.portsmouthunibus.onboarding2</string>
+    <string name="preferences_onboarding_3" translatable="false">com.malcolm.portsmouthunibus.onboarding3</string>
+    <string name="preferences_shortcuts_reset" translatable="false">com.malcolm.portsmouthunibus.shortcuts</string>
+    <string name="preferences_24hourclock" translatable="false">com.malcolm.portsmouthunibus.24hourclock</string>
     <string name="shortcut_home_timetable_name_long">Home Timetable</string>
     <string name="shortcut_home_timetable_name_short">Home Stop</string>
     <string name="shortcut_home_timetable" translatable="false">home_timetable</string>

@@ -37,7 +37,7 @@ import com.malcolm.portsmouthunibus.adapters.TopFragmentAdapter;
 import com.malcolm.portsmouthunibus.models.ResponseSchema;
 import com.malcolm.portsmouthunibus.models.Route;
 import com.malcolm.portsmouthunibus.utilities.BusStopUtils;
-import com.malcolm.portsmouthunibus.utilities.ResponseParser;
+import com.malcolm.portsmouthunibus.utilities.NetworkRequest;
 import com.malcolm.unibusutilities.BusStops;
 import com.malcolm.unibusutilities.DatabaseHelper;
 import com.malcolm.unibusutilities.TermDates;
@@ -110,7 +110,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_top, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
+        stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), DEFAULT_VALUE);
         googleApiClient = new GoogleApiClient.Builder(getContext().getApplicationContext())
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
@@ -299,7 +299,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     @Override
     public void onResume() {
         super.onResume();
-        int currentHome = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
+        int currentHome = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), DEFAULT_VALUE);
         //Checks the previous value of the stop to show
         if (stopToShow != 0) {
             //Checks if this value has been changed
@@ -322,7 +322,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     /**
-     * Starts the update for the timehero. If previously paused (meaning the runnable ins nonNull
+     * Starts the update for the timehero. If previously paused (meaning the runnable is non Null
      * such as on rotation) it will post the runnable rather than create a new one.
      */
     public void updateTimeHero() {
@@ -487,8 +487,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 .baseUrl("https://maps.googleapis.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        ResponseParser responseParser = retrofit.create(ResponseParser.class);
-        call = responseParser.getResponse(current, target, "walking", BuildConfig.API_KEY);
+        NetworkRequest networkRequest = retrofit.create(NetworkRequest.class);
+        call = networkRequest.getResponse(current, target, "walking", BuildConfig.API_KEY);
         call.enqueue(this);
     }
 
@@ -511,7 +511,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 return false;
             }
         }
-        ArrayList<Integer> arrayList = databaseHelper.getTimesForArray("[" + closest.getProvider() + "]");
+        ArrayList<Integer> arrayList = databaseHelper.getTimesForArray(closest.getProvider());
         if (arrayList == null) {
             Snackbar snackbar = Snackbar.make(layout, "Error displaying the closest stop card", Snackbar.LENGTH_SHORT);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
@@ -632,7 +632,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         if (TermDates.isBankHoliday()) {
             return;
         }
-        stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), DEFAULT_VALUE);
+        stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), DEFAULT_VALUE);
         stopTimes = databaseHelper.getTimesForArray(stopToShow);
         if (homeRunnable != null) {
             handler.removeCallbacks(homeRunnable);

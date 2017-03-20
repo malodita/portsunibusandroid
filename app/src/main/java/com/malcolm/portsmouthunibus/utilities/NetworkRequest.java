@@ -10,7 +10,7 @@ import retrofit2.http.Query;
  * The retrofit interface used to send the API request.
  */
 
-public interface ResponseParser {
+public interface NetworkRequest {
 
     /**
      * This is the method used to obtain a response from the directions API.

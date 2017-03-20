@@ -94,7 +94,7 @@ public class IntroActivity extends MaterialIntroActivity {
         super.onFinish();
         SharedPreferences settings = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         settings.edit()
-                .putBoolean(getString(R.string.preferences_onboarding_key),true)
+                .putBoolean(getString(R.string.preferences_onboarding),true)
                 .apply();
         Intent view = new Intent(this, TopActivity.class);
         view.setAction(Intent.ACTION_MAIN);

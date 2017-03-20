@@ -94,7 +94,7 @@ public class TimetableFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_timetable, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         setUpSpinner(spinner);
-        int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop_key), 2);
+        int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 2);
         if (getArguments() != null) {
             stopToShow = getArguments().getInt(getString(R.string.shortcut_specific_timetable));
             setUpRecyclerView(recyclerView, 0, true);
@@ -134,7 +134,8 @@ public class TimetableFragment extends Fragment implements
             return;
         }
         if (!shortcutUsed) {
-            ArrayList<Times> array = databaseHelper.getTimesArray(stop);
+            boolean timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
+            ArrayList<Times> array = databaseHelper.getTimesArray(stop, timeFormat);
             if (adapter == null) {
                 recyclerView.setHasFixedSize(true);
                 adapter = new TimetableFragmentAdapter(getContext(), array);
@@ -239,7 +240,7 @@ public class TimetableFragment extends Fragment implements
      */
     @TargetApi(Build.VERSION_CODES.N_MR1)
     private void buildDialog() {
-        Boolean onboarding = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_3_key), false);
+        Boolean onboarding = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_3), false);
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setTitle("Add Shortcut")
                 .setMessage(R.string.dialog_create_shortcut)
@@ -291,14 +292,14 @@ public class TimetableFragment extends Fragment implements
                                 "Drag to your home screen for quick access")
                         .targetCircleColor(R.color.primary)
                         .outerCircleColor(R.color.onboarding_2_outer_circle)
-                        .textColor(R.color.icons)
+                        .textColor(R.color.textview_inverse_color)
                         .transparentTarget(true)
                         .drawShadow(true), new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
                         super.onTargetDismissed(view, userInitiated);
                         sharedPreferences.edit()
-                                .putBoolean(getString(R.string.preferences_onboarding_3_key), true)
+                                .putBoolean(getString(R.string.preferences_onboarding_3), true)
                                 .apply();
                     }
                 });

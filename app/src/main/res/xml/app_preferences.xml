@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="Appearance">
         <SwitchPreference
             android:defaultValue="true"
@@ -9,8 +9,15 @@
             android:summaryOff="Uses the day theme only"
             android:summaryOn="Switches to a dark theme at night"
             android:title="Night mode"/>
-    </android.support.v7.preference.PreferenceCategory>
-    <android.support.v7.preference.PreferenceCategory
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/preferences_24hourclock"
+            android:summaryOff="9:00 pm"
+            android:summaryOn="21:00"
+            android:title="Use 24-hour format"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="Cards">
         <SwitchPreference
             android:defaultValue="true"
@@ -18,23 +25,24 @@
             android:summaryOff="The card with your closest stop is hidden"
             android:summaryOn="The card with your closest stop is shown"
             android:title="Show map card"/>
-    </android.support.v7.preference.PreferenceCategory>
-    <android.support.v7.preference.PreferenceCategory
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="Reset to Defaults">
-
+        <!--suppress AndroidElementNotAllowed -->
         <com.malcolm.portsmouthunibus.settings.AlertDialogPreference
-            android:key="@string/preferences_home_bus_stop_key"
+            android:key="@string/preferences_home_bus_stop"
             android:summary="Resets the chosen default stop selected."
             android:title="Reset home stop"
             />
+        <!--suppress AndroidElementNotAllowed -->
         <com.malcolm.portsmouthunibus.settings.AlertDialogPreference
             android:enabled="false"
-            android:key="@string/preference_shortcuts_reset"
+            android:key="@string/preferences_shortcuts_reset"
             android:summary="This is only available to phones running Android 7.1 and above."
             android:title="Clear shortcuts"
             />
-    </android.support.v7.preference.PreferenceCategory>
-    <android.support.v7.preference.PreferenceCategory
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="Other">
         <Preference android:title="About">
             <intent
@@ -42,5 +50,5 @@
                 android:targetClass="com.malcolm.portsmouthunibus.settings.AboutActivity"
                 android:targetPackage="com.malcolm.portsmouthunibus"/>
         </Preference>
-    </android.support.v7.preference.PreferenceCategory>
-</android.support.v7.preference.PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>

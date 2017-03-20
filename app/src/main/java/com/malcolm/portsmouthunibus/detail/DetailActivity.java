@@ -45,7 +45,9 @@ public class DetailActivity extends AppCompatActivity {
          */
         int valueToGet = i.getIntExtra(getString(R.string.intent_list_position), 1);
         setActivityTitle(i);
-        ArrayList<Times> array = DatabaseHelper.getInstance(this).getDataForList(valueToGet);
+        boolean timeFormat = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE)
+                .getBoolean(getString(R.string.preferences_24hourclock), true);
+        ArrayList<Times> array = DatabaseHelper.getInstance(this).getDataForList(valueToGet, timeFormat);
         setUpRecyclerView(mRecyclerView, array);
     }
 

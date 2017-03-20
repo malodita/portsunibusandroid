@@ -20,9 +20,10 @@ import java.util.List;
 public class TimetableFragmentAdapter extends RecyclerView.Adapter<TimetableItemViewHolder>{
     private static final String TAG = "TimesAdaptor";
     private List<Times> times = Collections.emptyList();
+    private LayoutInflater inflater;
 
     public TimetableFragmentAdapter(Context context, ArrayList<Times> times)   {
-        LayoutInflater inflator = LayoutInflater.from(context);
+        inflater = LayoutInflater.from(context);
         this.times = times;
 
     }
@@ -32,7 +33,7 @@ public class TimetableFragmentAdapter extends RecyclerView.Adapter<TimetableItem
 
     @Override
     public TimetableItemViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_timetable, parent,false);
+        View view = inflater.inflate(R.layout.list_item_timetable, parent, false);
         return new TimetableItemViewHolder(view);
     }
 
