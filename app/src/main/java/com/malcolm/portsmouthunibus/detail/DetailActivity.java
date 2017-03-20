@@ -39,7 +39,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent i = getIntent();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        /**
+        /*
          * This gets the position that was clicked from the intent to be used to
          * display the correct timetable
          */
