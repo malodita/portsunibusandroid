@@ -323,6 +323,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @param stop The stop to display, if zero then it skips getting the array
      *
+     * @param is24Hours If the 12 hour or 24 hour format should be used
+     *
      * @return An arrayList of times ready for the adapter to use or null if no default stop is
      * selected
      * //Todo: Change javadoc

@@ -46,9 +46,6 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
     @Override
     public void onClick(View view) {
         Intent i = new Intent(view.getContext(), DetailActivity.class);
-        //Activity activity = (Activity) view.getContext();
-      /*  ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-                destinationTextView, "default");*/
         Bundle bundle = new Bundle();
         bundle.putInt("listPosition", position);
         bundle.putString("stop", destinationTextView.getText().toString());
@@ -58,8 +55,6 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
         i.putExtra("time", timeTextView.getText());
         analytics.logEvent(context.getString(R.string.firebase_timetable_detail_request), bundle);
         context.startActivity(i);
-        //context.startActivity(i, options.toBundle());
-        //Todo: When transitions are fixed, reenable
 
 
     }

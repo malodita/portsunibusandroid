@@ -21,7 +21,6 @@ import agency.tango.materialintroscreen.SlideFragmentBuilder;
  */
 
 public class IntroActivity extends MaterialIntroActivity {
-    //Todo: Finish Onboarding
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

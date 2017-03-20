@@ -317,7 +317,6 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         TimetableFragment timetableFragment = (TimetableFragment) manager.findFragmentByTag(TIMETABLETAG);
         MapsFragment mapsFragment = (MapsFragment) manager.findFragmentByTag(MAPSTAG);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        // TODO: 04/03/2017 Replace ft.replace with detatch attach
         switch (tabId) {
             case R.id.tab_place:
                 toolbar.setTitle(R.string.app_name);
@@ -398,7 +397,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.default_stop_icon:
-                AlertDialog dialog = new AlertDialog.Builder(this)
+                new AlertDialog.Builder(this)
                         .setTitle(R.string.select_default_stop)
                         .setItems(R.array.bus_stops_home, new DialogInterface.OnClickListener() {
                             @Override
