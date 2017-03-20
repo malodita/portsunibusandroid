@@ -72,7 +72,7 @@ public final class BusStops {
         Location goldsmithFratton = new Location("Goldsmith Avenue (adj Fratton Station)");
         goldsmithFratton.setLatitude(GOLDSMITHFRATTON.latitude);
         goldsmithFratton.setLongitude(GOLDSMITHFRATTON.longitude);
-        Location goldsmithOppLidl = new Location("Goldsmith Avenue (adj Fratton Station)");
+        Location goldsmithOppLidl = new Location("Goldsmith Avenue (opp Lidl)");
         goldsmithOppLidl.setLatitude(GOLDSMITHOPPLIDL.latitude);
         goldsmithOppLidl.setLongitude(GOLDSMITHOPPLIDL.longitude);
         Location imsEastney = new Location("IMS Eastney (Departures)");
@@ -99,6 +99,46 @@ public final class BusStops {
             }
         }
         return closest;
+    }
+
+    public static String getShortenedStopName(String longName){
+        String shortname = "";
+        switch (longName){
+            case "Langstone":
+                shortname = "Langstone";
+                break;
+            case "Locksway Road (for Milton Park)":
+                shortname = "Locksway Road";
+                break;
+            case "Goldsmith Avenue (adj Lidi)":
+                shortname = "Goldsmith Ave";
+                break;
+            case "Goldsmith Avenue (opp Fratton Station)":
+                shortname = "Fawcett Road";
+                break;
+            case "Winston Churchill Avenue (adj Ibis Hotel)":
+                shortname = "University";
+                break;
+            case "Cambridge Road (adj Nuffield Building)":
+                shortname = "Student Union";
+                break;
+            case "Winston Churchill Avenue (adj Law Courts)":
+                shortname = "Law Courts";
+                break;
+            case "Goldsmith Avenue (adj Fratton Station)":
+                shortname = "Fratton Station";
+                break;
+            case "Goldsmith Avenue (opp Lidl)":
+                shortname = "Goldsmith opp Lidl";
+                break;
+            case "Goldsmith Avenue adj Milton Park":
+                shortname = "Milton Park";
+                break;
+            case "IMS Eastney (Departures)":
+                shortname = "IMS Eastney";
+                break;
+        }
+        return shortname;
     }
 
     /**
