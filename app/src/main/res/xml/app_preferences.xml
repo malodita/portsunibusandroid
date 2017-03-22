@@ -25,6 +25,12 @@
             android:summaryOff="The card with your closest stop is hidden"
             android:summaryOn="The card with your closest stop is shown"
             android:title="Show map card"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/preferences_instant_card"
+            android:summaryOn="The next departure for a stop close to you is shown"
+            android:summaryOff="No departure card is shown for the stop closest to you"
+            android:title="Show closest stop departure card"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="Reset to Defaults">

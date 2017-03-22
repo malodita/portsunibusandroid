@@ -44,6 +44,7 @@
     <!--Strings related to preferences, shortcuts and intents-->
     <string name="preferences_name">com.malcolm.portsmouthunibus_preferences</string>
     <string name="preferences_home_bus_stop" translatable="false">com.malcolm.portsmouthunibus.homebusstop</string>
+    <string name="preferences_instant_card" translatable="false">com.malcolm.portsmouthunibus.instantcard</string>
     <string name="preferences_maps_card" translatable="false">com.malcolm.portsmouthunibus.mapscard</string>
     <string name="preferences_night_mode" translatable="false">com.malcolm.portsmouthunibus.nightmode</string>
     <string name="preferences_onboarding" translatable="false">com.malcolm.portsmouthunibus.onboarding</string>
@@ -56,8 +57,8 @@
     <string name="shortcut_home_timetable" translatable="false">home_timetable</string>
     <string name="shortcut_home_timetable_action" translatable="false">com.malcolm.portsmouthunibus.VIEW.TIMETABLE</string>
     <string name="shortcut_specific_timetable" translatable="false">specific_timetable</string>
-    <string name="shortcut_specific_timetable_action" translatable="false">com.malcolm.portsmouthunibus.VIEW.TIMETABLE.SPECIFIC</string>
-    <string name="intent_list_position">listPosition</string>
+    <string name="shortcut_specific_timetable_action" translatable="false">ECIFIC</string>
+    <string name="intent_list_position">com.malcolm.portsmouthunibus.VIEW.LIST.POSITION</string>
 
 
     <!--Strings related to firebase analytics-->

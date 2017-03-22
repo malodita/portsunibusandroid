@@ -432,32 +432,41 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     private void instantCardCheck(final boolean onResume) {
-        try {
-            Awareness.SnapshotApi.getLocation(googleApiClient).setResultCallback(new ResultCallback<LocationResult>() {
-                @Override
-                public void onResult(@NonNull LocationResult locationResult) {
-                    if (!locationResult.getStatus().isSuccess()) {
-                        Log.e(TAG, "Could not get location.");
-                        return;
-                    }
-                    Location location = locationResult.getLocation();
-                    Location closest = BusStops.getClosestStop(location);
-                    float distance = location.distanceTo(closest);
-                    if (distance <= 45) {
-                        if (onResume && isInstantCardDisplayed && instantCard != null) {
-                            handler.post(instantCard);
-                        } else {
-                            isInstantCardDisplayed = setupInstantCard(closest);
-                        }
-                    } else {
-                        removeInstantCard();
-                    }
-                }
-            });
-        } catch (SecurityException e){
-            Log.e(TAG, "instantCardCheck: Location permission not granted");
+        boolean instant = sharedPreferences.getBoolean(getString(R.string.preferences_instant_card), true);
+        if (!instant){
+            removeInstantCard();
+            return;
         }
-
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Awareness.SnapshotApi.getLocation(googleApiClient).setResultCallback(new ResultCallback<LocationResult>() {
+            @Override
+            public void onResult(@NonNull LocationResult locationResult) {
+                if (!locationResult.getStatus().isSuccess()) {
+                    Log.e(TAG, "Could not get location.");
+                    return;
+                }
+                Location location = locationResult.getLocation();
+                Location closest = BusStops.getClosestStop(location);
+                float distance = location.distanceTo(closest);
+                if (distance <= 45) {
+                    if (onResume && isInstantCardDisplayed && instantCard != null) {
+                        handler.post(instantCard);
+                    } else {
+                        isInstantCardDisplayed = setupInstantCard(closest);
+                    }
+                } else {
+                    removeInstantCard();
+                }
+            }
+        });
     }
 
     /**
