@@ -511,8 +511,13 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 return false;
             }
         }
-        ArrayList<Integer> arrayList = databaseHelper.getTimesForArray(closest.getProvider());
-        if (arrayList == null) {
+        String search;
+        if (closest.getProvider().equals("Langstone")) {
+            search = "Langstone Campus (for Departures only)";
+        } else {
+            search = closest.getProvider();
+        }
+        ArrayList<Integer> arrayList = databaseHelper.getTimesForArray(search);        if (arrayList == null) {
             Snackbar snackbar = Snackbar.make(layout, "Error displaying the closest stop card", Snackbar.LENGTH_SHORT);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
