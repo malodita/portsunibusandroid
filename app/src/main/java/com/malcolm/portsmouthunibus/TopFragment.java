@@ -23,13 +23,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.awareness.Awareness;
+import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.firebase.crash.FirebaseCrash;
@@ -114,6 +118,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         googleApiClient = new GoogleApiClient.Builder(getContext().getApplicationContext())
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
+                .addApi(Awareness.API)
                 .addOnConnectionFailedListener(this)
                 .build();
         return rootView;
@@ -315,6 +320,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         if (isInstantCardDisplayed && instantCard != null) {
             handler.post(instantCard);
         }
+        instantCardCheck(true);
         boolean mapCard = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
         if (!mapCard) {
             adapter.hideMapsCard();
@@ -351,9 +357,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             } else {
                 adapter.hideMapsCard();
             }
-            instantCardCheck(lastLocation, closestStop);
+            instantCardCheck(false);
         }
-
     }
 
     /**
@@ -383,16 +388,16 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         //If the cache exists
         if (cachedLocation != null) {
             //If the distance between the last location and  the closest stop < 120 metres
-            if (lastLocation.distanceTo(closest) < 120){
+            if (lastLocation.distanceTo(closest) < 120) {
                 //If so a near warning is sent
                 sendMapInfoToAdapter(closest);
             } else {
                 //If the distance between the cached location and last location < 100 metres
-                if (cachedLocation.distanceTo(lastLocation) < 100){
+                if (cachedLocation.distanceTo(lastLocation) < 100) {
                     //The cached location is sent
                     sendCachedLocationToAdapter(responseSchema, closest);
                 } else {
-                    if (cacheTime > 180000){
+                    if (cacheTime > 180000) {
                         //If the cached item has expired
                         sendDirectionsRequest(lastLocation, closest);
                     } else {
@@ -407,7 +412,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
 
-    private void sendCachedLocationToAdapter(ResponseSchema responseSchema, Location closest){
+    private void sendCachedLocationToAdapter(ResponseSchema responseSchema, Location closest) {
         Route route = responseSchema.getRoutes().get(0);
         String summary = route.getSummary();
         String polyline = route.getOverviewPolyline().getPoints();
@@ -426,16 +431,33 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         adapter.locationReady(list);
     }
 
-    private void instantCardCheck(Location location, Location closest) {
-        if (closest == null){
-            return;
+    private void instantCardCheck(final boolean onResume) {
+        try {
+            Awareness.SnapshotApi.getLocation(googleApiClient).setResultCallback(new ResultCallback<LocationResult>() {
+                @Override
+                public void onResult(@NonNull LocationResult locationResult) {
+                    if (!locationResult.getStatus().isSuccess()) {
+                        Log.e(TAG, "Could not get location.");
+                        return;
+                    }
+                    Location location = locationResult.getLocation();
+                    Location closest = BusStops.getClosestStop(location);
+                    float distance = location.distanceTo(closest);
+                    if (distance <= 45) {
+                        if (onResume && isInstantCardDisplayed && instantCard != null) {
+                            handler.post(instantCard);
+                        } else {
+                            isInstantCardDisplayed = setupInstantCard(closest);
+                        }
+                    } else {
+                        removeInstantCard();
+                    }
+                }
+            });
+        } catch (SecurityException e){
+            Log.e(TAG, "instantCardCheck: Location permission not granted");
         }
-        float distance = location.distanceTo(closest);
-        if (distance <= 45) {
-            isInstantCardDisplayed = setupInstantCard(closest);
-        } else {
-            removeInstantCard();
-        }
+
     }
 
     /**
