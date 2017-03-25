@@ -48,9 +48,11 @@ public class ResponseSchema implements Serializable {
         this.additionalProperties.put(name, value);
     }
 
-    public static class Duration{
+    public static class Duration implements Serializable{
         @SerializedName("value")
         private Double value;
+        private final static long serialVersionUID = -2907738741189184610L;
+
 
         public Double getValue() {
             return value;
@@ -61,11 +63,13 @@ public class ResponseSchema implements Serializable {
         }
     }
 
-    public static class StartLocation{
+    public static class StartLocation implements Serializable{
         @SerializedName("lat")
         private Double lat;
         @SerializedName("lng")
         private Double lng;
+        private final static long serialVersionUID = -1095649872761905358L;
+
 
 
         public Location getLocation() {
@@ -76,9 +80,11 @@ public class ResponseSchema implements Serializable {
         }
     }
 
-    public static class OverviewPolyline{
+    public static class OverviewPolyline implements Serializable{
         @SerializedName("points")
         private String points;
+        private final static long serialVersionUID = 1844494828718790673L;
+
 
 
         public String getPoints() {
@@ -92,12 +98,12 @@ public class ResponseSchema implements Serializable {
 
     }
 
-    public static class Distance{
+    public static class Distance implements Serializable{
         @SerializedName("text")
         private String text;
         @SerializedName("value")
         private Integer value;
-        private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+        private final static long serialVersionUID = -3105138012835463825L;
 
         public String getText() {
             return text;
@@ -116,13 +122,15 @@ public class ResponseSchema implements Serializable {
         }
     }
 
-    public static class Route{
+    public static class Route implements Serializable{
 
         private List<Leg> legs = null;
         @SerializedName("overview_polyline")
         private OverviewPolyline overviewPolyline;
         @SerializedName("summary")
         private String summary;
+        private final static long serialVersionUID = 8592740390759606326L;
+
 
 
         public List<Leg> getLegs() {
@@ -151,13 +159,14 @@ public class ResponseSchema implements Serializable {
 
     }
 
-    public static class Leg{
+    public static class Leg implements Serializable{
 
         private Distance distance;
         private Duration duration;
         @SerializedName("start_location")
         private StartLocation startLocation;
-        private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+        private final static long serialVersionUID = 8160144812660242559L;
+
 
         public StartLocation getStartLocation() {
             return startLocation;
