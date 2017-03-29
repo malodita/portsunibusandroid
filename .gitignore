@@ -204,3 +204,4 @@ utilities/.gitignore
 app/portsmouth-uni-b-1482878048775-firebase-crashreporting-hqbai-cda9b59a80.json
 /app/firebase-crashreportingservice.json
 /keystore.properties
+/Patches/

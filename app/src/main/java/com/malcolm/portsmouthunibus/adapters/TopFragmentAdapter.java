@@ -9,6 +9,7 @@ import com.malcolm.portsmouthunibus.viewholders.HomeStopModel;
 import com.malcolm.portsmouthunibus.viewholders.HomeStopModel_;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents the adapter responsible for displaying and updating the recyclerview in
@@ -21,7 +22,7 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     private final ClosestStopMapModel map;
     private final ClosestStopModel instant = new ClosestStopModel();
 
-    public TopFragmentAdapter(ArrayList<Object> homeCard, ArrayList<Object> mapCard) {
+    public TopFragmentAdapter(List<Object> homeCard, List<Object> mapCard) {
         enableDiffing();
         if (homeCard != null && !Boolean.parseBoolean(homeCard.get(0).toString())) {
             home = new HomeStopModel_()
@@ -68,19 +69,19 @@ public class TopFragmentAdapter extends EpoxyAdapter {
         notifyModelChanged(home, list);
     }
 
-    public void locationReady(ArrayList<Object> list) {
+    public void locationReady(List<Object> list) {
         if (!map.isShown()){
             addModel(map);
         }
         notifyModelChanged(map, list);
     }
 
-    public void updateTimeHero(ArrayList newInfo) {
+    public void updateTimeHero(List newInfo) {
         notifyModelChanged(home, newInfo);
     }
 
 
-    public void instantCard(ArrayList<Object> array) {
+    public void instantCard(List<Object> array) {
         //Check to see if instant card is already added
         if (!models.contains(instant)) {
             //If it is not added, check to see where to insert
@@ -110,7 +111,7 @@ public class TopFragmentAdapter extends EpoxyAdapter {
         map.noConnection();
     }
 
-    public void closeToStop(ArrayList info) {
+    public void closeToStop(List info) {
         notifyModelChanged(map, info);
     }
 
