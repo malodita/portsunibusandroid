@@ -464,12 +464,16 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             return;
         }
         Location closest = BusStops.getClosestStop(location);
-        float distance = location.distanceTo(closest);
-        if (distance <= 45) {
-            if (isInstantCardDisplayed && instantCard != null) {
-                handler.post(instantCard);
+        if (closest != null) {
+            float distance = location.distanceTo(closest);
+            if (distance <= 45) {
+                if (isInstantCardDisplayed && instantCard != null) {
+                    handler.post(instantCard);
+                } else {
+                    isInstantCardDisplayed = setupInstantCard(closest);
+                }
             } else {
-                isInstantCardDisplayed = setupInstantCard(closest);
+                removeInstantCard();
             }
         } else {
             removeInstantCard();
