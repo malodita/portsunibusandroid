@@ -44,6 +44,9 @@ public final class BusStops {
      */
     @Nullable
     public static Location getClosestStop(Location currentLocation) {
+        if (currentLocation == null){
+            return null;
+        }
         ArrayList<Location> stopLocations = new ArrayList<>();
         Location langstone = new Location("Langstone");
         langstone.setLatitude(LANGSTONE.latitude);
