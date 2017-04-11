@@ -347,8 +347,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        startLocationUpdates();
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        startLocationUpdates(); // FIXME: 11/04/2017 Location updates memory leak
         closest = BusStops.getClosestStop(location);
         boolean mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
         if (mapCardAllowed) {
@@ -736,7 +736,10 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     }
 
-
+    /**
+     * This class implements the LocationListener interface instead of the TopFragment as this led to
+     * constant memory leaks
+     */
     private static class CurrentLocationListener implements LocationListener{
 
         private WeakReference<TopFragment> reference;
