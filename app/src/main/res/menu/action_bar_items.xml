@@ -5,7 +5,7 @@
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/default_stop_icon"
-        android:icon="@drawable/ic_home_white_24dp"
+        android:icon="@drawable/ic_home"
         android:title="@string/set_home_stop"
         app:showAsAction="ifRoom">
 

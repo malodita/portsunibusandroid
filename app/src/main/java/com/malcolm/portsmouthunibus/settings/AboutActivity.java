@@ -28,11 +28,11 @@ public class AboutActivity extends MaterialAboutActivity {
                 .build());
         app.addItem(new MaterialAboutActionItem.Builder()
                 .text("Version").subText(BuildConfig.VERSION_NAME)
-                .icon(R.drawable.ic_information_outline_grey600_24dp)
+                .icon(R.drawable.ic_info)
                 .build());
         app.addItem(new MaterialAboutActionItem.Builder()
                 .text("Changelog")
-                .icon(R.drawable.ic_history_grey600_24dp)
+                .icon(R.drawable.ic_history)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -54,7 +54,7 @@ public class AboutActivity extends MaterialAboutActivity {
         MaterialAboutCard.Builder licenses = new MaterialAboutCard.Builder().title("Libraries & Licenses");
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Bottom Bar")
-                .icon(R.drawable.ic_github_circle_grey600_24dp)
+                .icon(R.drawable.ic_github_circle)
                 .subText("Iiro Krankka (Roughike)")
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
@@ -64,7 +64,7 @@ public class AboutActivity extends MaterialAboutActivity {
                 }).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Material Intro Screen").subText("Tango Agency")
-                .icon(R.drawable.ic_github_circle_grey600_24dp)
+                .icon(R.drawable.ic_github_circle)
 
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
@@ -74,7 +74,7 @@ public class AboutActivity extends MaterialAboutActivity {
                 }).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Material About Library").subText("Daniel Stone")
-                .icon(R.drawable.ic_github_circle_grey600_24dp)
+                .icon(R.drawable.ic_github_circle)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -84,7 +84,7 @@ public class AboutActivity extends MaterialAboutActivity {
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Retrofit")
                 .subText("Square")
-                .icon(R.drawable.ic_github_circle_grey600_24dp)
+                .icon(R.drawable.ic_github_circle)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -94,7 +94,7 @@ public class AboutActivity extends MaterialAboutActivity {
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Leak Canary")
                 .subText("Square")
-                .icon(R.drawable.ic_github_circle_grey600_24dp)
+                .icon(R.drawable.ic_github_circle)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -105,7 +105,7 @@ public class AboutActivity extends MaterialAboutActivity {
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("TapTargetView")
                 .subText("Keepsafe")
-                .icon(R.drawable.ic_github_circle_grey600_24dp)
+                .icon(R.drawable.ic_github_circle)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -114,7 +114,7 @@ public class AboutActivity extends MaterialAboutActivity {
                 }).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Butterknife")
-                .subText("Jake Wharton").icon(R.drawable.ic_github_circle_grey600_24dp)
+                .subText("Jake Wharton").icon(R.drawable.ic_github_circle)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -124,7 +124,7 @@ public class AboutActivity extends MaterialAboutActivity {
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Epoxy")
                 .subText("Airbnb")
-                .icon(R.drawable.ic_github_circle_grey600_24dp)
+                .icon(R.drawable.ic_github_circle)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -136,7 +136,7 @@ public class AboutActivity extends MaterialAboutActivity {
         personal.addItem(new MaterialAboutActionItem.Builder()
                 .text("Malcolm Odita")
                 .subText("In his spare time, he takes pictures")
-                .icon(R.drawable.ic_google_photos_grey600_24dp)
+                .icon(R.drawable.ic_google_photos)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
@@ -150,7 +150,7 @@ public class AboutActivity extends MaterialAboutActivity {
         MaterialAboutCard.Builder thanks = new MaterialAboutCard.Builder().title("Special Thanks");
         thanks.addItem(new MaterialAboutActionItem.Builder()
                 .text("Austin Andrews").subText("For icon use")
-                .icon(R.drawable.ic_twitter_grey600_24dp)
+                .icon(R.drawable.ic_twitter)
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {

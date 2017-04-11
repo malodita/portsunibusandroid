@@ -2,17 +2,17 @@
 
 <tabs>
     <tab
-        icon="@drawable/ic_timetable_black_24dp"
+        icon="@drawable/ic_timetable_black"
         id="@+id/tab_timetable"
         title="Timetable"
         />
     <tab
-        icon="@drawable/ic_place_black_24dp"
+        icon="@drawable/ic_place"
         id="@+id/tab_place"
         title="Here"
         />
     <tab
-        icon="@drawable/ic_map_black_24dp"
+        icon="@drawable/ic_map"
         id="@+id/tab_find"
         title="Find Stop"
         />
