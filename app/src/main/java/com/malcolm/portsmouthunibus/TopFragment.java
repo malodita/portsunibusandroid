@@ -71,7 +71,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class TopFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema>, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema>{
     private final int DEFAULT_VALUE = 0;
     public final String TAG = "Top Fragment";
     private final Handler handler = new Handler();
@@ -93,6 +93,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     private InstantCard instantCard;
     private SharedPreferences sharedPreferences;
     private Location closest;
+    private final CurrentLocationListener listener = new CurrentLocationListener(this);
     private boolean requestingLocationUpdates = false;
 
 
@@ -109,6 +110,11 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         busStops = getResources().getStringArray(R.array.bus_stops_home_selected);
         databaseHelper = DatabaseHelper.getInstance(getContext());
         sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
+        googleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     @Override
@@ -117,11 +123,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         final View rootView = inflater.inflate(R.layout.fragment_top, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), DEFAULT_VALUE);
-        googleApiClient = new GoogleApiClient.Builder(getContext().getApplicationContext())
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .addOnConnectionFailedListener(this)
-                .build();
         return rootView;
     }
 
@@ -305,7 +306,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     @Override
     public void onResume() {
         super.onResume();
-        startLocationUpdates();
         int currentHome = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), DEFAULT_VALUE);
         //Checks the previous value of the stop to show
         if (stopToShow != 0) {
@@ -348,6 +348,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             return;
         }
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        startLocationUpdates(); // FIXME: 11/04/2017 Location updates memory leak
         closest = BusStops.getClosestStop(location);
         boolean mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
         if (mapCardAllowed) {
@@ -359,26 +360,22 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     private void startLocationUpdates() {
-        if (!requestingLocationUpdates && googleApiClient.isConnected()) {
+        if (!requestingLocationUpdates) {
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext()
                     , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, LocationRequest.create(), this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, LocationRequest.create(), listener);
             requestingLocationUpdates = true;
         }
     }
 
     private void stopLocationUpdates(){
-        if (requestingLocationUpdates && googleApiClient.isConnected()){
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        if (requestingLocationUpdates){
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, listener);
+            requestingLocationUpdates = false;
         }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        instantCardCheck(location);
     }
 
     /**
@@ -737,6 +734,22 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         RefWatcher refWatcher = App.getRefWatcher(getActivity());
         refWatcher.watch(this);
 
+    }
+
+
+    private static class CurrentLocationListener implements LocationListener{
+
+        private WeakReference<TopFragment> reference;
+
+        CurrentLocationListener(TopFragment fragment) {
+            reference = new WeakReference<>(fragment);
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            TopFragment fragment = reference.get();
+            fragment.instantCardCheck(location);
+        }
     }
 
     /**
