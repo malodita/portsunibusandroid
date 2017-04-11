@@ -20,8 +20,8 @@
     <color name="intro_night">#190C22</color>
     <color name="intro_night_button">#FFC107</color>
     <color name="onboarding_2_outer_circle">#1a237e</color>
-    <color name="fab_confirm">#4caf50</color>
-    <color name="fab_confirm_muted">#a5d6a7</color>
+    <color name="fab_confirm">#388e3c</color>
+    <color name="fab_confirm_muted">#81c784</color>
     <color name="google_maps_inner_fill">#FFFFFF</color>
     <color name="google_maps_outer_fill">#212121</color>
 </resources>
