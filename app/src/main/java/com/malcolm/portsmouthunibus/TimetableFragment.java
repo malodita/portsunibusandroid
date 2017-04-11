@@ -21,7 +21,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
@@ -208,12 +207,7 @@ public class TimetableFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            floatingActionButton.setScaleX(0f);
-            floatingActionButton.setScaleY(0f);
-            floatingActionButton.setAlpha(0f);
-            floatingActionButton.setVisibility(View.VISIBLE);
-            floatingActionButton.animate().setDuration(200).scaleX(1).scaleY(1).alpha(1)
-                    .setInterpolator(new LinearOutSlowInInterpolator());
+            floatingActionButton.show();
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
