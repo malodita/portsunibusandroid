@@ -1,6 +1,8 @@
 package com.malcolm.portsmouthunibus;
 
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
@@ -195,6 +199,9 @@ public class TimetableFragment extends Fragment implements
             firebaseAnalytics.logEvent("timetable_changed_stop", bundle);
         }
         spinnerReady = true;
+        if (!floatingActionButton.isShown()){
+            floatingActionButton.show();
+        }
     }
 
     @Override
@@ -247,29 +254,8 @@ public class TimetableFragment extends Fragment implements
                 .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String[] busLong = getResources().getStringArray(R.array.bus_stops_shortcuts_long);
-                        String shortcutLong = busLong[stopToSave];
-                        String[] busShort = getResources().getStringArray(R.array.bus_stops_shortcuts_short);
-                        String shortcutShort = busShort[stopToSave];
-                        Bundle bundle = new Bundle();
-                        bundle.putString(getString(R.string.firebase_stop_id), shortcutShort);
-                        firebaseAnalytics.logEvent(getString(R.string.firebase_shortcut_created), bundle);
-                        ShortcutManager manager = getContext().getSystemService(ShortcutManager.class);
-                        String packageName = getContext().getApplicationInfo().packageName;
-                        ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(getContext(), getString(R.string.shortcut_specific_timetable))
-                                .setShortLabel(shortcutShort)
-                                .setLongLabel(shortcutLong)
-                                .setIcon(Icon.createWithResource(getContext(), R.mipmap.ic_shortcut_timetable_blue))
-                                .setIntent(new Intent(getString(R.string.shortcut_specific_timetable_action))
-                                        .setPackage(packageName)
-                                        .setClass(getContext(), TopActivity.class)
-                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                        .putExtra(getString(R.string.shortcut_specific_timetable), stopToSave))
-                                .build();
-                        manager.addDynamicShortcuts(Arrays.asList(shortcutInfo));
-                        Snackbar snackbar = Snackbar.make(layout, "Shortcut created", Snackbar.LENGTH_SHORT);
-                        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
-                        snackbar.show();
+                        saveShortcut();
+                        showConfirmAnimation();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -277,6 +263,76 @@ public class TimetableFragment extends Fragment implements
         if (!onboarding) {
             onboarding3(alertDialog);
         }
+    }
+
+    /**
+     * Saves the shortcut chosen by the user
+     */
+    @TargetApi(Build.VERSION_CODES.N_MR1)
+    private void saveShortcut(){
+        String[] busLong = getResources().getStringArray(R.array.bus_stops_shortcuts_long);
+        String shortcutLong = busLong[stopToSave];
+        String[] busShort = getResources().getStringArray(R.array.bus_stops_shortcuts_short);
+        String shortcutShort = busShort[stopToSave];
+        Bundle bundle = new Bundle();
+        bundle.putString(getString(R.string.firebase_stop_id), shortcutShort);
+        firebaseAnalytics.logEvent(getString(R.string.firebase_shortcut_created), bundle);
+        ShortcutManager manager = getContext().getSystemService(ShortcutManager.class);
+        String packageName = getContext().getApplicationInfo().packageName;
+        ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(getContext(), getString(R.string.shortcut_specific_timetable))
+                .setShortLabel(shortcutShort)
+                .setLongLabel(shortcutLong)
+                .setIcon(Icon.createWithResource(getContext(), R.mipmap.ic_shortcut_timetable_blue))
+                .setIntent(new Intent(getString(R.string.shortcut_specific_timetable_action))
+                        .setPackage(packageName)
+                        .setClass(getContext(), TopActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        .putExtra(getString(R.string.shortcut_specific_timetable), stopToSave))
+                .build();
+        manager.addDynamicShortcuts(Arrays.asList(shortcutInfo));
+    }
+
+    /**
+     * Animates the FAB and raises the snackbar.
+     * <P>
+     * When this method completes, the FAB is then hidden. This behavior is because the vector animation
+     * cannot be reversed. This should be kept even after Android O is released as this is a workaround for
+     * API 25
+     * </P>
+     */
+    @TargetApi(Build.VERSION_CODES.N_MR1)
+    private void showConfirmAnimation(){
+        Snackbar snackbar = Snackbar.make(layout, "Shortcut created", Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
+        final AnimatedVectorDrawable vectorDrawable = (AnimatedVectorDrawable) floatingActionButton.getDrawable();
+        int accent = getContext().getColor(R.color.accent);
+        int confirm = getContext().getColor(R.color.fab_confirm);
+        final ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), accent, confirm);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int color = (int) animator.getAnimatedValue();
+                floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(color));
+            }
+        });
+        animator.start();
+        vectorDrawable.start();
+        snackbar.show();
+        snackbar.addCallback(new Snackbar.Callback(){
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                floatingActionButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                    @Override
+                    public void onHidden(FloatingActionButton fab) {
+                        super.onHidden(fab);
+                        vectorDrawable.reset(); //Android O will allow for reversed vector animations
+                        animator.reverse();
+                    }
+                });
+
+            }
+        });
     }
 
     /**
