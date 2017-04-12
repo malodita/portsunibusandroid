@@ -56,7 +56,6 @@ public class TimetableFragment extends Fragment implements
     private FirebaseAnalytics firebaseAnalytics;
     Unbinder unbinder;
     int stopToSave;
-
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.spinner)
@@ -172,6 +171,9 @@ public class TimetableFragment extends Fragment implements
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (floatingActionButton != null && !floatingActionButton.isShown()){
+            floatingActionButton.show();
+        }
         int newStopToShow;
         if (position == 10) {
             if (TermDates.isHoliday() || TermDates.isWeekend()) {
@@ -198,14 +200,22 @@ public class TimetableFragment extends Fragment implements
             firebaseAnalytics.logEvent("timetable_changed_stop", bundle);
         }
         spinnerReady = true;
-        if (floatingActionButton != null && !floatingActionButton.isShown()){
-            floatingActionButton.show();
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        setUpFab();
+    }
+
+    /**
+     * Sets up the floating action button.
+     * <p>
+     * As it controls a feature that is dependent on API > 24, it will only set it up if the device
+     * is above this version
+     * </p>
+     */
+    private void setUpFab(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             floatingActionButton.show();
             floatingActionButton.setOnClickListener(new View.OnClickListener() {

@@ -273,10 +273,9 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         sequence.targets(targets);
         sequence.listener(new TapTargetSequence.Listener() {
             @Override
-            public void onSequenceStep(TapTarget lastTarget) {
-
+            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                //Probably should add a warning if target isn't tapped
             }
-
             @Override
             public void onSequenceFinish() {
                 sharedPreferences.edit()

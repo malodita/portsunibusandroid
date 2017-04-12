@@ -370,8 +370,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                 return;
             }
             LocationRequest request = LocationRequest.create()
-                    .setFastestInterval(30000)
-                    .setInterval(120000)
+                    .setFastestInterval(15000)
+                    .setInterval(60000)
                     .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request , listener);
             requestingLocationUpdates = true;
