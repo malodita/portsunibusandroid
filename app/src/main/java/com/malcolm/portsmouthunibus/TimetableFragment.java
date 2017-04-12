@@ -63,10 +63,10 @@ public class TimetableFragment extends Fragment implements
     AppCompatSpinner spinner;
     @BindView(R.id.no_timetable)
     TextView noTimetable;
-    @BindView(R.id.timetable_fab)
-    FloatingActionButton floatingActionButton;
     @BindView(R.id.timetableFragment)
     CoordinatorLayout layout;
+    @Nullable @BindView(R.id.timetable_fab)
+    FloatingActionButton floatingActionButton;
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreferences;
     private boolean spinnerReady = false;
