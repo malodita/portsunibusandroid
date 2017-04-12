@@ -327,6 +327,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         if (isInstantCardDisplayed && instantCard != null) {
             handler.post(instantCard);
         }
+        startLocationUpdates();
     }
 
     /**
@@ -362,13 +363,17 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     private void startLocationUpdates() {
-        if (!requestingLocationUpdates) {
+        if (!requestingLocationUpdates && googleApiClient.isConnected()) {
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext()
                     , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, LocationRequest.create(), listener);
+            LocationRequest request = LocationRequest.create()
+                    .setFastestInterval(30000)
+                    .setInterval(120000)
+                    .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request , listener);
             requestingLocationUpdates = true;
         }
     }
