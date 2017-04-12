@@ -198,7 +198,7 @@ public class TimetableFragment extends Fragment implements
             firebaseAnalytics.logEvent("timetable_changed_stop", bundle);
         }
         spinnerReady = true;
-        if (!floatingActionButton.isShown()){
+        if (floatingActionButton != null && !floatingActionButton.isShown()){
             floatingActionButton.show();
         }
     }
