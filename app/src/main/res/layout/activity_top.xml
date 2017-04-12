@@ -26,9 +26,9 @@
         android:layout_alignParentBottom="true"
         android:elevation="8dp"
         android:background="@color/primary"
+        android:foreground="?android:attr/selectableItemBackground"
         app:bb_activeTabColor="@color/bottom_bar_tabs"
         app:bb_inActiveTabColor="@color/primary_light"
-        app:bb_showShadow="false"
         app:bb_tabXmlResource="@xml/bottom_bar_tabs">
     </com.roughike.bottombar.BottomBar>
 
