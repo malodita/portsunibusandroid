@@ -10,7 +10,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Process;
@@ -415,16 +417,30 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                     //The cached location is sent
                     sendCachedLocationToAdapter(responseSchema, closest);
                 } else {
-                    if (cacheTime > 180000) {
-                        //If the cached item has expired
-                        sendDirectionsRequest(lastLocation, closest);
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        //If data saver enabled, increases expiry time of the cached location
+                        ConnectivityManager connMgr = (ConnectivityManager)
+                                getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        if (connMgr.getRestrictBackgroundStatus() == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED){
+                            if (cacheTime > 300000) {
+                                //If the cached item has expired
+                                sendDirectionsRequest(lastLocation, closest);
+                            } else {
+                                sendCachedLocationToAdapter(responseSchema, closest);
+                            }
+                        }
                     } else {
-                        sendCachedLocationToAdapter(responseSchema, closest);
+                        if (cacheTime > 180000) {
+                            //If the cached item has expired
+                            sendDirectionsRequest(lastLocation, closest);
+                        } else {
+                            sendCachedLocationToAdapter(responseSchema, closest);
+                        }
                     }
                 }
             }
         } else {
-            //If it doesn't exist a API request is sent
+            //If it doesn't exist an API request is sent
             sendDirectionsRequest(lastLocation, closest);
         }
     }
