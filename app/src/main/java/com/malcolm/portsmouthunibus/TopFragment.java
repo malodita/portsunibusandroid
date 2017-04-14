@@ -74,8 +74,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class TopFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema>{
-    private final int DEFAULT_VALUE = 0;
-    public final String TAG = "Top Fragment";
+    private static final int DEFAULT_VALUE = 0;
+    public static final String TAG = "Top Fragment";
     private final Handler handler = new Handler();
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
