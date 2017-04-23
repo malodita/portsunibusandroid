@@ -57,7 +57,7 @@
     <string name="shortcut_home_timetable" translatable="false">home_timetable</string>
     <string name="shortcut_home_timetable_action" translatable="false">com.malcolm.portsmouthunibus.VIEW.TIMETABLE</string>
     <string name="shortcut_specific_timetable" translatable="false">specific_timetable</string>
-    <string name="shortcut_specific_timetable_action" translatable="false">ECIFIC</string>
+    <string name="shortcut_specific_timetable_action" translatable="false">com.malcolm.portsmouthunibus.VIEW.TIMETABLE.SPECIFIC</string>
     <string name="intent_list_position">com.malcolm.portsmouthunibus.VIEW.LIST.POSITION</string>
 
 
