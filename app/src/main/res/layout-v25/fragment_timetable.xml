@@ -5,11 +5,12 @@
     android:id="@+id/timetableFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.malcolm.portsmouthunibus.TimetableFragment"
-    >
+    tools:context="com.malcolm.portsmouthunibus.TimetableFragment">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/timetable_layout">
 
         <android.support.v7.widget.AppCompatSpinner
             android:layout_width="match_parent"
@@ -33,17 +34,6 @@
             />
     </RelativeLayout>
 
-    <TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:layout_gravity="center"
-    android:text="@string/error_no_timetable_selected"
-    android:visibility="gone"
-    android:textSize="@dimen/text_primary_size"
-    android:id="@+id/no_timetable"
-    />
-
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,11 +44,21 @@
         app:backgroundTint="@color/accent"
         app:rippleColor="@color/accent_muted"
         android:src="@drawable/animated_vector_drawable"
-        app:layout_anchor="@id/recycler_view"
+        app:layout_anchor="@id/timetable_layout"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="@dimen/activity_margin"
         app:fabSize="auto"/>
 
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:text="@string/error_no_timetable_selected"
+    android:visibility="gone"
+    android:textSize="@dimen/text_primary_size"
+    android:id="@+id/no_timetable"
+    />
 
 
 </android.support.design.widget.CoordinatorLayout>
