@@ -50,9 +50,9 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
         bundle.putInt("listPosition", position);
         bundle.putString("stop", destinationTextView.getText().toString());
         bundle.putString("time", timeTextView.getText().toString());
-        i.putExtra("listPosition", position);
-        i.putExtra("stop", destinationTextView.getText());
-        i.putExtra("time", timeTextView.getText());
+        i.putExtra(context.getString(R.string.intent_list_position), position);
+        i.putExtra(context.getString(R.string.intent_stop), destinationTextView.getText());
+        i.putExtra(context.getString(R.string.intent_stop_time), timeTextView.getText());
         analytics.logEvent(context.getString(R.string.firebase_timetable_detail_request), bundle);
         context.startActivity(i);
 

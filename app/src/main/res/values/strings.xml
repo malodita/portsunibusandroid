@@ -59,6 +59,9 @@
     <string name="shortcut_specific_timetable" translatable="false">specific_timetable</string>
     <string name="shortcut_specific_timetable_action" translatable="false">com.malcolm.portsmouthunibus.VIEW.TIMETABLE.SPECIFIC</string>
     <string name="intent_list_position">com.malcolm.portsmouthunibus.VIEW.LIST.POSITION</string>
+    <string name="intent_stop">com.malcolm.portsmouthunibus.VIEW.STOP</string>
+    <string name="intent_stop_time">com.malcolm.portsmouthunibus.VIEW.STOP.TIME</string>
+
 
 
     <!--Strings related to firebase analytics-->

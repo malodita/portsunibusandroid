@@ -53,8 +53,8 @@ public class DetailActivity extends AppCompatActivity {
 
 
     protected void setActivityTitle(Intent intent){
-        String stop = intent.getCharSequenceExtra("stop").toString();
-        String time = intent.getCharSequenceExtra("time").toString();
+        String stop = intent.getCharSequenceExtra(getString(R.string.intent_stop)).toString();
+        String time = intent.getCharSequenceExtra(getString(R.string.intent_stop_time)).toString();
         titleTextView.setText("The " + time + " at " + stop);
     }
 
