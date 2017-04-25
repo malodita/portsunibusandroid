@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 public class DetailActivity extends AppCompatActivity {
     private static final String TAG = "DetailActivity";
     @NonNull
-    @BindView(R.id.detail_recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.detail_recycler_view) RecyclerView recyclerView;
     @NonNull
     @BindView(R.id.title_text_view) TextView titleTextView;
     @Nullable @BindView(R.id.app_bar_detail) Toolbar toolbar;
@@ -43,19 +43,19 @@ public class DetailActivity extends AppCompatActivity {
          * This gets the position that was clicked from the intent to be used to
          * display the correct timetable
          */
-        int valueToGet = i.getIntExtra(getString(R.string.intent_list_position), 1);
+        int listPosition = i.getIntExtra(getString(R.string.intent_list_position), 1);
         setActivityTitle(i);
         boolean timeFormat = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE)
                 .getBoolean(getString(R.string.preferences_24hourclock), true);
-        ArrayList<Times> array = DatabaseHelper.getInstance(this).getDataForList(valueToGet, timeFormat);
-        setUpRecyclerView(mRecyclerView, array);
+        ArrayList<Times> array = DatabaseHelper.getInstance(this).getDataForList(listPosition, timeFormat);
+        setUpRecyclerView(recyclerView, array);
     }
 
 
     protected void setActivityTitle(Intent intent){
         String stop = intent.getCharSequenceExtra(getString(R.string.intent_stop)).toString();
         String time = intent.getCharSequenceExtra(getString(R.string.intent_stop_time)).toString();
-        titleTextView.setText("The " + time + " at " + stop);
+        titleTextView.setText("The " + time + " to " + stop);
     }
 
 

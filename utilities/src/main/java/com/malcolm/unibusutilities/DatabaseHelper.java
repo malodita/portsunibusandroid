@@ -310,6 +310,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Obtains the stop {@link #getTimesForArray(int) to search the database here}
+     *
+     * @param stopId The id of the stop retrieved
+     *
+     * @return A formatted string for the search to use
+     */
+    private String getStopToShow(int stopId, boolean isFull) {
+        String stopToShowString;
+        switch (stopId) {
+            case 1:
+                stopToShowString = "[IMS Eastney (Departures)]";
+                break;
+            case 2:
+                stopToShowString = "[Langstone Campus (for Departures only)]";
+                break;
+            case 3:
+                stopToShowString = "[Locksway Road (for Milton Park)]";
+                break;
+            case 4:
+                stopToShowString = "[Goldsmith Avenue (adj Lidi)]";
+                break;
+            case 5:
+                stopToShowString = "[Goldsmith Avenue (opp Fratton Station)]";
+                break;
+            case 6:
+                stopToShowString = "[Winston Churchill Avenue (adj Ibis Hotel)]";
+                break;
+            case 8:
+                stopToShowString = "[Cambridge Road (adj Nuffield Building)]";
+                break;
+            case 9:
+                stopToShowString = "[Winston Churchill Avenue (adj Ibis Hotel)]";
+                break;
+            case 10:
+                stopToShowString = "[Goldsmith Avenue (adj Fratton Station)]";
+                break;
+            case 11:
+                stopToShowString = "[Goldsmith Avenue (opp Lidl)]";
+                break;
+            case 12:
+                stopToShowString = "[Goldsmith Avenue (adj Milton Park)]";
+                break;
+            default:
+                return null;
+        }
+        return stopToShowString;
+    }
+
+    /**
      * This method opens and obtains the entire database and parses it to find the stops that match
      * the correct stop. It then formats the times and adds to the arrayList (after clearing
      * the list beforehand from previous run results. I could split the method for a v2 but it
@@ -342,10 +391,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         do {
                             if (cursor.getString(stop) != null) {
                                 Times times = new Times();
-                                times.setDestination(cursor.getColumnName(stop));
+                                if (cursor.getInt(13) == 0){ //Checks if the bus is to go to eastney
+                                    if (stop < 7){
+                                        times.setDestination("Cambridge Road adj Student Union");
+                                    } else {
+                                        times.setDestination("Langstone Campus");
+                                    }
+                                } else {
+                                    times.setDestination(cursor.getColumnName(13));
+                                }
                                 times.setTime(formatTime(cursor.getString(stop), is24Hours));
                                 times.setId(cursor.getInt(0));
                                 if (cursor.getInt(0) == 47 && stop >= 7) {
+                                    //Checks to see if last row (Which should only be seen for return bus)
                                     arrayList.add(times);
                                 } else {
                                     arrayList.add(times);
