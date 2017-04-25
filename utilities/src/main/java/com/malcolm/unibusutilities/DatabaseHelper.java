@@ -457,7 +457,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         for (int i = 1; i < cursor.getColumnCount(); i++) {
                             if (cursor.getString(i) != null) {
                                 Times times = new Times();
-                                times.setDestination(cursor.getColumnName(i));
+                                if (cursor.getColumnName(i).equals("Langstone Campus (for Departures only)")){
+                                    times.setDestination("Langstone Campus (Departures)");
+                                } else if (cursor.getColumnName(i).equals("Langstone Campus (for Arrivals only)")){
+                                    times.setDestination("Langstone Campus");
+                                } else if (cursor.getColumnName(i).equals("Cambridge Road (adj Student Union for Arrivals only)")){
+                                    times.setDestination("Cambridge Road (Student Union)");
+                                } else {
+                                    times.setDestination(cursor.getColumnName(i));
+                                }
                                 times.setTime(formatTime(cursor.getString(i), is24Hours));
                                 array.add(times);
                             }
