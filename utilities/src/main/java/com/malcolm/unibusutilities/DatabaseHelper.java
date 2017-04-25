@@ -50,7 +50,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Obtains an instance suitable for phones
+     *
      * @param context The calling context
+     *
      * @return A database instance for phones
      */
     public static synchronized DatabaseHelper getInstance(Context context) {
@@ -62,10 +64,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Obtains an instance suitable for wearable devices.
+     *
      * @param context The calling context
+     *
      * @return A database instance for wearable devices
      */
-    public static synchronized DatabaseHelper getWearableInstance(Context context){
+    public static synchronized DatabaseHelper getWearableInstance(Context context) {
         if (instance == null) {
             instance = new DatabaseHelper(context.getApplicationContext(), true);
         }
@@ -133,27 +137,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void copyDatabase() throws IOException {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    InputStream myInput;
-                    try {
-                        myInput = context.getAssets().open(DB_NAME);
-                        String outFileName = DB_PATH + DB_NAME;
-                        OutputStream myOutput = new FileOutputStream(outFileName);
-                        byte[] buffer = new byte[1024];
-                        int length;
-                        while ((length = myInput.read(buffer)) > 0) {
-                            myOutput.write(buffer, 0, length);
-                        }
-                        myOutput.flush();
-                        myOutput.close();
-                        myInput.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                InputStream myInput;
+                try {
+                    myInput = context.getAssets().open(DB_NAME);
+                    String outFileName = DB_PATH + DB_NAME;
+                    OutputStream myOutput = new FileOutputStream(outFileName);
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = myInput.read(buffer)) > 0) {
+                        myOutput.write(buffer, 0, length);
                     }
+                    myOutput.flush();
+                    myOutput.close();
+                    myInput.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            }).start();
+            }
+        }).start();
     }
 
     private boolean openDatabase() {
@@ -164,13 +168,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.e(TAG, "Error opening database");
             e.printStackTrace();
         }
-        if (myDatabase != null){
+        if (myDatabase != null) {
             int version = myDatabase.getVersion();
-            if (version < BuildConfig.VERSION_CODE){
+            if (version > BuildConfig.VERSION_CODE) {
                 try {
                     copyDatabase();
                     myDatabase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-                } catch (IOException e){
+                } catch (IOException e) {
                     Log.e(TAG, "Error writing new database");
                 }
             }
@@ -190,16 +194,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * <P>
-     * This method parses through the timetable at the selected stop in order to count down the
+     * <P> This method parses through the timetable at the selected stop in order to count down the
      * time until the next bus arrives at the home stop. After opening the database using the helper
      * class, it then takes the value for this in a switch statement and depending on the value will
      * set the query for the database search to give all the times in the column for the result.
-     *</P>
-     * <p>
-     * Unlike the alternative method {@link #getTimesForArray(int)}, this will be able to search any stop
-     * as long as the correct string has been passed into the method (This string must be in brackets)
-     * </p>
+     * </P> <p> Unlike the alternative method {@link #getTimesForArray(int)}, this will be able to
+     * search any stop as long as the correct string has been passed into the method (This string
+     * must be in brackets) </p>
+     *
      * @param busStop The string used to search the database
      *
      * @return An arraylist of Integers representing the times the bus will stop in seconds
@@ -240,12 +242,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * time until the next bus arrives at the home stop. After opening the database using the helper
      * class, it then takes the value for this in a switch statement and depending on the value will
      * set the query for the database search to give all the times in the column for the result.
-     * </p>
-     * <p>
-     * This method only works for obtaining the array for a home stop as the id check will only obtain
-     * one of these stop. Use {@link #getTimesForArray(String) the alternative method} if you wish
-     * to search any stop.
-     * </p>
+     * </p> <p> This method only works for obtaining the array for a home stop as the id check will
+     * only obtain one of these stop. Use {@link #getTimesForArray(String) the alternative method}
+     * if you wish to search any stop. </p>
      *
      * @param stopId The integer representation of the bus stop
      *
@@ -370,13 +369,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * should be replaced with a prompt to select the stop. Also no asyncTask/Runnable has been used
      * for this since it is not a huge database task database contains no more than 50 rows
      *
-     * @param stop The stop to display, if zero then it skips getting the array
-     *
+     * @param stop      The stop to display, if zero then it skips getting the array
      * @param is24Hours If the 12 hour or 24 hour format should be used
      *
      * @return An arrayList of times ready for the adapter to use or null if no default stop is
-     * selected
-     * //Todo: Change javadoc
+     * selected //Todo: Change javadoc
      */
     @Nullable
     public ArrayList<Times> getTimesArray(int stop, boolean is24Hours) {
@@ -390,18 +387,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     if (cursor.moveToFirst()) {
                         do {
                             if (cursor.getString(stop) != null) {
-                                Times times = new Times();
-                                if (cursor.getInt(13) == 0){ //Checks if the bus is to go to eastney
-                                    if (stop < 7){
-                                        times.setDestination("Cambridge Road adj Student Union");
-                                    } else {
-                                        times.setDestination("Langstone Campus");
-                                    }
-                                } else {
-                                    times.setDestination(cursor.getColumnName(13));
-                                }
-                                times.setTime(formatTime(cursor.getString(stop), is24Hours));
-                                times.setId(cursor.getInt(0));
+                                Times times = createTime(stop, cursor, is24Hours);
                                 if (cursor.getInt(0) == 47 && stop >= 7) {
                                     //Checks to see if last row (Which should only be seen for return bus)
                                     arrayList.add(times);
@@ -417,13 +403,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } catch (SQLException e) {
                 e.printStackTrace();
                 Log.e(TAG, "Error at loadDatabase: try block B");
-            } catch (ParseException e) {
-                if (e.getMessage().equals("Unparseable date: \"\"")) {
-                    System.out.print("Out of dates");
-                } else {
-                    e.printStackTrace();
-                }
-            } finally {
+            }  finally {
                 if (cursor != null) {
                     cursor.close();
                 }
@@ -433,13 +413,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return arrayList;
     }
 
+    private Times createTime(int stop, Cursor cursor, boolean is24Hours){
+        Times times = new Times();
+        if (stop < 7) { //All stops before Cambridge road are to Cambridge Road
+            if (cursor.getInt(13) != 0) { //Checks if the bus is to go to eastney
+                times.setDestination("IMS Eastney via Cambridge Road");
+            } else {
+                if (cursor.getInt(1) != 0){
+                    times.setDestination("Langstone Campus via Cambridge Road");
+                } else {
+                    times.setDestination("Cambridge Road");
+                }
+            }
+        } else {
+            if (cursor.getInt(13) != 0) { //Checks if the bus is to go to eastney
+                times.setDestination(cursor.getColumnName(13));
+            } else {
+                times.setDestination("Langstone Campus");
+            }
+        }
+        try {
+            times.setTime(formatTime(cursor.getString(stop), is24Hours));
+        } catch (ParseException e) {
+                if (e.getMessage().equals("Unparseable date: \"\"")) {
+                    System.out.print("Out of dates");
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        times.setId(cursor.getInt(0));
+        return times;
+    }
+
     public ArrayList<Times> getDataForList(int busId, boolean is24Hours) {
         ArrayList<Times> array = new ArrayList<>();
         Cursor cursor = null;
         checkAndCopyDatabase();
         if (openDatabase()) {
             try {
-                cursor = queryData("select * from Timetable where id=" + busId + " order by id");
+                cursor = queryData("select * from Timetable where id=" + busId);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         for (int i = 1; i < cursor.getColumnCount(); i++) {
@@ -495,7 +507,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 after.format(date);
                 output.append(after.format(date));
             }
-            if (Integer.valueOf(input) >= 43200){
+            if (Integer.valueOf(input) >= 43200) {
                 output.append(" pm");
             } else {
                 output.append(" am");
