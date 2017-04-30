@@ -1,8 +1,12 @@
 package com.malcolm.portsmouthunibus.viewholders;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,6 +16,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.detail.DetailActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Malcolm on 24/08/2016. This class is what the RecyclerViewAdapter populates the
  * recycler view with. It contains all the information that is to be displayed or manipulated
@@ -20,8 +27,10 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
     private static final String TAG = "TimetableItemViewHolder";
     private Context context;
     //Do not set these as access private
-    public TextView timeTextView;
-    public TextView destinationTextView;
+    @BindView(R.id.depart_time_recycler) public TextView timeTextView;
+    @BindView(R.id.destination_recycler) public TextView destinationTextView;
+    @BindView(R.id.inner_linear_layout_recyclerview) LinearLayout layout;
+    @BindView(R.id.card_view_recyclerview) CardView cardView;
     public int position;
     private FirebaseAnalytics analytics;
 
@@ -34,10 +43,8 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
      */
     public TimetableItemViewHolder(View itemView) {
         super(itemView);
+        ButterKnife.bind(this, itemView);
         context = itemView.getContext();
-        timeTextView = (TextView) itemView.findViewById(R.id.depart_time_recycler);
-        destinationTextView = (TextView) itemView.findViewById(R.id.destination_recycler);
-        LinearLayout layout = (LinearLayout) itemView.findViewById(R.id.inner_linear_layout_recyclerview);
         layout.setOnClickListener(this);
         analytics = FirebaseAnalytics.getInstance(context);
     }
@@ -53,8 +60,12 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
         i.putExtra(context.getString(R.string.intent_list_position), position);
         i.putExtra(context.getString(R.string.intent_stop), destinationTextView.getText());
         i.putExtra(context.getString(R.string.intent_stop_time), timeTextView.getText());
+        Activity activity = (Activity) context;
+        ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, cardView, ViewCompat.getTransitionName(cardView));
         analytics.logEvent(context.getString(R.string.firebase_timetable_detail_request), bundle);
         context.startActivity(i);
+        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
 
     }
