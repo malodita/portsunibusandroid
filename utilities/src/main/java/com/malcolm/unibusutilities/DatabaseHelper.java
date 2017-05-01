@@ -413,6 +413,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return arrayList;
     }
 
+    //Todo: Rewrite method to make simpler
     private Times createTime(int stop, Cursor cursor, boolean is24Hours){
         Times times = new Times();
         if (stop < 7) { //All stops before Cambridge road are to Cambridge Road
@@ -429,18 +430,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (cursor.getInt(13) != 0) { //Checks if the bus is to go to eastney
                 times.setDestination(cursor.getColumnName(13));
             } else {
-                times.setDestination("Langstone Campus");
+                if (cursor.getInt(14) == 0) {//Checks if bus does not terminate at langstone
+                    times.setDestination("Milton Park");
+                } else {
+                    times.setDestination("Langstone Campus");
+                }
             }
         }
         try {
             times.setTime(formatTime(cursor.getString(stop), is24Hours));
         } catch (ParseException e) {
-                if (e.getMessage().equals("Unparseable date: \"\"")) {
-                    System.out.print("Out of dates");
-                } else {
-                    e.printStackTrace();
-                }
-            }
+            e.printStackTrace();
+        }
         times.setId(cursor.getInt(0));
         return times;
     }
