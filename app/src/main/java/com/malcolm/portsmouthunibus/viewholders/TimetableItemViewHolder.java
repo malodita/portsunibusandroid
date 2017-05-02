@@ -3,9 +3,9 @@ package com.malcolm.portsmouthunibus.viewholders;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
 public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final String TAG = "TimetableItemViewHolder";
     private Context context;
-    //Do not set these as access private
     @BindView(R.id.depart_time_recycler) public TextView timeTextView;
     @BindView(R.id.destination_recycler) public TextView destinationTextView;
     @BindView(R.id.inner_linear_layout_recyclerview) LinearLayout layout;
@@ -60,13 +59,17 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
         i.putExtra(context.getString(R.string.intent_list_position), position);
         i.putExtra(context.getString(R.string.intent_stop), destinationTextView.getText());
         i.putExtra(context.getString(R.string.intent_stop_time), timeTextView.getText());
-        Activity activity = (Activity) context;
-        ActivityOptionsCompat options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, cardView, ViewCompat.getTransitionName(cardView));
+        //ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, cardView, ViewCompat.getTransitionName(cardView));
+        //This can be played with later to create shared element transition
         analytics.logEvent(context.getString(R.string.firebase_timetable_detail_request), bundle);
-        context.startActivity(i);
-        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeClipRevealAnimation(view, 0, 0
+                    , view.getMeasuredWidth(), view.getMeasuredHeight());
+            context.startActivity(i, options.toBundle());
+        } else {
+            context.startActivity(i);
+            Activity activity = (Activity) context;
+            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
     }
 }
