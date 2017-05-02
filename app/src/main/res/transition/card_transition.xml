@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <changeBounds/>
+    <changeImageTransform/>
+    <changeClipBounds/>
+    <fade android:startDelay="300"
+          android:fadingMode="fade_in"
+          android:duration="300"/>
+</transitionSet>
