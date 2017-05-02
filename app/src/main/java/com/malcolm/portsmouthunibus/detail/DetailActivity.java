@@ -1,6 +1,7 @@
 package com.malcolm.portsmouthunibus.detail;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -56,22 +59,49 @@ public class DetailActivity extends AppCompatActivity {
     protected void setActivityTitle(Intent intent){
         String stop = intent.getCharSequenceExtra(getString(R.string.intent_stop)).toString();
         String time = intent.getCharSequenceExtra(getString(R.string.intent_stop_time)).toString();
-        titleTextView.setText("The " + time + " to " + stop);
+        titleTextView.setText(getString(R.string.card_title, time, stop));
     }
 
 
-    protected void setUpRecyclerView(RecyclerView recyclerView, ArrayList<Times> times){
+    protected void setUpRecyclerView(final RecyclerView recyclerView, ArrayList<Times> times){
         DetailActivityAdapter adapter = new DetailActivityAdapter(this, times);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            //getWindow().getSharedElementEnterTransition();
+            recyclerView.getViewTreeObserver().addOnPreDrawListener(
+                    new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                            for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                                View v = recyclerView.getChildAt(i);
+                                v.setAlpha(0.0f);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                v.animate().alpha(1.0f)
+                                        .setDuration(300)
+                                        .setStartDelay(i * 50)
+                                        .start();
+                            }
+                            return true;
+                        }
+                    });
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                finish();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    finishAfterTransition();
+                } else {
+                    finish();
+                }
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 return true;
 
