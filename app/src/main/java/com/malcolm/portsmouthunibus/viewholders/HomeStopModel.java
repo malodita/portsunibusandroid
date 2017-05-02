@@ -52,7 +52,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
             updateViewHolder(holder);
         }
     }
-
+    @SuppressWarnings("unchecked cast")
     @Override
     public void bind(final HomeStopHolder holder, List<Object> payloads) {
         ArrayList<Object> array = (ArrayList<Object>) payloads.get(0);
