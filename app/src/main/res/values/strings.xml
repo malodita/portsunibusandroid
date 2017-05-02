@@ -23,6 +23,7 @@
     <string name="local_map">Find Stop</string>
     <string name="next_departure">Next departure</string>
     <string name="dialog_create_shortcut">Do you wish to create a shortcut for the selected stop</string>
+    <string name="card_title">"The %1$s to %2$s</string>
 
     <!--Strings related to errors-->
     <string name="play_services_needed">Google Play Services is required for location services</string>
