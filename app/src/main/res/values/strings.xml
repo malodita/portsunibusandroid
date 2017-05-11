@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Portsmouth University Bus</string>
     <string name="minutes">minutes</string>
-    <string name="uni_leaves_in">Next bus to University leaves in</string>
+    <string name="uni_leaves_in">Next bus to University</string>
     <string name="metres_away">metres away</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_detail">Stop Times</string>
