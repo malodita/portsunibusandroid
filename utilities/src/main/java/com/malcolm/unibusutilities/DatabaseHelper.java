@@ -170,7 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         if (myDatabase != null) {
             int version = myDatabase.getVersion();
-            if (version > BuildConfig.VERSION_CODE) {
+            if (version < BuildConfig.VERSION_CODE) {
                 try {
                     copyDatabase();
                     myDatabase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
@@ -309,55 +309,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Obtains the stop {@link #getTimesForArray(int) to search the database here}
-     *
-     * @param stopId The id of the stop retrieved
-     *
-     * @return A formatted string for the search to use
-     */
-    private String getStopToShow(int stopId, boolean isFull) {
-        String stopToShowString;
-        switch (stopId) {
-            case 1:
-                stopToShowString = "[IMS Eastney (Departures)]";
-                break;
-            case 2:
-                stopToShowString = "[Langstone Campus (for Departures only)]";
-                break;
-            case 3:
-                stopToShowString = "[Locksway Road (for Milton Park)]";
-                break;
-            case 4:
-                stopToShowString = "[Goldsmith Avenue (adj Lidi)]";
-                break;
-            case 5:
-                stopToShowString = "[Goldsmith Avenue (opp Fratton Station)]";
-                break;
-            case 6:
-                stopToShowString = "[Winston Churchill Avenue (adj Ibis Hotel)]";
-                break;
-            case 8:
-                stopToShowString = "[Cambridge Road (adj Nuffield Building)]";
-                break;
-            case 9:
-                stopToShowString = "[Winston Churchill Avenue (adj Ibis Hotel)]";
-                break;
-            case 10:
-                stopToShowString = "[Goldsmith Avenue (adj Fratton Station)]";
-                break;
-            case 11:
-                stopToShowString = "[Goldsmith Avenue (opp Lidl)]";
-                break;
-            case 12:
-                stopToShowString = "[Goldsmith Avenue (adj Milton Park)]";
-                break;
-            default:
-                return null;
-        }
-        return stopToShowString;
-    }
-
-    /**
      * This method opens and obtains the entire database and parses it to find the stops that match
      * the correct stop. It then formats the times and adds to the arrayList (after clearing
      * the list beforehand from previous run results. I could split the method for a v2 but it
@@ -388,8 +339,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         do {
                             if (cursor.getString(stop) != null) {
                                 Times times = createTime(stop, cursor, is24Hours);
-                                if (cursor.getInt(0) == 47 && stop >= 7) {
-                                    //Checks to see if last row (Which should only be seen for return bus)
+                                if (cursor.getInt(0) == 48 && stop >= 7) {
+                                    //Checks to see if last row (Which should only be seen for return bus). Hardcoded value.
                                     arrayList.add(times);
                                 } else {
                                     arrayList.add(times);
