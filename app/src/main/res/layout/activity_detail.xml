@@ -11,7 +11,8 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
+        android:elevation="4dp"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -19,16 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="@color/icons"
-            app:expandedTitleGravity="end|bottom|center"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline"
+            app:expandedTitleGravity="start|bottom|center"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/dsc05922"
                 app:layout_collapseMode="parallax"
                 android:scaleType="centerCrop"
                 android:id="@+id/image_view"
+                android:transitionName="default"
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
 
             <android.support.v7.widget.Toolbar

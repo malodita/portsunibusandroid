@@ -107,8 +107,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseAnalytics.getInstance(getContext());
-        currentNightMode = getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
+        currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         busStops = getResources().getStringArray(R.array.bus_stops_home_selected);
         databaseHelper = DatabaseHelper.getInstance(getContext());
         sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);

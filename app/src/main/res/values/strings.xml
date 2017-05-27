@@ -23,7 +23,7 @@
     <string name="local_map">Find Stop</string>
     <string name="next_departure">Next departure</string>
     <string name="dialog_create_shortcut">Do you wish to create a shortcut for the selected stop</string>
-    <string name="card_title">"The %1$s to %2$s</string>
+    <string name="card_title">"%1$s to %2$s</string>
 
     <!--Strings related to errors-->
     <string name="play_services_needed">Google Play Services is required for location services</string>
@@ -39,6 +39,7 @@
     <string name="error_route_display">Cannot display route</string>
     <string name="error_eastney">The Eastney service does not run during weekends or holidays</string>
     <string name="error_bank_holiday">The bus service does not run on bank holidays</string>
+    <string name="error_server_response">Error getting response from server</string>
 
 
 
@@ -73,7 +74,6 @@
     <string name="firebase_specific_shortcut_used" translatable="false">specific_shortcut_used</string>
     <string name="firebase_map_marker_click" translatable="false">map_marker_click</string>
     <string name="firebase_timetable_detail_request" translatable="false">timetable_detail_requested</string>
-    <string name="error_server_response">Error getting response from server</string>
 
 
     <string-array name="bus_stops_home">

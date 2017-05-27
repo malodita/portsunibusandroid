@@ -22,7 +22,6 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:popupBackground">@color/background</item>
         <item name="android:colorBackground">@color/background</item>
-
     </style>
 
     <style name="AppTheme.ActionBar" parent="Theme.AppCompat.DayNight">

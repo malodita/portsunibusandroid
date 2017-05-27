@@ -1,8 +1,11 @@
 package com.malcolm.portsmouthunibus.detail;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -36,8 +38,6 @@ public class DetailActivity extends AppCompatActivity {
     CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.image_view)
     ImageView imageView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +64,38 @@ public class DetailActivity extends AppCompatActivity {
     protected void setupToolbar(Intent intent){
         String stop = intent.getCharSequenceExtra(getString(R.string.intent_stop)).toString();
         String time = intent.getCharSequenceExtra(getString(R.string.intent_stop_time)).toString();
-        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
-        Palette palette = new Palette.Builder(bitmap).generate();
         toolbarLayout.setTitle(getString(R.string.card_title, time, stop));
+        toolbarLayout.setExpandedTitleTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        setupImage(stop);
+    }
+
+    private void setupImage(String stop){
+        Drawable drawable;
+        Palette palette;
+        Palette.Swatch swatch;
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            drawable = ContextCompat.getDrawable(this, R.drawable.dsc03145);
+        } else {
+            drawable = ContextCompat.getDrawable(this, R.drawable.img_0145);
+        }
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        palette = new Palette.Builder(bitmap).maximumColorCount(16).generate();
+        swatch = palette.getVibrantSwatch();
+        imageView.setImageDrawable(drawable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(palette.getDarkVibrantColor(ContextCompat.getColor(this, R.color.primary_dark)));
+        }
         toolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.icons));
-        toolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.icons));
-        toolbarLayout.setContentScrimColor(palette.getVibrantColor(ContextCompat.getColor(this, R.color.primary)));
+        if (swatch != null){
+            toolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.icons));
+            toolbarLayout.setContentScrimColor(swatch.getRgb());
+        } else {
+            toolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.icons));
+            toolbarLayout.setContentScrimColor(ContextCompat.getColor(this, R.color.primary));
+        }
     }
 
 
@@ -79,28 +104,7 @@ public class DetailActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            //getWindow().getSharedElementEnterTransition();
-            recyclerView.getViewTreeObserver().addOnPreDrawListener(
-                    new ViewTreeObserver.OnPreDrawListener() {
-                        @Override
-                        public boolean onPreDraw() {
-                            recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                            for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                                View v = recyclerView.getChildAt(i);
-                                v.setAlpha(0.0f);
-                                recyclerView.setVisibility(View.VISIBLE);
-                                v.animate().alpha(1.0f)
-                                        .setDuration(300)
-                                        .setStartDelay(i * 50)
-                                        .start();
-                            }
-                            return true;
-                        }
-                    });
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
 
