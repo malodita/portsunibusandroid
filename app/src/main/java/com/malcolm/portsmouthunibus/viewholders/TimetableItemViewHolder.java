@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -26,10 +26,11 @@ import butterknife.ButterKnife;
 public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final String TAG = "TimetableItemViewHolder";
     private Context context;
-    @BindView(R.id.depart_time_recycler) public TextView timeTextView;
-    @BindView(R.id.destination_recycler) public TextView destinationTextView;
-    @BindView(R.id.inner_linear_layout_recyclerview) LinearLayout layout;
-    @BindView(R.id.card_view_recyclerview) CardView cardView;
+    @BindView(R.id.time) public TextView timeTextView;
+    @BindView(R.id.destination) public TextView destinationTextView;
+    @BindView(R.id.layout)
+    ConstraintLayout layout;
+    @BindView(R.id.card_view) CardView cardView;
     public int position;
     private FirebaseAnalytics analytics;
 
