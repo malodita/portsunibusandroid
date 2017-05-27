@@ -1,18 +1,21 @@
 package com.malcolm.portsmouthunibus.detail;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.R;
@@ -27,11 +30,13 @@ import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
     private static final String TAG = "DetailActivity";
-    @NonNull
-    @BindView(R.id.detail_recycler_view) RecyclerView recyclerView;
-    @NonNull
-    @BindView(R.id.title_text_view) TextView titleTextView;
-    @Nullable @BindView(R.id.app_bar_detail) Toolbar toolbar;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar_wrapper)
+    CollapsingToolbarLayout toolbarLayout;
+    @BindView(R.id.image_view)
+    ImageView imageView;
+
 
 
     @Override
@@ -48,7 +53,7 @@ public class DetailActivity extends AppCompatActivity {
          * display the correct timetable
          */
         int listPosition = i.getIntExtra(getString(R.string.intent_list_position), 1);
-        setActivityTitle(i);
+        setupToolbar(i);
         boolean timeFormat = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE)
                 .getBoolean(getString(R.string.preferences_24hourclock), true);
         ArrayList<Times> array = DatabaseHelper.getInstance(this).getDataForList(listPosition, timeFormat);
@@ -56,10 +61,16 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    protected void setActivityTitle(Intent intent){
+    protected void setupToolbar(Intent intent){
         String stop = intent.getCharSequenceExtra(getString(R.string.intent_stop)).toString();
         String time = intent.getCharSequenceExtra(getString(R.string.intent_stop_time)).toString();
-        titleTextView.setText(getString(R.string.card_title, time, stop));
+        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        Palette palette = new Palette.Builder(bitmap).generate();
+        toolbarLayout.setTitle(getString(R.string.card_title, time, stop));
+        toolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.icons));
+        toolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.icons));
+        toolbarLayout.setContentScrimColor(palette.getVibrantColor(ContextCompat.getColor(this, R.color.primary)));
     }
 
 
