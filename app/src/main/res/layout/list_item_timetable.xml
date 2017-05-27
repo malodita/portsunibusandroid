@@ -8,6 +8,7 @@
     android:layout_height="72dp"
     android:transitionName="default"
     app:cardCornerRadius="0dp"
+    app:cardUseCompatPadding="false"
     android:orientation="vertical"
     android:id="@+id/card_view"
     >
@@ -30,7 +31,8 @@
             app:layout_constraintBottom_toTopOf="@+id/destination"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="@dimen/margin"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"/>
 
         <TextView
             android:id="@+id/destination"

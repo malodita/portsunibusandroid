@@ -14,5 +14,6 @@
     <dimen name="card_spacing_vertical">4dp</dimen>
     <dimen name="fab_icon_size">24dp</dimen>
     <dimen name="card_margin">8dp</dimen>
+    <dimen name="bottom_sheet_margin">8dp</dimen>
 
 </resources>
