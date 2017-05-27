@@ -3,7 +3,6 @@ package com.malcolm.portsmouthunibus;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,10 +19,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +34,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.intro.IntroActivity;
 import com.malcolm.portsmouthunibus.settings.SettingsActivity;
+import com.malcolm.portsmouthunibus.utilities.BottomSheet;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -46,7 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class TopActivity extends AppCompatActivity implements OnTabSelectListener {
+public class TopActivity extends AppCompatActivity implements OnTabSelectListener, BottomSheet.DialogListener {
     //Initialise local variables
     private static final String TAG = "TopActivity";
     private static final String HOMESHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE";
@@ -54,13 +54,13 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     private static final String TOPFRAGMENTTAG = "TopFragment";
     private static final String TIMETABLETAG = "TimetableFragment";
     private static final String MAPSTAG = "MapsFragment";
+    private static final String BOTTOMSHEET = "BottomSheet";
     @BindView(R.id.app_bar)
     Toolbar toolbar;
     @BindView(R.id.bottom_bar_view)
     BottomBar bottomBar;
     @BindView(R.id.placeholder)
     CoordinatorLayout layout;
-    private int stopToShow;
     private FirebaseAnalytics firebaseAnalytics;
     private SharedPreferences sharedPreferences;
     private boolean nightMode;
@@ -101,7 +101,6 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 isGooglePlayServicesAvailable(this);
             }
             ButterKnife.bind(this);
-            stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 1);
             toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.icons));
             toolbar.inflateMenu(R.menu.action_bar_items);
             setSupportActionBar(toolbar);
@@ -187,6 +186,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 manager.beginTransaction()
                         .replace(R.id.placeholder, fragment, TIMETABLETAG)
                         .commit();
+                int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 1);
                 firebaseLog(getString(R.string.firebase_home_shortcut_used)
                         , getString(R.string.firebase_stop_id), String.valueOf(stopToShow));
                 bottomBar.setDefaultTabPosition(0);
@@ -379,6 +379,29 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         return true;
     }
 
+    @Override
+    public void onItemSelected(int position) {
+        Log.d(TAG, "onItemSelected: " + position);
+        int current = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 0);
+        if (position == current) {
+            return;
+        }
+        String[] array = getResources().getStringArray(R.array.bus_stops_home);
+        firebaseLog(getString(R.string.firebase_home_stop_changed), getString(R.string.firebase_stop_id), array[position - 1]);
+        sharedPreferences.edit().putInt(getString(R.string.preferences_home_bus_stop), position).apply();
+        Snackbar snackbar = Snackbar.make(layout, "Home stop changed", Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
+        snackbar.show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            createShortcut();
+        }
+        if (getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG) != null &&
+                getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG).isVisible()) {
+            TopFragment fragment = (TopFragment) getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG);
+            fragment.changeHomeCard();
+        }
+    }
+
     /**
      * Sets a menu listener for if any of the options on the action bar are selected. If the change
      * stop action was selected, it will inflate a dialog asking which stop the user would like to
@@ -396,33 +419,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.default_stop_icon:
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.select_default_stop)
-                        .setItems(R.array.bus_stops_home, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                int selected = which + 1;
-                                int current = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 0);
-                                if (selected == current) {
-                                    return;
-                                }
-                                String[] array = getResources().getStringArray(R.array.bus_stops_home);
-                                firebaseLog(getString(R.string.firebase_home_stop_changed), getString(R.string.firebase_stop_id), array[selected - 1]);
-                                sharedPreferences.edit().putInt(getString(R.string.preferences_home_bus_stop), selected).apply();
-                                Snackbar snackbar = Snackbar.make(layout, "Home stop changed", Snackbar.LENGTH_SHORT);
-                                snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
-                                snackbar.show();
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                                    createShortcut();
-                                }
-                                stopToShow = selected;
-                                if (getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG) != null &&
-                                        getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG).isVisible()) {
-                                    TopFragment fragment = (TopFragment) getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG);
-                                    fragment.changeHomeCard();
-                                }
-                            }
-                        }).show();
+                new BottomSheet().show(getSupportFragmentManager(), BOTTOMSHEET);
                 return true;
             case R.id.action_settings:
                 Intent view = new Intent(this, SettingsActivity.class);
