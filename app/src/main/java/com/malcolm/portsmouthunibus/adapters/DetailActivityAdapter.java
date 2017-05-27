@@ -27,7 +27,7 @@ public class DetailActivityAdapter extends RecyclerView.Adapter<TimetableItemVie
 
     @Override
     public TimetableItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new TimetableItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_timetable, parent,false));
+        return new TimetableItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_detail, parent,false));
     }
 
 
