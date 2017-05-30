@@ -65,6 +65,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     private SharedPreferences sharedPreferences;
     private boolean nightMode;
     private boolean timeFormat;
+    private boolean mapCardAllowed;
 
     /**
      * Static method to enable DayNight
@@ -90,6 +91,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             boolean onboarding2 = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
             nightMode = sharedPreferences.getBoolean(getString(R.string.preferences_night_mode), true);
             timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
+            mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
             nightModeSwitching(nightMode);
             setContentView(R.layout.activity_top);
             if (ContextCompat.checkSelfPermission(this,
@@ -159,7 +161,8 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     protected void onResume() {
         boolean newNightMode  = sharedPreferences.getBoolean(getString(R.string.preferences_night_mode), true);
         boolean newTimeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
-        if (newNightMode != nightMode || newTimeFormat != timeFormat){
+        boolean newMapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
+        if (newNightMode != nightMode || newTimeFormat != timeFormat || newMapCardAllowed != mapCardAllowed){
             nightModeSwitching(newNightMode);
             recreate();
         }
