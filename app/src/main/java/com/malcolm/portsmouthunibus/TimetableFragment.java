@@ -25,6 +25,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,13 +141,14 @@ public class TimetableFragment extends Fragment implements
             ArrayList<Times> array = databaseHelper.getTimesArray(stop, timeFormat);
             if (adapter == null) {
                 recyclerView.setHasFixedSize(true);
-                adapter = new TimetableFragmentAdapter(getContext(), array);
+                adapter = new TimetableFragmentAdapter(getContext(), array, stop);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             } else {
-                adapter.swapData(array);
+                adapter.swapData(array, stop);
             }
         }
+        Log.d(TAG, "setUpRecyclerView: " + stop);
         recyclerView.setVisibility(View.VISIBLE);
     }
 

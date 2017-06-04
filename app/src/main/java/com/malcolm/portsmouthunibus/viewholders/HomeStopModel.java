@@ -16,12 +16,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Malcolm on 28/01/2017.
- */
 
 public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHolder> {
     private static final String TAG = "HomeStopModel";
+    private HomeStopHolder holder;
     @EpoxyAttribute
     String timeHero;
     @EpoxyAttribute
@@ -30,11 +28,15 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
     boolean visibility;
     @EpoxyAttribute
     boolean isHoliday;
+    @EpoxyAttribute
+    boolean isWeekendInHoliday;
+
 
 
     @Override
-    public void bind(final HomeStopHolder holder) {
+    public void bind(HomeStopHolder holder) {
         super.bind(holder);
+        this.holder = holder;
         if (!visibility) {
             holder.intro.setVisibility(View.GONE);
             holder.timeHero.setVisibility(View.GONE);
@@ -42,11 +44,9 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
             holder.error.setVisibility(View.VISIBLE);
             holder.error.setText(stopHero);
         } else if (isHoliday) {
-            holder.intro.setVisibility(View.GONE);
-            holder.timeHero.setVisibility(View.GONE);
-            holder.minutes.setVisibility(View.GONE);
-            holder.error.setVisibility(View.VISIBLE);
-            holder.error.setText(R.string.error_bank_holiday);
+            bankHoliday();
+        } else if (isWeekendInHoliday){
+            weekendInHoliday();
         } else {
             holder.stopHero.setText(stopHero);
             updateViewHolder(holder);
@@ -54,7 +54,8 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
     }
     @SuppressWarnings("unchecked cast")
     @Override
-    public void bind(final HomeStopHolder holder, List<Object> payloads) {
+    public void bind(HomeStopHolder holder, List<Object> payloads) {
+        this.holder = holder;
         ArrayList<Object> array = (ArrayList<Object>) payloads.get(0);
         String payload = array.get(0).toString();
         if (payload.equals(Boolean.TRUE.toString())) {
@@ -115,7 +116,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
         }
     }
 
-    private void updateViewHolder(final HomeStopHolder holder, final String payload) {
+    private void updateViewHolder(HomeStopHolder holder, String payload) {
         if (holder.stopHero.getVisibility() != View.VISIBLE) {
             holder.stopHero.setVisibility(View.VISIBLE);
             holder.error.setVisibility(View.GONE);
@@ -177,6 +178,26 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
     @Override
     protected HomeStopHolder createNewHolder() {
         return new HomeStopHolder();
+    }
+
+    public void weekendInHoliday() {
+        if (holder != null) {
+            holder.intro.setVisibility(View.GONE);
+            holder.timeHero.setVisibility(View.GONE);
+            holder.minutes.setVisibility(View.GONE);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.error.setText(R.string.error_weekend_in_holiday);
+        }
+    }
+
+    public void bankHoliday(){
+        if (holder != null) {
+            holder.intro.setVisibility(View.GONE);
+            holder.timeHero.setVisibility(View.GONE);
+            holder.minutes.setVisibility(View.GONE);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.error.setText(R.string.error_bank_holiday);
+        }
     }
 
     static class HomeStopHolder extends BaseModel {

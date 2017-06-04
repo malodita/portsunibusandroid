@@ -121,4 +121,12 @@ public class TopFragmentAdapter extends EpoxyAdapter {
             removeModel(map);
         }
     }
+
+    public void weekendInHoliday() {
+        home.weekendInHoliday();
+    }
+
+    public void bankHoliday() {
+        home.bankHoliday();
+    }
 }

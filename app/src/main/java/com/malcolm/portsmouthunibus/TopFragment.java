@@ -336,9 +336,14 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     /**
      * Starts the update for the timehero. If previously paused (meaning the runnable is non Null
      * such as on rotation) it will post the runnable rather than create a new one.
-     */
+     */// FIXME: 04/06/2017 When home stop changed during weekend in holiday, card doesn't update
     public void updateTimeHero() {
-        if (TermDates.isWeekendInHoliday() || TermDates.isBankHoliday()) {
+        if (TermDates.isWeekendInHoliday()) {
+            adapter.weekendInHoliday();
+            return;
+        }
+        if (TermDates.isBankHoliday()){
+            adapter.bankHoliday();
             return;
         }
         if (homeRunnable == null) {
@@ -702,9 +707,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * </p>
      */
     public void changeHomeCard() {
-        if (TermDates.isBankHoliday()) {
-            return;
-        }
         stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), DEFAULT_VALUE);
         stopTimes = databaseHelper.getTimesForArray(stopToShow);
         if (homeRunnable != null) {
