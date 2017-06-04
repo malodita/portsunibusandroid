@@ -32,7 +32,8 @@ public class TopFragmentAdapter extends EpoxyAdapter {
             home = new HomeStopModel_().visibility(true)
                     .stopHero(homeCard.get(1).toString())
                     .timeHero(homeCard.get(2).toString())
-                    .isHoliday(Boolean.parseBoolean(homeCard.get(3).toString()));
+                    .isHoliday(Boolean.parseBoolean(homeCard.get(3).toString()))
+                    .isWeekendInHoliday(Boolean.parseBoolean(homeCard.get(4).toString()));
         }
         boolean mapsCardAllowed = (Boolean) mapCard.get(0);
         int playServices = (int) mapCard.get(1);
@@ -70,7 +71,7 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     }
 
     public void locationReady(List<Object> list) {
-        if (!map.isShown()){
+        if (!map.isShown()) {
             addModel(map);
         }
         notifyModelChanged(map, list);
@@ -116,7 +117,7 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     }
 
     public void hideMapsCard() {
-        if (map.isShown()){
+        if (map.isShown()) {
             removeModel(map);
         }
     }

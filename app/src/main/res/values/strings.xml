@@ -39,6 +39,7 @@
     <string name="error_route_display">Cannot display route</string>
     <string name="error_eastney">The Eastney service does not run during weekends or holidays</string>
     <string name="error_bank_holiday">The bus service does not run on bank holidays</string>
+    <string name="error_weekend_in_holiday">The bus service does not run out of term during the weekend</string>
     <string name="error_server_response">Error getting response from server</string>
 
 
@@ -63,6 +64,7 @@
     <string name="intent_list_position">com.malcolm.portsmouthunibus.VIEW.LIST.POSITION</string>
     <string name="intent_stop">com.malcolm.portsmouthunibus.VIEW.STOP</string>
     <string name="intent_stop_time">com.malcolm.portsmouthunibus.VIEW.STOP.TIME</string>
+    <string name="intent_stop_viewed">com.malcolm.portsmouthunibus.VIEW.CALLING.STOP</string>
 
 
 

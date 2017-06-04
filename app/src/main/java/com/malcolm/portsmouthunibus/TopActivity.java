@@ -35,6 +35,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.intro.IntroActivity;
 import com.malcolm.portsmouthunibus.settings.SettingsActivity;
 import com.malcolm.portsmouthunibus.utilities.BottomSheet;
+import com.malcolm.unibusutilities.TermDates;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -347,7 +348,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 }
                 break;
             case R.id.tab_timetable:
-                toolbar.setTitle(R.string.app_name);
+                toolbar.setTitle(TermDates.getTimetableName());
                 if (timetableFragment != null) {
                     timetableFragment = (TimetableFragment) getSupportFragmentManager().findFragmentByTag(TIMETABLETAG);
                     ft.attach(timetableFragment).commit();
@@ -358,7 +359,6 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                     ft.commit();
                 }
-                toolbar.setTitle(R.string.timetables);
                 break;
             default:
                 break;

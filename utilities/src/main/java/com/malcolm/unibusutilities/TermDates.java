@@ -1,6 +1,7 @@
 package com.malcolm.unibusutilities;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -80,6 +81,10 @@ public final class TermDates {
         }
     }
 
+    public static boolean isWeekendInHoliday(){
+        return isWeekend() && isHoliday();
+    }
+
     public static boolean isBankHoliday() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR, 0);
@@ -99,6 +104,23 @@ public final class TermDates {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @NonNull
+    public static String getTimetableName(){
+        if (isWeekendInHoliday() || isHoliday()){
+            return "Out of Term Timetable";
+        } else if (isWeekend()){
+            return "Weekend Timetable";
+        } else if (isBankHoliday()){
+            if (isHoliday()){
+                return "Out of Term Timetable";
+            } else {
+                return "Term Timetable";
+            }
+        } else {
+            return "Term Timetable";
+        }
     }
 
     private static List<Date> makeDateArray(String start, String end) {

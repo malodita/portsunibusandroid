@@ -73,7 +73,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class TopFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema>{
+        GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema> {
     private static final int DEFAULT_VALUE = 0;
     public static final String TAG = "Top Fragment";
     private final Handler handler = new Handler();
@@ -145,7 +145,10 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * <p>
      * 3 - Boolean: If the term date is a holiday
      * </p>
-     * array is a field as this is subsequently used to set the initial state of the card, it does
+     * <p>
+     * 4 - Boolean: If it is the weekend during the holiday
+     * </p>
+     * Array is a field as this is subsequently used to set the initial state of the card, it does
      * not take care of updating it {@link HomeCardTask which is left to a runnable task}.
      *
      * @return An array list suitable for use as an initial payload for the home card
@@ -162,6 +165,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
             array.add(stopList[stopToShow]);
             array.add(stop);
             array.add(TermDates.isBankHoliday());
+            array.add(TermDates.isWeekendInHoliday());
         }
         return array;
     }
@@ -334,12 +338,13 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * such as on rotation) it will post the runnable rather than create a new one.
      */
     public void updateTimeHero() {
-        if (!TermDates.isBankHoliday()) {
-            if (homeRunnable == null) {
-                homeRunnable = new HomeCardTask(this);
-            }
-            handler.post(homeRunnable);
+        if (TermDates.isWeekendInHoliday() || TermDates.isBankHoliday()) {
+            return;
         }
+        if (homeRunnable == null) {
+            homeRunnable = new HomeCardTask(this);
+        }
+        handler.post(homeRunnable);
     }
 
     @Override
@@ -372,13 +377,13 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                     .setFastestInterval(15000)
                     .setInterval(60000)
                     .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request , listener);
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, listener);
             requestingLocationUpdates = true;
         }
     }
 
-    private void stopLocationUpdates(){
-        if (requestingLocationUpdates){
+    private void stopLocationUpdates() {
+        if (requestingLocationUpdates) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, listener);
             requestingLocationUpdates = false;
         }
@@ -425,7 +430,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
                         //If data saver enabled, increases expiry time of the cached location
                         ConnectivityManager connMgr = (ConnectivityManager)
                                 getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                        if (connMgr.getRestrictBackgroundStatus() == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED){
+                        if (connMgr.getRestrictBackgroundStatus() == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED) {
                             if (cacheTime > 300000) {
                                 //If the cached item has expired
                                 sendDirectionsRequest(lastLocation, closest);
@@ -757,10 +762,10 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     /**
-     * This class implements the LocationListener interface instead of the TopFragment as this led to
-     * constant memory leaks
+     * This class implements the LocationListener interface instead of the TopFragment as this led
+     * to constant memory leaks
      */
-    private static class CurrentLocationListener implements LocationListener{
+    private static class CurrentLocationListener implements LocationListener {
 
         private WeakReference<TopFragment> reference;
 
