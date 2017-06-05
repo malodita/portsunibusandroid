@@ -30,12 +30,14 @@ public class TimetableFragmentAdapter extends RecyclerView.Adapter<TimetableItem
     private LayoutInflater inflater;
     private Context context;
     private FirebaseAnalytics analytics;
+    private int currentStopId;
 
-    public TimetableFragmentAdapter(Context context, ArrayList<Times> times){
+    public TimetableFragmentAdapter(Context context, ArrayList<Times> times, int currentStopId){
         this.context = context;
         analytics = FirebaseAnalytics.getInstance(context);
         inflater = LayoutInflater.from(context);
         this.times = times;
+        this.currentStopId = currentStopId;
     }
 
 
@@ -62,11 +64,10 @@ public class TimetableFragmentAdapter extends RecyclerView.Adapter<TimetableItem
                 bundle.putInt("listPosition", holderPosition);
                 bundle.putString("stop", holder.destination.getText().toString());
                 bundle.putString("time", holder.time.getText().toString());
-                i.putExtra(context.getString(R.string.intent_list_position), holderPosition + 1);
+                i.putExtra(context.getString(R.string.intent_list_position), holder.position);
                 i.putExtra(context.getString(R.string.intent_stop), holder.destination.getText());
                 i.putExtra(context.getString(R.string.intent_stop_time), holder.time.getText());
-                //ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, cardView, ViewCompat.getTransitionName(cardView));
-                //This can be played with later to create shared element transition
+                i.putExtra(context.getString(R.string.intent_stop_viewed), currentStopId);
                 analytics.logEvent(context.getString(R.string.firebase_timetable_detail_request), bundle);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeClipRevealAnimation(v, 0, 0
@@ -92,13 +93,14 @@ public class TimetableFragmentAdapter extends RecyclerView.Adapter<TimetableItem
         notifyDataSetChanged();
     }
 
-    public void swapData(List<Times> list){
+    public void swapData(List<Times> list, int newPosition){
         if (times != null){
             times.clear();
             times.addAll(list);
         } else {
             times = list;
         }
+        currentStopId = newPosition;
         notifyDataSetChanged();
     }
 
