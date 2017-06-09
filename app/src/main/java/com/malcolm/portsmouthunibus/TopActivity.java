@@ -134,6 +134,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     void startOnboarding() {
         Intent view = new Intent(this, IntroActivity.class);
         startActivity(view);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 
