@@ -29,12 +29,14 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
 
 
 
-    public TimetableItemViewHolder(View itemView) {
+    public TimetableItemViewHolder(View itemView, boolean isClickable) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        context = itemView.getContext();
-        analytics = FirebaseAnalytics.getInstance(context);
-        itemView.setOnClickListener(this);
+        if (isClickable) {
+            context = itemView.getContext();
+            analytics = FirebaseAnalytics.getInstance(context);
+            itemView.setOnClickListener(this);
+        }
     }
 
     @Override
