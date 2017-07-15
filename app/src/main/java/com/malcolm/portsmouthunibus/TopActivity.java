@@ -20,7 +20,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -64,20 +63,8 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     CoordinatorLayout layout;
     private FirebaseAnalytics firebaseAnalytics;
     private SharedPreferences sharedPreferences;
-    private boolean nightMode;
     private boolean timeFormat;
     private boolean mapCardAllowed;
-
-    /**
-     * Static method to enable DayNight
-     */
-    static void nightModeSwitching(boolean mode) {
-        if (mode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +77,9 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             startOnboarding();
         } else {
             boolean onboarding2 = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
-            nightMode = sharedPreferences.getBoolean(getString(R.string.preferences_night_mode), true);
             timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
             mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-            nightModeSwitching(nightMode);
+            //nightModeSwitching(nightMode);
             setContentView(R.layout.activity_top);
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
@@ -115,7 +101,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.placeholder, new TopFragment(), TOPFRAGMENTTAG)
-                        .commit();
+                        .commitNow();
             }
             bottomBar.setOnTabSelectListener(this, false);
         }
@@ -161,11 +147,9 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
 
     @Override
     protected void onResume() {
-        boolean newNightMode  = sharedPreferences.getBoolean(getString(R.string.preferences_night_mode), true);
         boolean newTimeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
         boolean newMapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-        if (newNightMode != nightMode || newTimeFormat != timeFormat || newMapCardAllowed != mapCardAllowed){
-            nightModeSwitching(newNightMode);
+        if (newTimeFormat != timeFormat || newMapCardAllowed != mapCardAllowed){
             recreate();
         }
         super.onResume();

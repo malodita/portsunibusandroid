@@ -71,8 +71,6 @@ ehthumbs.db
 Thumbs.db
 
 #Custom
-/app/src/main/AndroidManifest.xml
-/app/src/debug/AndroidManifest.xml
 /app/src/main/res/raw/
 /app/google-services.json
 gradle.properties

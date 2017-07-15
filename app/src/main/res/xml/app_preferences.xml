@@ -6,8 +6,8 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/preferences_night_mode"
-            android:summaryOff="Uses the day theme only"
-            android:summaryOn="Switches to a dark theme at night"
+            android:summaryOff="Uses the day theme only. Requires app restart to apply changes"
+            android:summaryOn="Switches to a dark theme at night. Requires app restart to apply changes"
             android:title="Night mode"/>
         <SwitchPreference
             android:defaultValue="true"
