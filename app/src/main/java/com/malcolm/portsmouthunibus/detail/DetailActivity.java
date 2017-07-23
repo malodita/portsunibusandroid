@@ -1,7 +1,6 @@
 package com.malcolm.portsmouthunibus.detail;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,6 +21,7 @@ import android.widget.ImageView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.adapters.DetailActivityAdapter;
+import com.malcolm.portsmouthunibus.utilities.ImageGenerator;
 import com.malcolm.unibusutilities.DatabaseHelper;
 import com.malcolm.unibusutilities.Times;
 
@@ -71,15 +71,7 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
     }
 
     private void setupImage(int stop){
-        Drawable drawable;
-        //drawable = ImageGenerator.generateImage(this, stop);
-        int currentNightMode = getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            drawable = ContextCompat.getDrawable(this, R.drawable.dsc03145);
-        } else {
-            drawable = ContextCompat.getDrawable(this, R.drawable.img_0145);
-        }
+        Drawable drawable = ImageGenerator.generateImage(this, stop);
         BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
         Bitmap bitmap = bitmapDrawable.getBitmap();
         new Palette.Builder(bitmap).maximumColorCount(16).generate(this);
@@ -90,7 +82,7 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
     public void onGenerated(Palette palette) {
         Palette.Swatch swatch = palette.getVibrantSwatch();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(palette.getDarkVibrantColor(ContextCompat.getColor(this, R.color.primary_dark)));
+            getWindow().setStatusBarColor(palette.getVibrantColor(ContextCompat.getColor(this, R.color.primary_dark)));
         }
         toolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.icons));
         if (swatch != null){
