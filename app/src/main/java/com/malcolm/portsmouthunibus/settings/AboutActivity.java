@@ -131,6 +131,16 @@ public class AboutActivity extends MaterialAboutActivity {
                         displayLicensesDialog("epoxy.html");
                     }
                 }).build());
+        licenses.addItem(new MaterialAboutActionItem.Builder()
+                .text("Picasso")
+                .subText("Square")
+                .icon(R.drawable.ic_github_circle)
+                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
+                    @Override
+                    public void onClick() {
+                        displayLicensesDialog("picasso.html");
+                    }
+                }).build());
 
         MaterialAboutCard.Builder personal = new MaterialAboutCard.Builder().title("Developer");
         personal.addItem(new MaterialAboutActionItem.Builder()
@@ -140,7 +150,7 @@ public class AboutActivity extends MaterialAboutActivity {
                 .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
                     @Override
                     public void onClick() {
-                        String url = "https://malodita.myportfolio.com/";
+                        String url = "https://malcolmphoto.co.uk/";
                         Intent view = new Intent(Intent.ACTION_VIEW);
                         view.setData(Uri.parse(url));
                         startActivity(view);
