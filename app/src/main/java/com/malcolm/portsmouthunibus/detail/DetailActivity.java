@@ -24,13 +24,15 @@ import com.malcolm.portsmouthunibus.adapters.DetailActivityAdapter;
 import com.malcolm.portsmouthunibus.utilities.ImageGenerator;
 import com.malcolm.unibusutilities.DatabaseHelper;
 import com.malcolm.unibusutilities.Times;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailActivity extends AppCompatActivity implements Palette.PaletteAsyncListener {
+public class DetailActivity extends AppCompatActivity implements Palette.PaletteAsyncListener, Callback {
     private static final String TAG = "DetailActivity";
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -62,20 +64,34 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
 
 
     protected void setupToolbar(Intent intent){
+        int viewedStop = intent.getIntExtra(getString(R.string.intent_stop_viewed), -1);
+        setupImage(viewedStop);
         String stop = intent.getCharSequenceExtra(getString(R.string.intent_stop)).toString();
         String time = intent.getCharSequenceExtra(getString(R.string.intent_stop_time)).toString();
-        int viewedStop = intent.getIntExtra(getString(R.string.intent_stop_viewed), -1);
         toolbarLayout.setTitle(getString(R.string.card_title, time, stop));
         toolbarLayout.setExpandedTitleTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-        setupImage(viewedStop);
     }
 
     private void setupImage(int stop){
-        Drawable drawable = ImageGenerator.generateImage(this, stop);
+        RequestCreator requestCreator = ImageGenerator.generateImage(this, stop);
+        requestCreator.into(imageView, this);
+    }
+
+    @Override
+    public void onSuccess() {
+        Drawable drawable = imageView.getDrawable();
         BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
         Bitmap bitmap = bitmapDrawable.getBitmap();
         new Palette.Builder(bitmap).maximumColorCount(16).generate(this);
+    }
+
+    @Override
+    public void onError() {
+        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.generic_day);
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        Bitmap bitmap = bitmapDrawable.getBitmap();
         imageView.setImageDrawable(drawable);
+        new Palette.Builder(bitmap).maximumColorCount(16).generate(this);
     }
 
     @Override

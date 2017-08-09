@@ -88,14 +88,18 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
             holder.error.setVisibility(View.VISIBLE);
             holder.progressBar.hide();
         }
-
+        if (googleMap != null){
+            setUpGoogleMap(googleMap);
+        }
     }
 
 
     public void noInternet() {
-        holder.error.setText(R.string.error_no_connection);
-        holder.error.setVisibility(View.VISIBLE);
-        holder.progressBar.hide();
+        if (holder != null) {
+            holder.error.setText(R.string.error_no_connection);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.progressBar.hide();
+        }
     }
 
 
@@ -139,6 +143,10 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        setUpGoogleMap(googleMap);
+    }
+
+    private void setUpGoogleMap(GoogleMap googleMap){
         final Context context = weakContext.get();
         holder.progressBar.hide();
         holder.layout.setVisibility(View.VISIBLE);
@@ -218,9 +226,11 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
     }
 
     public void notInPortsmouth() {
-        holder.error.setText(R.string.error_not_in_portsmouth);
-        holder.error.setVisibility(View.VISIBLE);
-        holder.progressBar.hide();
+        if (holder != null) {
+            holder.error.setText(R.string.error_not_in_portsmouth);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.progressBar.hide();
+        }
     }
 
     public void noConnection() {

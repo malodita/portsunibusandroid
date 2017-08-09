@@ -69,4 +69,13 @@ public class TimetableFragmentAdapter extends RecyclerView.Adapter<TimetableItem
         notifyDataSetChanged();
     }
 
+    public void refreshData(List<Times> list) {
+        if (times != null){
+            times.clear();
+            times.addAll(list);
+        } else {
+            times = list;
+        }
+        notifyDataSetChanged();
+    }
 }

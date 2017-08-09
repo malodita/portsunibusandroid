@@ -216,3 +216,6 @@ app/src/main/res/drawable-xxhdpi/dsc03145.png
 app/src/main/res/drawable-xxhdpi/img_0145.png
 app/src/main/res/drawable-xxxhdpi/dsc03145.png
 app/src/main/res/drawable-xxxhdpi/img_0145.png
+!/app/src/main/java/com/malcolm/portsmouthunibus/detail/DetailActivity.java
+!/app/src/main/java/com/malcolm/portsmouthunibus/adapters/TimetableFragmentAdapter.java
+/app/src/main/assets/picasso.html

@@ -55,6 +55,7 @@
     <string name="preferences_onboarding_3" translatable="false">com.malcolm.portsmouthunibus.onboarding3</string>
     <string name="preferences_shortcuts_reset" translatable="false">com.malcolm.portsmouthunibus.shortcuts</string>
     <string name="preferences_24hourclock" translatable="false">com.malcolm.portsmouthunibus.24hourclock</string>
+    <string name="preference_last_viewed_stop" translatable="false">com.malcolm.portsmouthunibus.lastviewed</string>
     <string name="shortcut_home_timetable_name_long">Home Timetable</string>
     <string name="shortcut_home_timetable_name_short">Home Stop</string>
     <string name="shortcut_home_timetable" translatable="false">home_timetable</string>
@@ -129,6 +130,31 @@
             >Goldsmith Avenue adj Milton Park</item>
         <item
             >IMS Eastney</item>
+    </string-array>
+
+    <string-array name="bus_stops_drawables">
+        <item
+            >langstone</item>
+        <item
+            >locksway</item>
+        <item
+            >adj_Lidl</item>
+        <item
+            >fawcett</item>
+        <item
+            >ibis</item>
+        <item
+            >nuffield</item>
+        <item
+            >law_Courts</item>
+        <item
+            >fratton</item>
+        <item
+            >opp_Lidl</item>
+        <item
+            >milton</item>
+        <item
+            >eastney</item>
     </string-array>
 
     <string-array name="bus_stops_shortcuts_short">

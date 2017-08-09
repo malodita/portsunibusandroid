@@ -71,7 +71,7 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     }
 
     public void locationReady(List<Object> list) {
-        if (!map.isShown()) {
+        if (!models.contains(map)) {
             addModel(map);
         }
         notifyModelChanged(map, list);
@@ -80,7 +80,6 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     public void updateTimeHero(List newInfo) {
         notifyModelChanged(home, newInfo);
     }
-
 
     public void instantCard(List<Object> array) {
         //Check to see if instant card is already added
@@ -117,9 +116,7 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     }
 
     public void hideMapsCard() {
-        if (map.isShown()) {
-            removeModel(map);
-        }
+        hideModel(map);
     }
 
     public void weekendInHoliday() {
@@ -129,4 +126,9 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     public void bankHoliday() {
         home.bankHoliday();
     }
+
+    public void showMapsCard() {
+        showModel(map);
+    }
 }
+
