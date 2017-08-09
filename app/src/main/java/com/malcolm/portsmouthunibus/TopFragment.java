@@ -10,9 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Process;
@@ -31,11 +29,13 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.malcolm.portsmouthunibus.adapters.TopFragmentAdapter;
@@ -72,8 +72,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class TopFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, Callback<ResponseSchema> {
+public class TopFragment extends Fragment implements Callback<ResponseSchema>, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int DEFAULT_VALUE = 0;
     public static final String TAG = "Top Fragment";
     private final Handler handler = new Handler();
@@ -81,7 +80,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     RecyclerView recyclerView;
     @BindView(R.id.top_fragment_coordinator)
     CoordinatorLayout layout;
-    private GoogleApiClient googleApiClient;
     private int stopToShow;
     private int currentNightMode;
     private Runnable homeRunnable;
@@ -97,6 +95,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     private Location closest;
     private final CurrentLocationListener listener = new CurrentLocationListener(this);
     private boolean requestingLocationUpdates = false;
+    private FusedLocationProviderClient client;
+
 
 
     public TopFragment() {
@@ -111,11 +111,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         busStops = getResources().getStringArray(R.array.bus_stops_home_selected);
         databaseHelper = DatabaseHelper.getInstance(getContext());
         sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
-        googleApiClient = new GoogleApiClient.Builder(getContext())
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .addOnConnectionFailedListener(this)
-                .build();
+        client = LocationServices.getFusedLocationProviderClient(getContext());
     }
 
     @Override
@@ -177,8 +173,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * or not</p> </p> 4 - MapStyleOptions: The layout to be used by the googlemap should night mode
      * be enabled. <p> 5 - int: If night mode is enabled so that night resources may be loaded for
      * the polyline <p> This method is only called once to help determine if the map requires
-     * setting up or not. Updating the map is done by a chain pf methods starting from {@link
-     * #onConnected(Bundle)} in the case that the current location is obtainable</P> </p>
+     * setting up or not. Updating the map is done by a chain of methods starting from {@link
+     * #startLocationUpdates()} in the case that the current location is obtainable</P> </p>
      *
      * @return An array list suitable to use as an initial payload for the maps card
      */
@@ -304,13 +300,12 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         return ((hour * 60) + minute) * 60;
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
 
     @Override
     public void onResume() {
         super.onResume();
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        startLocationUpdates();
         int currentHome = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), DEFAULT_VALUE);
         //Checks the previous value of the stop to show
         if (stopToShow != 0) {
@@ -330,19 +325,18 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         if (isInstantCardDisplayed && instantCard != null) {
             handler.post(instantCard);
         }
-        startLocationUpdates();
     }
 
     /**
      * Starts the update for the timehero. If previously paused (meaning the runnable is non Null
      * such as on rotation) it will post the runnable rather than create a new one.
-     */// FIXME: 04/06/2017 When home stop changed during weekend in holiday, card doesn't update
+     */
     public void updateTimeHero() {
         if (TermDates.isWeekendInHoliday()) {
             adapter.weekendInHoliday();
             return;
         }
-        if (TermDates.isBankHoliday()){
+        if (TermDates.isBankHoliday()) {
             adapter.bankHoliday();
             return;
         }
@@ -352,44 +346,44 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         handler.post(homeRunnable);
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    private void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext()
+                , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        startLocationUpdates();
-        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        closest = BusStops.getClosestStop(location);
-        boolean mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-        if (mapCardAllowed) {
-            getDirections(location);
-        } else {
-            adapter.hideMapsCard();
-        }
-        instantCardCheck(location);
-    }
-
-    private void startLocationUpdates() {
-        if (!requestingLocationUpdates && googleApiClient.isConnected()) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext()
-                    , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
+        final boolean mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
+        client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location == null) {
+                    adapter.noConnection();
+                    return;
+                }
+                closest = BusStops.getClosestStop(location);
+                if (mapCardAllowed) {
+                    adapter.showMapsCard();
+                    getDirections(location);
+                } else {
+                    adapter.hideMapsCard();
+                }
+                instantCardCheck(location);
             }
+        });
+        if (!requestingLocationUpdates) {
             LocationRequest request = LocationRequest.create()
                     .setFastestInterval(15000)
                     .setInterval(60000)
                     .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, listener);
+            client.requestLocationUpdates(request, listener, null);
             requestingLocationUpdates = true;
         }
     }
 
+
     private void stopLocationUpdates() {
         if (requestingLocationUpdates) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, listener);
+            client.removeLocationUpdates(listener);
             requestingLocationUpdates = false;
         }
     }
@@ -420,48 +414,42 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         }
         long cacheTime = System.currentTimeMillis() - cacheDate;
         //If the cache exists
-        if (cachedLocation != null) {
-            //If the distance between the last location and  the closest stop < 120 metres
-            if (lastLocation.distanceTo(closest) < 150) {
-                //If so a near warning is sent
-                sendMapInfoToAdapter(closest);
+        if (cachedLocation == null) {
+            sendDirectionsRequest(lastLocation, closest);
+            return;
+        }
+        //If the distance between the last location and  the closest stop < 120 metres
+        if (lastLocation.distanceTo(closest) < 150) {
+            //If so a near warning is sent
+            sendMapInfoToAdapter(closest);
+        } else {
+            //If the distance between the cached location and last location < 100 metres
+            if (cachedLocation.distanceTo(lastLocation) < 80) {
+                //The cached location is sent
+                sendCachedLocationToAdapter(responseSchema, closest);
             } else {
-                //If the distance between the cached location and last location < 100 metres
-                if (cachedLocation.distanceTo(lastLocation) < 80) {
-                    //The cached location is sent
-                    sendCachedLocationToAdapter(responseSchema, closest);
+                //If the distance is grater than 150 metres from stop and cached location is more than 80 metres away
+                if (cacheTime > 180000) {
+                    //If the cached item has expired
+                    sendDirectionsRequest(lastLocation, closest);
                 } else {
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        //If data saver enabled, increases expiry time of the cached location
-                        ConnectivityManager connMgr = (ConnectivityManager)
-                                getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                        if (connMgr.getRestrictBackgroundStatus() == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED) {
-                            if (cacheTime > 300000) {
-                                //If the cached item has expired
-                                sendDirectionsRequest(lastLocation, closest);
-                            } else {
-                                sendCachedLocationToAdapter(responseSchema, closest);
-                            }
-                        }
-                    } else {
-                        if (cacheTime > 180000) {
-                            //If the cached item has expired
-                            sendDirectionsRequest(lastLocation, closest);
-                        } else {
-                            sendCachedLocationToAdapter(responseSchema, closest);
-                        }
-                    }
+                    sendCachedLocationToAdapter(responseSchema, closest);
                 }
             }
-        } else {
-            //If it doesn't exist an API request is sent
-            sendDirectionsRequest(lastLocation, closest);
         }
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals(getString(R.string.preferences_maps_card))){
+            if (sharedPreferences.getBoolean(s, true)){
+                adapter.showMapsCard();
+                startLocationUpdates();
+            }
+        }
+    }
 
     private void sendCachedLocationToAdapter(ResponseSchema responseSchema, Location closest) {
-        //Route route = responseSchema.getRoutes().get(0);
         String summary = responseSchema.getRoutes().get(0).getSummary();
         String polyline = responseSchema.getRoutes().get(0).getOverviewPolyline().getPoints();
         double time = responseSchema.getRoutes().get(0).getLegs().get(0).getDuration().getValue();
@@ -694,11 +682,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-        adapter.noConnection();
-    }
-
     /**
      * Changes the home card according to the new home stop selected.
      * It removes the callbacks for the runnable and restarts it so that it may update immediately
@@ -717,13 +700,6 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         }
     }
 
-
-    @Override
-    public void onStart() {
-        googleApiClient.connect();
-        super.onStart();
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         adapter.onSaveInstanceState(outState);
@@ -737,15 +713,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     @Override
-    public void onStop() {
-        googleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
     public void onPause() {
         stopLocationUpdates();
-        //Nullifies callbacks for the handler
         handler.removeCallbacksAndMessages(null);
         if (call != null) {
             call.cancel();
@@ -756,18 +725,18 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         recyclerView.setAdapter(null);
         unbinder.unbind();
         RefWatcher refWatcher = App.getRefWatcher(getActivity());
         refWatcher.watch(this);
-
     }
 
     /**
      * This class implements the LocationListener interface instead of the TopFragment as this led
      * to constant memory leaks
      */
-    private static class CurrentLocationListener implements LocationListener {
+    private static class CurrentLocationListener extends LocationCallback {
 
         private WeakReference<TopFragment> reference;
 
@@ -776,10 +745,14 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
         }
 
         @Override
-        public void onLocationChanged(Location location) {
-            TopFragment fragment = reference.get();
-            fragment.instantCardCheck(location);
+        public void onLocationResult(LocationResult locationResult) {
+            for (Location location : locationResult.getLocations()) {
+                TopFragment fragment = reference.get();
+                fragment.instantCardCheck(location);
+            }
+            super.onLocationResult(locationResult);
         }
+
     }
 
     /**
@@ -821,10 +794,8 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     /**
      * This class is a holder for the {@link InstantCardTask} asynctask so that it may repeat.
-     * Unlike the {@link HomeCardTask} it is not static as to be able to create new instances
-     * of the asynctask so that the same one is not completed twice which will throw an exception.
      */
-    private class InstantCard implements Runnable {
+    private static class InstantCard implements Runnable {
 
         WeakReference<TopFragment> parent;
         ArrayList<Integer> list;
@@ -850,7 +821,7 @@ public class TopFragment extends Fragment implements GoogleApiClient.ConnectionC
      * array of stop times to be searched and a weak reference to the topFragment to access its
      * methods without possibly leaking the fragment
      */
-    private class InstantCardTask extends AsyncTask<Void, Void, ArrayList<Object>> {
+    private static class InstantCardTask extends AsyncTask<Void, Void, ArrayList<Object>> {
 
         TopFragment fragment;
         ArrayList<Integer> array;
