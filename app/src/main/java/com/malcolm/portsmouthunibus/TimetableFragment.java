@@ -15,6 +15,8 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -41,8 +43,10 @@ import com.malcolm.unibusutilities.DatabaseHelper;
 import com.malcolm.unibusutilities.TermDates;
 import com.malcolm.unibusutilities.Times;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,11 +54,9 @@ import butterknife.Unbinder;
 
 
 public class TimetableFragment extends Fragment implements
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "TimetableFragment";
-    private TimetableFragmentAdapter adapter;
-    private FirebaseAnalytics firebaseAnalytics;
     Unbinder unbinder;
     int stopToSave;
     @BindView(R.id.recycler_view)
@@ -65,11 +67,15 @@ public class TimetableFragment extends Fragment implements
     TextView noTimetable;
     @BindView(R.id.timetableFragment)
     CoordinatorLayout layout;
-    @Nullable @BindView(R.id.timetable_fab)
+    @Nullable
+    @BindView(R.id.timetable_fab)
     FloatingActionButton floatingActionButton;
+    private TimetableFragmentAdapter adapter;
+    private FirebaseAnalytics firebaseAnalytics;
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreferences;
     private boolean spinnerReady = false;
+    protected static TimetableHandler handler;
 
 
     public TimetableFragment() {
@@ -77,35 +83,24 @@ public class TimetableFragment extends Fragment implements
     }
 
     @Override
-    public void onAttach(Context context) {
-        //For the sake of getting a context
-        super.onAttach(context);
-        sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_name), Context.MODE_PRIVATE);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_name), Context.MODE_PRIVATE);
         databaseHelper = DatabaseHelper.getInstance(getContext());
         firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
         View rootView = inflater.inflate(R.layout.fragment_timetable, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        handler = new TimetableHandler(this);
         setUpSpinner(spinner);
         int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 2);
         if (getArguments() != null) {
-            stopToShow = getArguments().getInt(getString(R.string.shortcut_specific_timetable));
-            setUpRecyclerView(recyclerView, 0, true);
+            stopToSave = getArguments().getInt(getString(R.string.shortcut_specific_timetable));
             spinner.setOnItemSelectedListener(this);
-            spinner.setSelection(stopToShow, true);
+            spinner.setSelection(stopToSave, true);
         } else {
             setUpRecyclerView(recyclerView, stopToShow + 1, false);
             spinner.setSelection(stopToShow - 1, true);
+            stopToSave = stopToShow - 1;
             spinner.setOnItemSelectedListener(this);
         }
         return rootView;
@@ -138,19 +133,28 @@ public class TimetableFragment extends Fragment implements
         }
         if (!shortcutUsed) {
             boolean timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
-            ArrayList<Times> array = databaseHelper.getTimesArray(stop, timeFormat);
-            if (adapter == null) {
-                recyclerView.setHasFixedSize(true);
-                adapter = new TimetableFragmentAdapter(getContext(), array, stop);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            } else {
-                adapter.swapData(array, stop);
-            }
+            new TimetableThread(databaseHelper, stop, timeFormat).start();
         }
-        Log.d(TAG, "setUpRecyclerView: " + stop);
         recyclerView.setVisibility(View.VISIBLE);
     }
+
+    @SuppressWarnings("unchecked cast")
+    private void setData(Message message){
+        ArrayList<Object> list = (ArrayList<Object>) message.obj;
+        ArrayList<Times> times = (ArrayList<Times>) list.get(0);
+        int stop = (Integer) list.get(1);
+        if (adapter == null) {
+            recyclerView.setHasFixedSize(true);
+            adapter = new TimetableFragmentAdapter(getContext(), times, stop);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        } else {
+            adapter.swapData(times, stop);
+            sharedPreferences.edit().putInt(getString(R.string.preference_last_viewed_stop), stop).apply();
+        }
+    }
+
+
 
     /**
      * <p>Callback method to be invoked when an item in this view has been selected. This callback
@@ -173,10 +177,11 @@ public class TimetableFragment extends Fragment implements
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (floatingActionButton != null && !floatingActionButton.isShown()){
+        if (floatingActionButton != null && !floatingActionButton.isShown()) {
             floatingActionButton.show();
         }
         int newStopToShow;
+        stopToSave = position;
         if (position == 10) {
             if (TermDates.isHoliday() || TermDates.isWeekend()) {
                 recyclerView.setVisibility(View.GONE);
@@ -194,19 +199,20 @@ public class TimetableFragment extends Fragment implements
         ArrayAdapter<CharSequence> spinnerArray = ArrayAdapter.createFromResource(getContext(), R.array.bus_stops_all,
                 R.layout.spinner_top);
         Bundle bundle = new Bundle();
-        stopToSave = position;
         setUpRecyclerView(recyclerView, newStopToShow, false);
         noTimetable.setVisibility(View.GONE);
         if (spinnerReady) {
             bundle.putString("new_stop", spinnerArray.getItem(newStopToShow).toString());
             firebaseAnalytics.logEvent("timetable_changed_stop", bundle);
         }
+        Log.d(TAG, "onItemSelected: selected stop is " + position);
         spinnerReady = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         setUpFab();
     }
 
@@ -217,7 +223,7 @@ public class TimetableFragment extends Fragment implements
      * is above this version
      * </p>
      */
-    private void setUpFab(){
+    private void setUpFab() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             floatingActionButton.show();
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -227,23 +233,6 @@ public class TimetableFragment extends Fragment implements
                 }
             });
         }
-    }
-
-    /**
-     * Callback method to be invoked when the selection disappears from this view. The selection can
-     * disappear for instance when touch is activated or when the adapter becomes empty.
-     *
-     * @param parent The AdapterView that now contains no selected item.
-     */
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     /**
@@ -275,7 +264,8 @@ public class TimetableFragment extends Fragment implements
      * Saves the shortcut chosen by the user
      */
     @TargetApi(Build.VERSION_CODES.N_MR1)
-    private void saveShortcut(){
+    private void saveShortcut() {
+        Log.d(TAG, "saveShortcut: stop is " + stopToSave);
         String[] busLong = getResources().getStringArray(R.array.bus_stops_shortcuts_long);
         String shortcutLong = busLong[stopToSave];
         String[] busShort = getResources().getStringArray(R.array.bus_stops_shortcuts_short);
@@ -285,7 +275,9 @@ public class TimetableFragment extends Fragment implements
         firebaseAnalytics.logEvent(getString(R.string.firebase_shortcut_created), bundle);
         ShortcutManager manager = getContext().getSystemService(ShortcutManager.class);
         String packageName = getContext().getApplicationInfo().packageName;
-        ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(getContext(), getString(R.string.shortcut_specific_timetable))
+        List<ShortcutInfo> shortcuts = manager.getDynamicShortcuts();
+        ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(getContext()
+                , getString(R.string.shortcut_specific_timetable))
                 .setShortLabel(shortcutShort)
                 .setLongLabel(shortcutLong)
                 .setIcon(Icon.createWithResource(getContext(), R.mipmap.ic_shortcut_timetable_blue))
@@ -296,18 +288,20 @@ public class TimetableFragment extends Fragment implements
                         .putExtra(getString(R.string.shortcut_specific_timetable), stopToSave))
                 .build();
         manager.addDynamicShortcuts(Arrays.asList(shortcutInfo));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.isRequestPinShortcutSupported()) {
+            manager.requestPinShortcut(shortcutInfo, null);
+        }
     }
 
     /**
      * Animates the FAB and raises the snackbar.
-     * <P>
-     * When this method completes, the FAB is then hidden. This behavior is because the vector animation
-     * cannot be reversed. This should be kept even after Android O is released as this is a workaround for
-     * API 25
-     * </P>
+     * <p>
+     * When this method completes, the FAB is then hidden. This behavior is because the vector
+     * animation cannot be reversed. This should be kept even after Android O is released as this is
+     * a workaround for API 25 </P>
      */
     @TargetApi(Build.VERSION_CODES.N_MR1)
-    private void showConfirmAnimation(){
+    private void showConfirmAnimation() {
         Snackbar snackbar = Snackbar.make(layout, "Shortcut created", Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
         final AnimatedVectorDrawable vectorDrawable = (AnimatedVectorDrawable) floatingActionButton.getDrawable();
@@ -324,7 +318,7 @@ public class TimetableFragment extends Fragment implements
         animator.start();
         vectorDrawable.start();
         snackbar.show();
-        snackbar.addCallback(new Snackbar.Callback(){
+        snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
@@ -336,7 +330,6 @@ public class TimetableFragment extends Fragment implements
                         animator.reverse();
                     }
                 });
-
             }
         });
     }
@@ -366,5 +359,81 @@ public class TimetableFragment extends Fragment implements
                     }
                 });
 
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals(getString(R.string.preferences_24hourclock))) {
+            boolean timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
+            int stop = sharedPreferences.getInt(getString(R.string.preference_last_viewed_stop), 2);
+            ArrayList<Times> array = databaseHelper.getTimesArray(stop, timeFormat);
+            adapter.refreshData(array);
+        }
+    }
+
+    /**
+     * Callback method to be invoked when the selection disappears from this view. The selection can
+     * disappear for instance when touch is activated or when the adapter becomes empty.
+     *
+     * @param parent The AdapterView that now contains no selected item.
+     */
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        unbinder.unbind();
+    }
+
+    /**
+     * The purpose of this class is to act as a go between for the {@link TimetableFragment} and
+     * {@link TimetableThread}.
+     */
+    private static class TimetableHandler extends Handler{
+
+        private final WeakReference<TimetableFragment> fragment;
+
+        TimetableHandler(TimetableFragment fragment) {
+            this.fragment = new WeakReference<>(fragment);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            TimetableFragment timetableFragment = fragment.get();
+            timetableFragment.setData(msg);
+        }
+    }
+
+    /**
+     * The class carries out the task of searching the database for the enquired stop. This is
+     */
+    private static class TimetableThread extends Thread{
+
+        private final DatabaseHelper databaseHelper;
+        private final int stop;
+        private final boolean timeFormat;
+
+
+
+        TimetableThread(DatabaseHelper databaseHelper, int stop, boolean timeFormat) {
+            this.databaseHelper = databaseHelper;
+            this.stop = stop;
+            this.timeFormat = timeFormat;
+        }
+
+        @Override
+        public void run() {
+            ArrayList<Times> times = databaseHelper.getTimesArray(stop, timeFormat);
+            Message message = new Message();
+            ArrayList<Object> array = new ArrayList<>();
+            array.add(times);
+            array.add(stop);
+            message.obj = array;
+            handler.sendMessage(message);
+            super.run();
+        }
     }
 }
