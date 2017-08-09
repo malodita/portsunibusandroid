@@ -7,6 +7,13 @@
     android:id="@+id/maps_layout"
     tools:context=".MapsFragment">
 
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/progress_bar"
+        />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
