@@ -63,8 +63,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     CoordinatorLayout layout;
     private FirebaseAnalytics firebaseAnalytics;
     private SharedPreferences sharedPreferences;
-    private boolean timeFormat;
-    private boolean mapCardAllowed;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +76,6 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             startOnboarding();
         } else {
             boolean onboarding2 = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
-            timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
-            mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-            //nightModeSwitching(nightMode);
             setContentView(R.layout.activity_top);
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
@@ -145,15 +141,6 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        boolean newTimeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
-        boolean newMapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-        if (newTimeFormat != timeFormat || newMapCardAllowed != mapCardAllowed){
-            recreate();
-        }
-        super.onResume();
-    }
 
     /**
      * Checks the use of a shortcut to open the app to set the correct fragment to display as well
