@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     LinearLayout layout;
     @BindView(R.id.error_hint)
     TextView errorHint;
-    private MapView mapView;
+    @BindView(R.id.map) MapView mapView;
+    @BindView(R.id.progress_bar)
+    ContentLoadingProgressBar progressBar;
     Unbinder unbinder;
     private GoogleMap googleMap;
     private String[] stopList;
@@ -112,15 +115,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
-        mapView = (MapView) rootView.findViewById(R.id.map);
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
-        mapView.setVisibility(View.VISIBLE);
         return rootView;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        progressBar.hide();
+        mapView.setVisibility(View.VISIBLE);
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -198,6 +201,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int status = googleApiAvailability.isGooglePlayServicesAvailable(activity);
         if (status != ConnectionResult.SUCCESS) {
+            progressBar.hide();
             if (googleApiAvailability.isUserResolvableError(status)) {
                 errorHint.setText(getString(R.string.play_services_update));
             } else {
@@ -216,6 +220,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (mapView != null) {
             mapView.setVisibility(View.GONE);
         }
+        progressBar.hide();
         errorHint.setText(getString(R.string.error_no_connection));
         errorHint.setVisibility(View.VISIBLE);
     }
@@ -226,6 +231,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (mapView != null) {
             mapView.setVisibility(View.GONE);
         }
+        progressBar.hide();
         errorHint.setText(getText(R.string.location_permission_hint_wide));
         errorHint.setVisibility(View.VISIBLE);
     }
@@ -237,6 +243,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (mapView != null) {
             mapView.setVisibility(View.GONE);
         }
+        progressBar.hide();
         errorHint.setText(getText(R.string.error_GPS_off));
         errorHint.setVisibility(View.VISIBLE);
     }
