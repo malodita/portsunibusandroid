@@ -15,6 +15,7 @@
     <color name="background">#212121</color>
     <color name="bottom_bar_tabs">#FFD740</color>
     <color name="polyline">#FFD740</color>
+    <color name="onboarding_button">#FFD740</color>
     <color name="onboarding_2_outer_circle">#FFD740</color>
 
 </resources>

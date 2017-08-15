@@ -15,10 +15,7 @@
     <color name="background">#ffffff</color>
     <color name="bottom_bar_tabs">#FFFFFF</color>
     <color name="polyline">#2A1439</color>
-    <color name="intro_background">#1a237e</color>
-    <color name="intro_button">#4C2466</color>
-    <color name="intro_night">#190C22</color>
-    <color name="intro_night_button">#FFC107</color>
+    <color name="onboarding_button">#4C2466</color>
     <color name="onboarding_2_outer_circle">#1a237e</color>
     <color name="fab_confirm">#388e3c</color>
     <color name="fab_confirm_muted">#81c784</color>
