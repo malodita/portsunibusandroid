@@ -9,6 +9,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -43,6 +45,7 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
     private static final String TAG = "Intro";
     private final float[] ANIMATION_TIMES = {0f, 0.11f, 0.30f, 0.63f, 1f};
     private final int[] BACKGROUND_COLOURS = {0xFF4c2466, 0xFFFFC107, 0xFF4CAF50, 0xFF09040d};
+    private final int[] BACKGROUND_COLOURS_NIGHT = { 0XFF190c22, 0xFFFF6F00, 0xFF1B5E20, 0xFF09040d};
     private final int LOCATION_PERMISSION_REQUEST_CODE = 5384;
     private int locationPermission;
     @BindView(R.id.layout)
@@ -67,7 +70,7 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
         setContentView(R.layout.activity_intro);
         ButterKnife.bind(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(BACKGROUND_COLOURS[0]);
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primary));
         }
         locationPermission =  ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         viewPager.setAllowedSwipeDirection(NonSwipeViewPager.SwipeDirection.right);
@@ -181,9 +184,17 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
         if (drawable instanceof ColorDrawable){
             color = ((ColorDrawable) drawable).getColor();
         }
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        int[] colorArray;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES){
+            colorArray = BACKGROUND_COLOURS_NIGHT;
+        } else {
+            colorArray = BACKGROUND_COLOURS;
+        }
         ValueAnimator colour = ValueAnimator.ofObject(new ArgbEvaluator()
                 , color
-                , BACKGROUND_COLOURS[page])
+                , colorArray[page])
                 .setDuration(duration / 12);
         colour.setStartDelay((long) (duration / 3.333333));
         colour.addUpdateListener(valueAnimator -> {

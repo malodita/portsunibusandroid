@@ -18,7 +18,7 @@
         android:textAlignment="center"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="@color/textview_inverse_color"
+        android:textColor="@color/icons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
         android:padding="8dp"
         style="@style/Widget.AppCompat.Button.Borderless"
         tools:visibility="visible"
-        android:textColor="@color/textview_inverse_color"
+        android:textColor="@color/icons"
         android:text="@string/onboarding_permission"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -100,7 +100,7 @@
         app:layout_constraintBottom_toTopOf="@+id/indicator"
         android:layout_marginRight="24dp"
         tools:alpha="1"
-        android:textColor="@color/textview_inverse_color"
+        android:textColor="@color/icons"
         tools:visibility="visible"
         />
 
