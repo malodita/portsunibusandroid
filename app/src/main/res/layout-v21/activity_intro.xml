@@ -22,12 +22,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:alpha="0"
+        tools:visibility="gone"/>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie"
         android:layout_width="0dp"
-        android:layout_height="400dp"
+        android:layout_height="320dp"
         android:layout_marginTop="0dp"
         android:alpha="0"
         android:visibility="gone"
@@ -36,24 +38,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="10"/>
+        app:layout_constraintVertical_weight="10"
+        tools:alpha="1"
+        tools:visibility="visible"/>
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="48dp"
-        android:alpha="0"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:textColor="@color/icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
         android:text="@string/onboarding_permission"
+        android:textColor="@color/icons"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lottie"/>
+        tools:alpha="1"
+        tools:visibility="visible"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/indicator"/>
 
     <com.malcolm.portsmouthunibus.intro.NonSwipeViewPager
         android:id="@+id/viewpager"
@@ -74,11 +77,11 @@
 
     <com.pixelcan.inkpageindicator.InkPageIndicator
         android:id="@+id/indicator"
-        android:visibility="invisible"
-        android:alpha="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
+        android:alpha="0"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,12 +95,12 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
         android:alpha="0"
-        tools:alpha="1"
-        android:textColor="@color/icons"
         android:text="@string/onboarding_finish"
+        android:textColor="@color/icons"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/indicator"
         app:layout_constraintEnd_toEndOf="parent"
+        tools:alpha="1"
         tools:visibility="visible"/>
 
 </android.support.constraint.ConstraintLayout>

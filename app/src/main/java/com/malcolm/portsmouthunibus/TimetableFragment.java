@@ -46,7 +46,6 @@ import com.malcolm.unibusutilities.Times;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,9 +89,9 @@ public class TimetableFragment extends Fragment implements
         firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
         View rootView = inflater.inflate(R.layout.fragment_timetable, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        handler = new TimetableHandler(this);
+        //handler = new TimetableHandler(this);
         setUpSpinner(spinner);
-        int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 2);
+        int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 1);
         if (getArguments() != null) {
             stopToSave = getArguments().getInt(getString(R.string.shortcut_specific_timetable));
             spinner.setOnItemSelectedListener(this);
@@ -133,7 +132,17 @@ public class TimetableFragment extends Fragment implements
         }
         if (!shortcutUsed) {
             boolean timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
-            new TimetableThread(databaseHelper, stop, timeFormat).start();
+            ArrayList<Times> times = databaseHelper.getTimesArray(stop, timeFormat);
+            if (adapter == null) {
+                recyclerView.setHasFixedSize(true);
+                adapter = new TimetableFragmentAdapter(getContext(), times, stop);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            } else {
+                adapter.swapData(times, stop);
+                sharedPreferences.edit().putInt(getString(R.string.preference_last_viewed_stop), stop).apply();
+            }
+            //new TimetableThread(databaseHelper, stop, timeFormat).start();
         }
         recyclerView.setVisibility(View.VISIBLE);
     }
@@ -226,12 +235,7 @@ public class TimetableFragment extends Fragment implements
     private void setUpFab() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             floatingActionButton.show();
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    buildDialog();
-                }
-            });
+            floatingActionButton.setOnClickListener(v -> buildDialog());
         }
     }
 
@@ -246,12 +250,9 @@ public class TimetableFragment extends Fragment implements
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setTitle("Add Shortcut")
                 .setMessage(R.string.dialog_create_shortcut)
-                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        saveShortcut();
-                        showConfirmAnimation();
-                    }
+                .setPositiveButton("Okay", (dialog, which) -> {
+                    saveShortcut();
+                    showConfirmAnimation();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
@@ -275,7 +276,6 @@ public class TimetableFragment extends Fragment implements
         firebaseAnalytics.logEvent(getString(R.string.firebase_shortcut_created), bundle);
         ShortcutManager manager = getContext().getSystemService(ShortcutManager.class);
         String packageName = getContext().getApplicationInfo().packageName;
-        List<ShortcutInfo> shortcuts = manager.getDynamicShortcuts();
         ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(getContext()
                 , getString(R.string.shortcut_specific_timetable))
                 .setShortLabel(shortcutShort)
@@ -308,12 +308,9 @@ public class TimetableFragment extends Fragment implements
         int accent = getContext().getColor(R.color.accent);
         int confirm = getContext().getColor(R.color.fab_confirm);
         final ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), accent, confirm);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int color = (int) animator.getAnimatedValue();
-                floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(color));
-            }
+        animator.addUpdateListener(animation -> {
+            int color = (int) animator.getAnimatedValue();
+            floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(color));
         });
         animator.start();
         vectorDrawable.start();
@@ -326,7 +323,7 @@ public class TimetableFragment extends Fragment implements
                     @Override
                     public void onHidden(FloatingActionButton fab) {
                         super.onHidden(fab);
-                        vectorDrawable.reset(); //Android O will allow for reversed vector animations
+                        vectorDrawable.reset();
                         animator.reverse();
                     }
                 });
@@ -385,6 +382,7 @@ public class TimetableFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        //handler.removeCallbacksAndMessages(null);
         unbinder.unbind();
     }
 

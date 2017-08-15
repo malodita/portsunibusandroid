@@ -59,6 +59,4 @@
         android:textSize="@dimen/text_primary_size"
         android:visibility="gone"
         />
-
-
 </android.support.design.widget.CoordinatorLayout>

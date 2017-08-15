@@ -42,9 +42,4 @@
     android:textSize="@dimen/text_primary_size"
     android:id="@+id/no_timetable"
     />
-
-
-
-
-
 </android.support.design.widget.CoordinatorLayout>

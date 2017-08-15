@@ -49,6 +49,10 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
         FirebaseAnalytics.getInstance(this);
         Intent i = getIntent();
         setSupportActionBar(toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.image_placeholder));
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         /*
          * This gets the position that was clicked from the intent to be used to
