@@ -58,7 +58,7 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
         } else {
             context.startActivity(i);
             Activity activity = (Activity) context;
-            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
 }

@@ -55,9 +55,6 @@
             android:name=".settings.AboutActivity"
             android:parentActivityName=".settings.SettingsActivity"
             android:theme="@style/AppTheme.MaterialAboutActivity"/>
-        <activity
-            android:name=".intro.IntroActivity"
-            android:theme="@style/Theme.Intro"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -66,7 +63,7 @@
             android:name="com.google.android.awareness.API_KEY"
             android:value="${AWARENESS_API_KEY}"/>
 
-        <activity android:name=".intro.NewIntroActivity"
+        <activity android:name=".intro.IntroActivity"
                   android:hardwareAccelerated="true">
         </activity>
     </application>

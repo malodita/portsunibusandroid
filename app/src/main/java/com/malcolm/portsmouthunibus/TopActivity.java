@@ -31,7 +31,7 @@ import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.malcolm.portsmouthunibus.intro.NewIntroActivity;
+import com.malcolm.portsmouthunibus.intro.IntroActivity;
 import com.malcolm.portsmouthunibus.settings.SettingsActivity;
 import com.malcolm.portsmouthunibus.utilities.BottomSheet;
 import com.malcolm.unibusutilities.TermDates;
@@ -114,7 +114,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
      * features are added by changing shared preferences
      */
     void startOnboarding() {
-        Intent view = new Intent(this, NewIntroActivity.class);
+        Intent view = new Intent(this, IntroActivity.class);
         startActivity(view);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
