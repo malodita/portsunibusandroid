@@ -130,5 +130,9 @@ public class TopFragmentAdapter extends EpoxyAdapter {
     public void showMapsCard() {
         showModel(map);
     }
+
+    public void playServices(int playServicesResult) {
+        map.googlePlayServices(playServicesResult);
+    }
 }
 

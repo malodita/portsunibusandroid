@@ -72,7 +72,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class TopFragment extends Fragment implements Callback<ResponseSchema>, SharedPreferences.OnSharedPreferenceChangeListener {
+public class TopFragment extends Fragment implements Callback<ResponseSchema>, SharedPreferences.OnSharedPreferenceChangeListener,
+        OnSuccessListener<Location>{
     private static final int DEFAULT_VALUE = 0;
     public static final String TAG = "Top Fragment";
     private final Handler handler = new Handler();
@@ -346,38 +347,43 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
         handler.post(homeRunnable);
     }
 
+    @Override
+    public void onSuccess(Location location) {
+        if (location == null) {
+            adapter.noConnection();
+            return;
+        }
+        closest = BusStops.getClosestStop(location);
+        final boolean mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
+        if (mapCardAllowed) {
+            adapter.showMapsCard();
+            getDirections(location);
+        } else {
+            adapter.hideMapsCard();
+        }
+        instantCardCheck(location);
+    }
+
     private void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext()
                 , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        final boolean mapCardAllowed = sharedPreferences.getBoolean(getString(R.string.preferences_maps_card), true);
-        client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location == null) {
-                    adapter.noConnection();
-                    return;
-                }
-                closest = BusStops.getClosestStop(location);
-                if (mapCardAllowed) {
-                    adapter.showMapsCard();
-                    getDirections(location);
-                } else {
-                    adapter.hideMapsCard();
-                }
-                instantCardCheck(location);
+        if (isGooglePlayServicesAvailable(getActivity()) == 0){
+            client.getLastLocation().addOnSuccessListener(this);
+            if (!requestingLocationUpdates) {
+                LocationRequest request = LocationRequest.create()
+                        .setFastestInterval(15000)
+                        .setInterval(60000)
+                        .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                client.requestLocationUpdates(request, listener, null);
+                requestingLocationUpdates = true;
             }
-        });
-        if (!requestingLocationUpdates) {
-            LocationRequest request = LocationRequest.create()
-                    .setFastestInterval(15000)
-                    .setInterval(60000)
-                    .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            client.requestLocationUpdates(request, listener, null);
-            requestingLocationUpdates = true;
+        } else {
+            adapter.playServices(isGooglePlayServicesAvailable(getActivity()));
         }
+
     }
 
 

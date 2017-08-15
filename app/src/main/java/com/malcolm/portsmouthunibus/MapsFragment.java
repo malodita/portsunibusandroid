@@ -92,13 +92,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (!isGooglePlayServicesAvailable(getActivity())){
             return rootView;
         }
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            onDeniedPermission();
-            return rootView;
-        }
         LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             onNoGps();
@@ -124,13 +117,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onMapReady(GoogleMap googleMap) {
         progressBar.hide();
         mapView.setVisibility(View.VISIBLE);
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        googleMap.setMyLocationEnabled(true);
         ArrayList<LatLng> list = BusStops.makeArrayOfStops();
         for (int i = 0; i < list.size(); i++){
             googleMap.addMarker(new MarkerOptions().position(list.get(i))
@@ -147,6 +133,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         setUpMarkers(googleMap, BusStops.makeArrayOfStops());
         googleMap.setOnInfoWindowClickListener(this);
         this.googleMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        this.googleMap.setMyLocationEnabled(true);
     }
 
     /**

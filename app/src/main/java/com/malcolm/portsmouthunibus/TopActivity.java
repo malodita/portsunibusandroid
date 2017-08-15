@@ -369,6 +369,10 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     public void onButtonSelected(boolean positive) {
         if (positive){
             startQuickStart(toolbar);
+        } else {
+            sharedPreferences.edit()
+                    .putBoolean(getString(R.string.preferences_onboarding_2), true)
+                    .apply();
         }
     }
 

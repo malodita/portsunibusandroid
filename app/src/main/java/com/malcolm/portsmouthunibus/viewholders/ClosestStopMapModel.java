@@ -234,9 +234,23 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
     }
 
     public void noConnection() {
-        holder.error.setText(R.string.error_route_display);
-        holder.error.setVisibility(View.VISIBLE);
-        holder.progressBar.hide();
+        if (holder != null) {
+            holder.error.setText(R.string.error_route_display);
+            holder.error.setVisibility(View.VISIBLE);
+            holder.progressBar.hide();
+        }
+    }
+
+    public void googlePlayServices(int playServicesResult) {
+        if (holder != null) {
+            if (playServicesResult == 1){
+                holder.error.setText(R.string.play_services_update);
+            } else {
+                holder.error.setText(R.string.play_services_needed);
+            }
+            holder.error.setVisibility(View.VISIBLE);
+            holder.progressBar.hide();
+        }
     }
 
     static class MapViewHolder extends BaseModel {
