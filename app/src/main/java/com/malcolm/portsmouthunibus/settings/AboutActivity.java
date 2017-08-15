@@ -63,6 +63,7 @@ public class AboutActivity extends MaterialAboutActivity {
                 .setOnClickListener(() -> displayLicensesDialog("lottie.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Ink Pager Indicator")
+                .subText("David Păcioianu")
                 .icon(R.drawable.ic_github_circle)
                 .setOnClickListener(() -> displayLicensesDialog("inkpagerindicator.html"))
                 .build());
@@ -123,6 +124,17 @@ public class AboutActivity extends MaterialAboutActivity {
                     view.setData(Uri.parse(url));
                     startActivity(view);
                 }).build());
+        thanks.addItem(new MaterialAboutActionItem.Builder()
+                .text("Corbin Scott")
+                .subText("For Lottie asset use")
+                .icon(R.drawable.ic_twitter)
+                .setOnClickListener(() -> {
+                    String url = "https://twitter.com/slykuiper";
+                    Intent view = new Intent(Intent.ACTION_VIEW);
+                    view.setData(Uri.parse(url));
+                    startActivity(view);
+                })
+                .build());
 
 
         return new MaterialAboutList.Builder()
