@@ -85,25 +85,25 @@
     </string-array>
 
     <string-array name="onboarding_subtitles">
-        <item>The next bus from home to uni is always the first thing you see</item>
-        <item>See your nearest bus stop</item>
-        <item>The timetable for each stop including weekends and holidays</item>
-        <item>For when things get dark</item>
+        <item>The next bus from home to uni is always the first thing you see.</item>
+        <item>See your nearest bus stop.</item>
+        <item>The timetable for each stop.\nIncluding weekends and holidays.</item>
+        <item>For when things get dark.</item>
     </string-array>
 
     <string-array name="onboarding_subtitles_M">
-        <item>The next bus from home to uni is always the first thing you see</item>
-        <item>See your nearest bus stop. Available if you grant location permission</item>
-        <item>The timetable for each stop including weekends and holidays</item>
-        <item>For when things get dark</item>
+        <item>The next bus from home to uni is always the first thing you see.</item>
+        <item>See your nearest bus stop.\nAvailable if you grant location permission.</item>
+        <item>The timetable for each stop.\nIncluding weekends and holidays.</item>
+        <item>For when things get dark.</item>
     </string-array>
 
-    <string name="onboarding_subtitle">Helping you be on time, all the time</string>
+    <string name="onboarding_subtitle">Helping you be on time, all the time.</string>
     <string name="onboarding_finish">Get started</string>
     <string name="onboarding_permission">Grant permission</string>
-
-
-
+    <string name="onboarding2_subtitle">Get started quickly with the Portsmouth Uni Bus app by using the walkthrough.</string>
+    <string name="onboarding2_yes">Sure</string>
+    <string name="onboarding2_no">No thanks</string>
 
 
     <string-array name="bus_stops_home">

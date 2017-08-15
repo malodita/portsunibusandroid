@@ -28,12 +28,14 @@ import android.view.MenuItem;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.intro.IntroActivity;
 import com.malcolm.portsmouthunibus.settings.SettingsActivity;
 import com.malcolm.portsmouthunibus.utilities.BottomSheet;
+import com.malcolm.portsmouthunibus.utilities.QuickStartBottomSheet;
 import com.malcolm.unibusutilities.TermDates;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -46,7 +48,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class TopActivity extends AppCompatActivity implements OnTabSelectListener, BottomSheet.DialogListener {
+public class TopActivity extends AppCompatActivity implements OnTabSelectListener, BottomSheet.DialogListener, QuickStartBottomSheet.DialogButtonSelectedListener {
     //Initialise local variables
     private static final String TAG = "TopActivity";
     private static final String HOMESHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE";
@@ -55,6 +57,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     private static final String TIMETABLETAG = "TimetableFragment";
     private static final String MAPSTAG = "MapsFragment";
     private static final String BOTTOMSHEET = "BottomSheet";
+    private static final String QUICKSTART = "QuickStart";
     @BindView(R.id.app_bar)
     Toolbar toolbar;
     @BindView(R.id.bottom_bar_view)
@@ -90,7 +93,9 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             toolbar.inflateMenu(R.menu.action_bar_items);
             setSupportActionBar(toolbar);
             if (!onboarding2) {
-                startOnboarding2(toolbar, bottomBar);
+                QuickStartBottomSheet sheet = new QuickStartBottomSheet();
+                sheet.setCancelable(false);
+                sheet.show(getSupportFragmentManager(), QUICKSTART);
             }
             boolean shortcutUsed = shortcutCheck(getIntent().getAction(), bottomBar);
             if (!shortcutUsed && savedInstanceState == null){
@@ -116,7 +121,6 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     void startOnboarding() {
         Intent view = new Intent(this, IntroActivity.class);
         startActivity(view);
-        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 
@@ -187,34 +191,38 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         }
     }
 
-    /**
-     * Starts the second onboarding process involving Tap Targets on important areas. Dont try and
-     * access fragment views using this.
-     *
-     * @param toolbar   To get toolbar views
-     * @param bottomBar To get bottomBar views (Thank goodness it extends View)
-     */
-    void startOnboarding2(Toolbar toolbar, BottomBar bottomBar) {
-        TapTargetSequence sequence = new TapTargetSequence(this);
-        List<TapTarget> targets = new ArrayList<>();
-        targets.add(TapTarget.forToolbarMenuItem(toolbar, R.id.default_stop_icon,
-                "Home is where the heart is", "Tap me to set your home stop")
+
+    private void startQuickStart(Toolbar toolbar) {
+        TapTargetView.showFor(this, TapTarget.forToolbarMenuItem(toolbar, R.id.default_stop_icon
+                , "Home is where the heart is", "Tap to set your home stop")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
                 .textColor(R.color.textview_inverse_color)
                 .transparentTarget(true)
                 .drawShadow(true)
-                .cancelable(false)
-                .id(1));
+                .cancelable(false), new TapTargetView.Listener() {
+            @Override
+            public void onTargetClick(TapTargetView view) {
+                BottomSheet sheet = new BottomSheet();
+                sheet.setCancelable(false);
+                sheet.show(getSupportFragmentManager(), BOTTOMSHEET);
+                super.onTargetClick(view);
+            }
+        });
+    }
+
+    private void startOnboardingSequence(BottomBar bottomBar){
+        TapTargetSequence sequence = new TapTargetSequence(this);
+        List<TapTarget> targets = new ArrayList<>();
         targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_timetable),
-                "Tap me", "To view timetables for all stops")
+                "Timetable tab", "Views the timetables for all the stops for that day")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
                 .textColor(R.color.textview_inverse_color)
                 .transparentTarget(true)
                 .drawShadow(true)
                 .cancelable(true)
-                .id(2));
+                .id(1));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_find),
@@ -225,32 +233,32 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                     .cancelable(true)
                     .transparentTarget(true)
                     .drawShadow(true)
-                    .id(3));
+                    .id(2));
         } else {
             targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_find),
-                    "Tap me", "To view all the stop locations")
+                    "Maps tab", "Views all the stop locations")
                     .targetCircleColor(R.color.primary)
                     .outerCircleColor(R.color.onboarding_2_outer_circle)
                     .textColor(R.color.textview_inverse_color)
                     .transparentTarget(true)
                     .drawShadow(true)
                     .cancelable(false)
-                    .id(4));
+                    .id(3));
         }
         targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_place),
-                "A quick note", "Buses can sometimes run late, especially at rush hour!")
+                "Don't forget", "Buses can sometimes run late, especially at rush hour!")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
                 .textColor(R.color.textview_inverse_color)
                 .transparentTarget(true)
                 .cancelable(true)
                 .drawShadow(true)
-                .id(5));
+                .id(4));
         sequence.targets(targets);
         sequence.listener(new TapTargetSequence.Listener() {
             @Override
             public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-                //Probably should add a warning if target isn't tapped
+
             }
             @Override
             public void onSequenceFinish() {
@@ -260,6 +268,9 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             }
             @Override
             public void onSequenceCanceled(TapTarget lastTarget) {
+                sharedPreferences.edit()
+                        .putBoolean(getString(R.string.preferences_onboarding_2), true)
+                        .apply();
             }
         });
         sequence.start();
@@ -355,11 +366,23 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     }
 
     @Override
+    public void onButtonSelected(boolean positive) {
+        if (positive){
+            startQuickStart(toolbar);
+        }
+    }
+
+
+    @Override
     public void onItemSelected(int position) {
         Log.d(TAG, "onItemSelected: " + position);
         int current = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 0);
+        boolean quickstart = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
         if (position == current) {
             return;
+        }
+        if (current == 0 && !quickstart){
+            startOnboardingSequence(bottomBar);
         }
         String[] array = getResources().getStringArray(R.array.bus_stops_home);
         firebaseLog(getString(R.string.firebase_home_stop_changed), getString(R.string.firebase_stop_id), array[position - 1]);

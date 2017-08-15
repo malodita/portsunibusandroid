@@ -44,6 +44,11 @@
         android:layout_height="48dp"
         android:layout_marginBottom="16dp"
         android:alpha="0"
+        tools:alpha="1"
+        android:padding="8dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        tools:visibility="visible"
+        android:textColor="@color/textview_inverse_color"
         android:text="@string/onboarding_permission"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,6 +59,8 @@
 
     <com.pixelcan.inkpageindicator.InkPageIndicator
         android:id="@+id/indicator"
+        android:visibility="invisible"
+        android:alpha="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"

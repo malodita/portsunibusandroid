@@ -127,12 +127,14 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
         introVisibility.setStartDelay(3000);
         ObjectAnimator lottieVisibility = ObjectAnimator.ofFloat(lottie, View.ALPHA, 0, 1).setDuration(500);
         ObjectAnimator pagerVisibility = ObjectAnimator.ofFloat(viewPager, View.ALPHA, 0, 1).setDuration(500);
+        ObjectAnimator indicatorVisibility = ObjectAnimator.ofFloat(indicator, View.ALPHA, 0, 1).setDuration(500);
         lottieVisibility.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
                 intro.setVisibility(View.GONE);
                 lottie.setVisibility(View.VISIBLE);
                 viewPager.setVisibility(View.VISIBLE);
+                indicator.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -153,7 +155,7 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
         });
         AnimatorSet set = new AnimatorSet();
         AnimatorSet set2 = new AnimatorSet();
-        set2.playTogether(pagerVisibility, lottieVisibility);
+        set2.playTogether(pagerVisibility, lottieVisibility, indicatorVisibility);
         set.playSequentially(introVisibility, set2);
         set.start();
     }
