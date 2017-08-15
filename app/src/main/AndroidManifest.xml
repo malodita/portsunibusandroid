@@ -66,6 +66,9 @@
             android:name="com.google.android.awareness.API_KEY"
             android:value="${AWARENESS_API_KEY}"/>
 
+        <activity android:name=".intro.NewIntroActivity"
+                  android:hardwareAccelerated="true">
+        </activity>
     </application>
 
 </manifest>

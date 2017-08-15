@@ -43,7 +43,6 @@
     <string name="error_server_response">Error getting response from server</string>
 
 
-
     <!--Strings related to preferences, shortcuts and intents-->
     <string name="preferences_name">com.malcolm.portsmouthunibus_preferences</string>
     <string name="preferences_home_bus_stop" translatable="false">com.malcolm.portsmouthunibus.homebusstop</string>
@@ -68,7 +67,6 @@
     <string name="intent_stop_viewed">com.malcolm.portsmouthunibus.VIEW.CALLING.STOP</string>
 
 
-
     <!--Strings related to firebase analytics-->
     <string name="firebase_stop_id" translatable="false">stop_id</string>
     <string name="firebase_shortcut_created" translatable="false">shortcut_created</string>
@@ -77,6 +75,35 @@
     <string name="firebase_specific_shortcut_used" translatable="false">specific_shortcut_used</string>
     <string name="firebase_map_marker_click" translatable="false">map_marker_click</string>
     <string name="firebase_timetable_detail_request" translatable="false">timetable_detail_requested</string>
+
+    <!--Strings related to onboarding-->
+    <string-array name="onboarding_titles">
+        <item>Straight to the point</item>
+        <item>Always know the way</item>
+        <item>Plan ahead</item>
+        <item>Night mode</item>
+    </string-array>
+
+    <string-array name="onboarding_subtitles">
+        <item>The next bus from home to uni is always the first thing you see</item>
+        <item>See your nearest bus stop</item>
+        <item>The timetable for each stop including weekends and holidays</item>
+        <item>For when things get dark</item>
+    </string-array>
+
+    <string-array name="onboarding_subtitles_M">
+        <item>The next bus from home to uni is always the first thing you see</item>
+        <item>See your nearest bus stop. Available if you grant location permission</item>
+        <item>The timetable for each stop including weekends and holidays</item>
+        <item>For when things get dark</item>
+    </string-array>
+
+    <string name="onboarding_subtitle">Helping you be on time, all the time</string>
+    <string name="onboarding_finish">Get started</string>
+    <string name="onboarding_permission">Grant permission</string>
+
+
+
 
 
     <string-array name="bus_stops_home">

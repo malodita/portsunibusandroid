@@ -56,119 +56,72 @@ public class AboutActivity extends MaterialAboutActivity {
                 .text("Bottom Bar")
                 .icon(R.drawable.ic_github_circle)
                 .subText("Iiro Krankka (Roughike)")
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("bottombar.html");
-                    }
-                }).build());
+                .setOnClickListener(() -> displayLicensesDialog("bottombar.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
-                .text("Material Intro Screen").subText("Tango Agency")
+                .text("Lottie").subText("Airbnb")
                 .icon(R.drawable.ic_github_circle)
-
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("materialintroscreen.html");
-                    }
-                }).build());
+                .setOnClickListener(() -> displayLicensesDialog("lottie.html")).build());
+        licenses.addItem(new MaterialAboutActionItem.Builder()
+                .text("Ink Pager Indicator")
+                .icon(R.drawable.ic_github_circle)
+                .setOnClickListener(() -> displayLicensesDialog("inkpagerindicator.html"))
+                .build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Material About Library").subText("Daniel Stone")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("materialaboutlibrary.html");
-                    }
-                }).build());
+                .setOnClickListener(() -> displayLicensesDialog("materialaboutlibrary.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Retrofit")
                 .subText("Square")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("retrofit.html");
-                    }
-                }).build());
+                .setOnClickListener(() -> displayLicensesDialog("retrofit.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Leak Canary")
                 .subText("Square")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("leakcanary.html");
-                    }
-                })
+                .setOnClickListener(() -> displayLicensesDialog("leakcanary.html"))
                 .build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("TapTargetView")
                 .subText("Keepsafe")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("taptargetview.html");
-                    }
-                }).build());
+                .setOnClickListener(() -> displayLicensesDialog("taptargetview.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Butterknife")
                 .subText("Jake Wharton").icon(R.drawable.ic_github_circle)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("butterknife.html");
-                    }
-                }).build());
+                .setOnClickListener(() -> displayLicensesDialog("butterknife.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Epoxy")
                 .subText("Airbnb")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("epoxy.html");
-                    }
-                }).build());
+                .setOnClickListener(() -> displayLicensesDialog("epoxy.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Picasso")
                 .subText("Square")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("picasso.html");
-                    }
-                }).build());
+                .setOnClickListener(() -> displayLicensesDialog("picasso.html")).build());
 
         MaterialAboutCard.Builder personal = new MaterialAboutCard.Builder().title("Developer");
         personal.addItem(new MaterialAboutActionItem.Builder()
                 .text("Malcolm Odita")
                 .subText("In his spare time, he takes pictures")
                 .icon(R.drawable.ic_google_photos)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        String url = "https://malcolmphoto.co.uk/";
-                        Intent view = new Intent(Intent.ACTION_VIEW);
-                        view.setData(Uri.parse(url));
-                        startActivity(view);
-                    }
+                .setOnClickListener(() -> {
+                    String url = "https://malcolmphoto.co.uk/";
+                    Intent view = new Intent(Intent.ACTION_VIEW);
+                    view.setData(Uri.parse(url));
+                    startActivity(view);
                 })
                 .build());
         MaterialAboutCard.Builder thanks = new MaterialAboutCard.Builder().title("Special Thanks");
         thanks.addItem(new MaterialAboutActionItem.Builder()
                 .text("Austin Andrews").subText("For icon use")
                 .icon(R.drawable.ic_twitter)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        String url = "https://twitter.com/Templarian";
-                        Intent view = new Intent(Intent.ACTION_VIEW);
-                        view.setData(Uri.parse(url));
-                        startActivity(view);
-                    }
+                .setOnClickListener(() -> {
+                    String url = "https://twitter.com/Templarian";
+                    Intent view = new Intent(Intent.ACTION_VIEW);
+                    view.setData(Uri.parse(url));
+                    startActivity(view);
                 }).build());
 
 
