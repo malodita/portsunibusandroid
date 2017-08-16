@@ -41,11 +41,13 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
 
     @Override
     public void onClick(View view) {
+        String[] array = context.getResources().getStringArray(R.array.bus_stops_all);
         Intent i = new Intent(context, DetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("listPosition", getAdapterPosition());
         bundle.putString("stop", destination.getText().toString());
         bundle.putString("time", time.getText().toString());
+        bundle.putString("startingStop", array[currentStopId]);
         i.putExtra(context.getString(R.string.intent_list_position), position);
         i.putExtra(context.getString(R.string.intent_stop), destination.getText());
         i.putExtra(context.getString(R.string.intent_stop_time), time.getText());

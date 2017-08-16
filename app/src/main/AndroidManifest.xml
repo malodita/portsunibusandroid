@@ -10,6 +10,7 @@
 
     <uses-feature android:name="android.hardware.location.gps"/>
     <uses-feature android:name="android.hardware.location.network"/>
+    <uses-feature android:name="android.hardware.screen.portrait" />
 
     <application
         android:name=".App"
@@ -64,7 +65,8 @@
             android:name="com.google.android.awareness.API_KEY"
             android:value="${AWARENESS_API_KEY}"/>
 
-        <activity android:name=".intro.IntroActivity">
+        <activity android:name=".intro.IntroActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
