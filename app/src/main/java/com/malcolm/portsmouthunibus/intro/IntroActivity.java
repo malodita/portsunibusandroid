@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
 
 public class IntroActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener{
     private static final String TAG = "Intro";
-    private final float[] ANIMATION_TIMES = {0f, 0.11f, 0.30f, 0.63f, 1f};
+    private final float[] ANIMATION_TIMES = {0f, 0.11f, 0.30f, 0.61f, 1f};
     private final int[] BACKGROUND_COLOURS = {0xFF4c2466, 0xFFFFC107, 0xFF4CAF50, 0xFF09040d};
     private final int[] BACKGROUND_COLOURS_NIGHT = { 0XFF190c22, 0xFF846300, 0xFF134116, 0xFF09040d};
     private final int LOCATION_PERMISSION_REQUEST_CODE = 5384;

@@ -244,19 +244,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mapViewBundle = new Bundle();
             outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
             mapView.onSaveInstanceState(outState);
+        } else {
+            mapView.onSaveInstanceState(outState);
         }
     }
 
     @Override
     public void onStart() {
-        super.onStart();
         mapView.onStart();
+        super.onStart();
     }
 
     @Override
     public void onResume() {
-        super.onResume();
         mapView.onResume();
+        super.onResume();
     }
 
 
@@ -274,8 +276,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onLowMemory() {
-        super.onLowMemory();
         mapView.onLowMemory();
+        super.onLowMemory();
     }
 
 
@@ -283,8 +285,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onDestroyView() {
         mapView.onDestroy();
         if (googleMap != null){
-            googleMap.clear();
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+            //googleMap.clear();
+            //googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
             googleMap.setOnInfoWindowClickListener(null);
             try{
                 googleMap.setMyLocationEnabled(false);
