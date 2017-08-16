@@ -26,8 +26,8 @@
     <string name="card_title">"%1$s to %2$s</string>
 
     <!--Strings related to errors-->
-    <string name="play_services_needed">Google Play Services is required for location services</string>
-    <string name="play_services_update">An update to Google Play Services is required for location services</string>
+    <string name="error_play_services_needed">Google Play Services is required for location services</string>
+    <string name="error_play_services_update">An update to Google Play Services is required for location services</string>
     <string name="error_no_timetable_selected">Please select a timetable to view</string>
     <string name="error_no_location">Location not found</string>
     <string name="error_no_buses">No more buses are scheduled to stop here today</string>
@@ -61,20 +61,25 @@
     <string name="shortcut_home_timetable_action" translatable="false">com.malcolm.portsmouthunibus.VIEW.TIMETABLE</string>
     <string name="shortcut_specific_timetable" translatable="false">specific_timetable</string>
     <string name="shortcut_specific_timetable_action" translatable="false">com.malcolm.portsmouthunibus.VIEW.TIMETABLE.SPECIFIC</string>
-    <string name="intent_list_position">com.malcolm.portsmouthunibus.VIEW.LIST.POSITION</string>
-    <string name="intent_stop">com.malcolm.portsmouthunibus.VIEW.STOP</string>
-    <string name="intent_stop_time">com.malcolm.portsmouthunibus.VIEW.STOP.TIME</string>
-    <string name="intent_stop_viewed">com.malcolm.portsmouthunibus.VIEW.CALLING.STOP</string>
+    <string name="intent_list_position" translatable="false">com.malcolm.portsmouthunibus.VIEW.LIST.POSITION</string>
+    <string name="intent_stop" translatable="false">com.malcolm.portsmouthunibus.VIEW.STOP</string>
+    <string name="intent_stop_time" translatable="false">com.malcolm.portsmouthunibus.VIEW.STOP.TIME</string>
+    <string name="intent_stop_viewed" translatable="false">com.malcolm.portsmouthunibus.VIEW.CALLING.STOP</string>
 
 
     <!--Strings related to firebase analytics-->
-    <string name="firebase_stop_id" translatable="false">stop_id</string>
-    <string name="firebase_shortcut_created" translatable="false">shortcut_created</string>
-    <string name="firebase_home_stop_changed" translatable="false">home_stop_changed</string>
-    <string name="firebase_home_shortcut_used" translatable="false">home_shortcut_used</string>
-    <string name="firebase_specific_shortcut_used" translatable="false">specific_shortcut_used</string>
-    <string name="firebase_map_marker_click" translatable="false">map_marker_click</string>
-    <string name="firebase_timetable_detail_request" translatable="false">timetable_detail_requested</string>
+    <string name="firebase_property_stop_id" translatable="false">stopId</string>
+    <string name="firebase_property_list_position" translatable="false">listPosition</string>
+    <string name="firebase_property_destination" translatable="false">destinationStop</string>
+    <string name="firebase_property_stop_time" translatable="false">time</string>
+    <string name="firebase_event_shortcut_created" translatable="false">shortcut_created</string>
+    <string name="firebase_event_home_stop_changed" translatable="false">home_stop_changed</string>
+    <string name="firebase_event_home_shortcut_used" translatable="false">home_shortcut_used</string>
+    <string name="firebase_event_specific_shortcut_used" translatable="false">specific_shortcut_used</string>
+    <string name="firebase_event_map_marker_click" translatable="false">map_marker_click</string>
+    <string name="firebase_event_timetable_detail_request" translatable="false">timetable_detail_requested</string>
+    <string name="firebase_event_timetable_changed_stop" translatable="false">timetable_changed_stop</string>
+
 
     <!--Strings related to onboarding-->
     <string-array name="onboarding_titles">
@@ -104,6 +109,7 @@
     <string name="onboarding2_subtitle">Get started quickly with the Portsmouth Uni Bus app by using the walkthrough.</string>
     <string name="onboarding2_yes">Sure</string>
     <string name="onboarding2_no">No thanks</string>
+
 
 
     <string-array name="bus_stops_home">
@@ -280,6 +286,35 @@
             >Goldsmith Avenue for Milton Park</item>
         <item
             >IMS Eastney</item>
+    </string-array>
+
+    <string-array name="bus_stops_analytics">
+        <item
+            >IMS Eastney</item>
+        <item
+            >Langstone</item>
+        <item
+            >Locksway Road for Milton Park</item>
+        <item
+            >Goldsmith Avenue adj Lidl</item>
+        <item
+            >Goldsmith Avenue opp Fratton Station</item>
+        <item
+            >Winston Churchill Avenue adj Ibis Hotel</item>
+        <item
+            >Cambridge Road for Student Union</item>
+        <item
+            >Cambridge Road adj Nuffield Centre</item>
+        <item
+            >Winston Churchill Avenue adj Law Courts</item>
+        <item
+            >Goldsmith Avenue adj Fratton Station</item>
+        <item
+            >Goldsmith Avenue opp Lidl</item>
+        <item
+            >Goldsmith Avenue adj Milton Park</item>
+        <item
+            >Langstone</item>
     </string-array>
 
 

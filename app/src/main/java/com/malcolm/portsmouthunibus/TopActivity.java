@@ -167,8 +167,8 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                         .replace(R.id.placeholder, fragment, TIMETABLETAG)
                         .commit();
                 int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 1);
-                firebaseLog(getString(R.string.firebase_home_shortcut_used)
-                        , getString(R.string.firebase_stop_id), String.valueOf(stopToShow));
+                firebaseLog(getString(R.string.firebase_event_home_shortcut_used)
+                        , getString(R.string.firebase_property_stop_id), String.valueOf(stopToShow));
                 bottomBar.setDefaultTabPosition(0);
                 return true;
             case SPECIFICSHORTCUT:
@@ -176,8 +176,8 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 shortcutManager2.reportShortcutUsed(getString(R.string.shortcut_specific_timetable));
                 TimetableFragment fragment2 = new TimetableFragment();
                 String args = getIntent().getExtras().getString(getString(R.string.shortcut_specific_timetable));
-                firebaseLog(getString(R.string.firebase_specific_shortcut_used)
-                        , getString(R.string.firebase_stop_id), args);
+                firebaseLog(getString(R.string.firebase_event_specific_shortcut_used)
+                        , getString(R.string.firebase_property_stop_id), args);
                 fragment2.setArguments(getIntent().getExtras());
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -389,7 +389,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             startOnboardingSequence(bottomBar);
         }
         String[] array = getResources().getStringArray(R.array.bus_stops_home);
-        firebaseLog(getString(R.string.firebase_home_stop_changed), getString(R.string.firebase_stop_id), array[position - 1]);
+        firebaseLog(getString(R.string.firebase_event_home_stop_changed), getString(R.string.firebase_property_stop_id), array[position - 1]);
         sharedPreferences.edit().putInt(getString(R.string.preferences_home_bus_stop), position).apply();
         Snackbar snackbar = Snackbar.make(layout, "Home stop changed", Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));

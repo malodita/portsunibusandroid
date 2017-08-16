@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -50,8 +49,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private static final LatLng UPPERBOUNDS = new LatLng(50.810093, -1.040783);
     private static final LatLng LOWERBOUNDS = new LatLng(50.779265, -1.112208);
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    @BindView(R.id.maps_layout)
-    LinearLayout layout;
     @BindView(R.id.error_hint)
     TextView errorHint;
     @BindView(R.id.map) MapView mapView;
@@ -196,9 +193,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (status != ConnectionResult.SUCCESS) {
             progressBar.hide();
             if (googleApiAvailability.isUserResolvableError(status)) {
-                errorHint.setText(getString(R.string.play_services_update));
+                errorHint.setText(getString(R.string.error_play_services_update));
             } else {
-                errorHint.setText(getString(R.string.play_services_needed));
+                errorHint.setText(getString(R.string.error_play_services_needed));
             }
             errorHint.setVisibility(View.VISIBLE);
             return false;
@@ -233,9 +230,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * Called if the phone GPS isn't available
      */
     private void onNoGps() {
-        if (mapView != null) {
-            mapView.setVisibility(View.GONE);
-        }
+        mapView.setVisibility(View.GONE);
         progressBar.hide();
         errorHint.setText(getText(R.string.error_GPS_off));
         errorHint.setVisibility(View.VISIBLE);
@@ -248,42 +243,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         if (mapViewBundle == null) {
             mapViewBundle = new Bundle();
             outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
-            if (mapView != null) {
-                mapView.onSaveInstanceState(outState);
-            }
+            mapView.onSaveInstanceState(outState);
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (mapView != null) {
-            mapView.onStart();
-        }
+        mapView.onStart();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mapView != null) {
-            mapView.onResume();
-        }
+        mapView.onResume();
     }
 
 
     @Override
     public void onPause() {
-        if (mapView != null) {
-            mapView.onPause();
-        }
+        mapView.onPause();
         super.onPause();
     }
 
     @Override
     public void onStop() {
-        if (mapView != null) {
-            mapView.onStop();
-        }
+        mapView.onStop();
         super.onStop();
     }
 
@@ -296,9 +281,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onDestroyView() {
-        if (mapView != null) {
-            mapView.onDestroy();
-        }
+        mapView.onDestroy();
         if (googleMap != null){
             googleMap.clear();
             googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
@@ -322,8 +305,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
         Bundle bundle = new Bundle();
-        bundle.putString(getString(R.string.firebase_stop_id), marker.getTitle());
-        firebaseAnalytics.logEvent(getString(R.string.firebase_map_marker_click), bundle);
+        bundle.putString(getString(R.string.firebase_property_stop_id), marker.getTitle());
+        firebaseAnalytics.logEvent(getString(R.string.firebase_event_map_marker_click), bundle);
         return false;
     }
 }

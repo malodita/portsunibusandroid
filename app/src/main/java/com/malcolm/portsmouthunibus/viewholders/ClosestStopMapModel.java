@@ -71,9 +71,9 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
         weakContext = new WeakReference<>(holder.mapView.getContext());
         if (playServices != ConnectionResult.SUCCESS) {
             if (playServicesError == 1) {
-                holder.error.setText(R.string.play_services_update);
+                holder.error.setText(R.string.error_play_services_update);
             } else if (playServicesError == 2) {
-                holder.error.setText(R.string.play_services_needed);
+                holder.error.setText(R.string.error_play_services_needed);
             }
             holder.error.setVisibility(View.VISIBLE);
             holder.progressBar.hide();
@@ -111,9 +111,9 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
         provider = (String) mapObjects.get(0);
         if (playServices != ConnectionResult.SUCCESS) {
             if (playServicesError == 1) {
-                holder.error.setText(R.string.play_services_update);
+                holder.error.setText(R.string.error_play_services_update);
             } else if (playServicesError == 2) {
-                holder.error.setText(R.string.play_services_needed);
+                holder.error.setText(R.string.error_play_services_needed);
             }
             holder.error.setVisibility(View.VISIBLE);
             holder.progressBar.hide();
@@ -244,9 +244,9 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
     public void googlePlayServices(int playServicesResult) {
         if (holder != null) {
             if (playServicesResult == 1){
-                holder.error.setText(R.string.play_services_update);
+                holder.error.setText(R.string.error_play_services_update);
             } else {
-                holder.error.setText(R.string.play_services_needed);
+                holder.error.setText(R.string.error_play_services_needed);
             }
             holder.error.setVisibility(View.VISIBLE);
             holder.progressBar.hide();

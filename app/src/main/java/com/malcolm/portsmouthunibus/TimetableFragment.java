@@ -205,16 +205,14 @@ public class TimetableFragment extends Fragment implements
         } else {
             newStopToShow = position + 3;
         }
-        ArrayAdapter<CharSequence> spinnerArray = ArrayAdapter.createFromResource(getContext(), R.array.bus_stops_all,
-                R.layout.spinner_top);
+        String[] array = getContext().getResources().getStringArray(R.array.bus_stops_spinner);
         Bundle bundle = new Bundle();
         setUpRecyclerView(recyclerView, newStopToShow, false);
         noTimetable.setVisibility(View.GONE);
         if (spinnerReady) {
-            bundle.putString("new_stop", spinnerArray.getItem(newStopToShow).toString());
-            firebaseAnalytics.logEvent("timetable_changed_stop", bundle);
+            bundle.putString(getString(R.string.firebase_property_stop_id), array[position]);
+            firebaseAnalytics.logEvent(getString(R.string.firebase_event_timetable_changed_stop), bundle);
         }
-        Log.d(TAG, "onItemSelected: selected stop is " + position);
         spinnerReady = true;
     }
 
@@ -272,8 +270,8 @@ public class TimetableFragment extends Fragment implements
         String[] busShort = getResources().getStringArray(R.array.bus_stops_shortcuts_short);
         String shortcutShort = busShort[stopToSave];
         Bundle bundle = new Bundle();
-        bundle.putString(getString(R.string.firebase_stop_id), shortcutShort);
-        firebaseAnalytics.logEvent(getString(R.string.firebase_shortcut_created), bundle);
+        bundle.putString(getString(R.string.firebase_property_stop_id), shortcutShort);
+        firebaseAnalytics.logEvent(getString(R.string.firebase_event_shortcut_created), bundle);
         ShortcutManager manager = getContext().getSystemService(ShortcutManager.class);
         String packageName = getContext().getApplicationInfo().packageName;
         ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(getContext()

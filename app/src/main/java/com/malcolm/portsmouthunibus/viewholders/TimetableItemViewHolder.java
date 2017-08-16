@@ -41,18 +41,18 @@ public class TimetableItemViewHolder extends RecyclerView.ViewHolder implements 
 
     @Override
     public void onClick(View view) {
-        String[] array = context.getResources().getStringArray(R.array.bus_stops_all);
+        String[] array = context.getResources().getStringArray(R.array.bus_stops_analytics);
         Intent i = new Intent(context, DetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("listPosition", getAdapterPosition());
-        bundle.putString("stop", destination.getText().toString());
-        bundle.putString("time", time.getText().toString());
-        bundle.putString("startingStop", array[currentStopId]);
+        bundle.putInt(context.getString(R.string.firebase_property_list_position), getAdapterPosition());
+        bundle.putString(context.getString(R.string.firebase_property_destination), destination.getText().toString());
+        bundle.putString(context.getString(R.string.firebase_property_stop_time), time.getText().toString());
+        bundle.putString(context.getString(R.string.firebase_property_stop_id), array[currentStopId - 1]);
         i.putExtra(context.getString(R.string.intent_list_position), position);
         i.putExtra(context.getString(R.string.intent_stop), destination.getText());
         i.putExtra(context.getString(R.string.intent_stop_time), time.getText());
         i.putExtra(context.getString(R.string.intent_stop_viewed), currentStopId);
-        analytics.logEvent(context.getString(R.string.firebase_timetable_detail_request), bundle);
+        analytics.logEvent(context.getString(R.string.firebase_event_timetable_detail_request), bundle);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityOptionsCompat options = ActivityOptionsCompat.makeClipRevealAnimation(view, 0, 0
                     , view.getMeasuredWidth(), view.getMeasuredHeight());
