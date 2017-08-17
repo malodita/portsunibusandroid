@@ -79,7 +79,7 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
             startOnboarding();
         } else {
             boolean onboarding2 = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
-            setContentView(R.layout.activity_top);
+            setContentView(R.layout.activity_home);
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]

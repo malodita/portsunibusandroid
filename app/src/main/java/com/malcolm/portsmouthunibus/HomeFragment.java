@@ -118,7 +118,7 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_top, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), DEFAULT_VALUE);
         return rootView;
