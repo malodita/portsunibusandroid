@@ -211,7 +211,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         });
     }
 
-    private void startOnboardingSequence(BottomBar bottomBar){
+    private void startOnboardingSequence(final BottomBar bottomBar){
         TapTargetSequence sequence = new TapTargetSequence(this);
         List<TapTarget> targets = new ArrayList<>();
         targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_timetable),
@@ -258,7 +258,21 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         sequence.listener(new TapTargetSequence.Listener() {
             @Override
             public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-
+                if (targetClicked){
+                    switch (lastTarget.id()){
+                        case 1:
+                            bottomBar.selectTabAtPosition(0, true);
+                            break;
+                        case 3:
+                            bottomBar.selectTabAtPosition(2, true);
+                            break;
+                        case 4:
+                            bottomBar.selectTabAtPosition(1, true);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             @Override
             public void onSequenceFinish() {

@@ -1,6 +1,7 @@
 package com.malcolm.portsmouthunibus.detail;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -52,7 +53,6 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.image_placeholder));
         }
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         /*
          * This gets the position that was clicked from the intent to be used to
@@ -91,7 +91,15 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
 
     @Override
     public void onError() {
-        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.generic_day);
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        Drawable drawable;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES){
+            drawable = ContextCompat.getDrawable(this, R.drawable.generic_night);
+        } else {
+            drawable = ContextCompat.getDrawable(this, R.drawable.generic_day);
+
+        }
         BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
         Bitmap bitmap = bitmapDrawable.getBitmap();
         imageView.setImageDrawable(drawable);
