@@ -281,7 +281,7 @@ public class TimetableFragment extends Fragment implements
                 .setIcon(Icon.createWithResource(getContext(), R.mipmap.ic_shortcut_timetable_blue))
                 .setIntent(new Intent(getString(R.string.shortcut_specific_timetable_action))
                         .setPackage(packageName)
-                        .setClass(getContext(), TopActivity.class)
+                        .setClass(getContext(), HomeActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         .putExtra(getString(R.string.shortcut_specific_timetable), stopToSave))
                 .build();

@@ -692,7 +692,7 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
      * Changes the home card according to the new home stop selected.
      * It removes the callbacks for the runnable and restarts it so that it may update immediately
      * <p>
-     * Note: this should only be called from {@link TopActivity}
+     * Note: this should only be called from {@link HomeActivity}
      * </p>
      */
     public void changeHomeCard() {

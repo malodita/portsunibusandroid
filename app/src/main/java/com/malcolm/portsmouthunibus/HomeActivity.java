@@ -48,9 +48,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class TopActivity extends AppCompatActivity implements OnTabSelectListener, BottomSheet.DialogListener, QuickStartBottomSheet.DialogButtonSelectedListener {
+public class HomeActivity extends AppCompatActivity implements OnTabSelectListener, BottomSheet.DialogListener, QuickStartBottomSheet.DialogButtonSelectedListener {
     //Initialise local variables
-    private static final String TAG = "TopActivity";
+    private static final String TAG = "HomeActivity";
     private static final String HOMESHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE";
     private static final String SPECIFICSHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE.SPECIFIC";
     private static final String HOMEFRAGMENTTAG = "HomeFragment";
@@ -459,7 +459,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
                 .setIcon(Icon.createWithResource(this, R.mipmap.ic_shortcut_timetable))
                 .setIntent(new Intent(getString(R.string.shortcut_home_timetable_action))
                         .setPackage(getApplicationInfo().packageName)
-                        .setClass(this, TopActivity.class)
+                        .setClass(this, HomeActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP))
                 .build();
         manager.addDynamicShortcuts(Arrays.asList(shortcutInfo));

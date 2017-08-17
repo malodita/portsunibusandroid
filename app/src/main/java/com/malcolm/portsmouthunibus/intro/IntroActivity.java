@@ -34,8 +34,8 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieComposition;
+import com.malcolm.portsmouthunibus.HomeActivity;
 import com.malcolm.portsmouthunibus.R;
-import com.malcolm.portsmouthunibus.TopActivity;
 import com.pixelcan.inkpageindicator.InkPageIndicator;
 
 import butterknife.BindView;
@@ -295,7 +295,7 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
             settings.edit()
                     .putBoolean(getString(R.string.preferences_onboarding),true)
                     .apply();
-            Intent intent = new Intent(this, TopActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             intent.setAction(Intent.ACTION_MAIN);
             startActivity(intent);
             finish();
