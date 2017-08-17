@@ -38,7 +38,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
-import com.malcolm.portsmouthunibus.adapters.TopFragmentAdapter;
+import com.malcolm.portsmouthunibus.adapters.HomeFragmentAdapter;
 import com.malcolm.portsmouthunibus.models.ResponseSchema;
 import com.malcolm.portsmouthunibus.utilities.BusStopUtils;
 import com.malcolm.portsmouthunibus.utilities.NetworkRequest;
@@ -72,10 +72,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class TopFragment extends Fragment implements Callback<ResponseSchema>, SharedPreferences.OnSharedPreferenceChangeListener,
+public class HomeFragment extends Fragment implements Callback<ResponseSchema>, SharedPreferences.OnSharedPreferenceChangeListener,
         OnSuccessListener<Location>{
     private static final int DEFAULT_VALUE = 0;
-    public static final String TAG = "Top Fragment";
+    public static final String TAG = "Home Fragment";
     private final Handler handler = new Handler();
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -84,7 +84,7 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
     private int stopToShow;
     private int currentNightMode;
     private Runnable homeRunnable;
-    private TopFragmentAdapter adapter;
+    private HomeFragmentAdapter adapter;
     private ArrayList<Integer> stopTimes;
     private Unbinder unbinder;
     private DatabaseHelper databaseHelper;
@@ -100,7 +100,7 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
 
 
 
-    public TopFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -211,7 +211,7 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
     private void setupRecyclerView(RecyclerView recyclerView
             , List<Object> homeCard, List<Object> mapCard) {
         if (adapter == null) {
-            adapter = new TopFragmentAdapter(homeCard, mapCard);
+            adapter = new HomeFragmentAdapter(homeCard, mapCard);
             adapter.hasStableIds();
         }
         if (recyclerView.getLayoutManager() == null) {
@@ -739,21 +739,21 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
     }
 
     /**
-     * This class implements the LocationListener interface instead of the TopFragment as this led
+     * This class implements the LocationListener interface instead of the HomeFragment as this led
      * to constant memory leaks
      */
     private static class CurrentLocationListener extends LocationCallback {
 
-        private WeakReference<TopFragment> reference;
+        private WeakReference<HomeFragment> reference;
 
-        CurrentLocationListener(TopFragment fragment) {
+        CurrentLocationListener(HomeFragment fragment) {
             reference = new WeakReference<>(fragment);
         }
 
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
-                TopFragment fragment = reference.get();
+                HomeFragment fragment = reference.get();
                 fragment.instantCardCheck(location);
             }
             super.onLocationResult(locationResult);
@@ -767,17 +767,17 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
      */
     private static class HomeCardTask implements Runnable {
 
-        private final WeakReference<TopFragment> weakReference;
+        private final WeakReference<HomeFragment> weakReference;
 
-        HomeCardTask(TopFragment parent) {
+        HomeCardTask(HomeFragment parent) {
             weakReference = new WeakReference<>(parent);
         }
 
         @Override
         public void run() {
-            final TopFragment topFragment = weakReference.get();
-            if (topFragment != null) {
-                homeStopRunnableTask(topFragment);
+            final HomeFragment homeFragment = weakReference.get();
+            if (homeFragment != null) {
+                homeStopRunnableTask(homeFragment);
             }
         }
 
@@ -787,7 +787,7 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
          *
          * @param parent The top fragment instance
          */
-        void homeStopRunnableTask(TopFragment parent) {
+        void homeStopRunnableTask(HomeFragment parent) {
             String time = parent.getTimeToStop(parent.stopTimes);
             ArrayList<String> array = new ArrayList<>();
             array.add(time);
@@ -803,12 +803,12 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
      */
     private static class InstantCard implements Runnable {
 
-        WeakReference<TopFragment> parent;
+        WeakReference<HomeFragment> parent;
         ArrayList<Integer> list;
 
 
-        InstantCard(TopFragment topFragment, List<Integer> list) {
-            parent = new WeakReference<>(topFragment);
+        InstantCard(HomeFragment homeFragment, List<Integer> list) {
+            parent = new WeakReference<>(homeFragment);
             this.list = (ArrayList<Integer>) list;
         }
 
@@ -829,7 +829,7 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
      */
     private static class InstantCardTask extends AsyncTask<Void, Void, ArrayList<Object>> {
 
-        TopFragment fragment;
+        HomeFragment fragment;
         ArrayList<Integer> array;
 
         /**
@@ -838,7 +838,7 @@ public class TopFragment extends Fragment implements Callback<ResponseSchema>, S
          * @param parent The topFragment instance
          * @param array  An array of stop times to be searched
          */
-        InstantCardTask(WeakReference<TopFragment> parent, ArrayList<Integer> array) {
+        InstantCardTask(WeakReference<HomeFragment> parent, ArrayList<Integer> array) {
             fragment = parent.get();
             this.array = array;
         }

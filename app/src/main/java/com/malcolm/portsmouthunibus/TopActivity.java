@@ -53,7 +53,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     private static final String TAG = "TopActivity";
     private static final String HOMESHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE";
     private static final String SPECIFICSHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE.SPECIFIC";
-    private static final String TOPFRAGMENTTAG = "TopFragment";
+    private static final String HOMEFRAGMENTTAG = "HomeFragment";
     private static final String TIMETABLETAG = "TimetableFragment";
     private static final String MAPSTAG = "MapsFragment";
     private static final String BOTTOMSHEET = "BottomSheet";
@@ -101,7 +101,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
             if (!shortcutUsed && savedInstanceState == null){
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.placeholder, new TopFragment(), TOPFRAGMENTTAG)
+                        .replace(R.id.placeholder, new HomeFragment(), HOMEFRAGMENTTAG)
                         .commitNow();
             }
             bottomBar.setOnTabSelectListener(this, false);
@@ -150,7 +150,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
      * Checks the use of a shortcut to open the app to set the correct fragment to display as well
      * as its arguments. Since shortcuts are only exposed to devices running N MR1 (the option to
      * create one isn't even exposed to non compatible devices), the usual path for this is to
-     * simply set the tab position and therefore TopFragment.
+     * simply set the tab position and therefore HomeFragment.
      *
      * @param action The action accompanying the intent to open the app from a shortcut
      */
@@ -313,20 +313,20 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
     @Override
     public void onTabSelected(@IdRes int tabId) {
         FragmentManager manager = getSupportFragmentManager();
-        TopFragment topFragment = (TopFragment) manager.findFragmentByTag(TOPFRAGMENTTAG);
+        HomeFragment homeFragment = (HomeFragment) manager.findFragmentByTag(HOMEFRAGMENTTAG);
         TimetableFragment timetableFragment = (TimetableFragment) manager.findFragmentByTag(TIMETABLETAG);
         MapsFragment mapsFragment = (MapsFragment) manager.findFragmentByTag(MAPSTAG);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch (tabId) {
             case R.id.tab_place:
                 toolbar.setTitle(R.string.app_name);
-                if (topFragment != null) {
-                    topFragment = (TopFragment) getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG);
-                    ft.attach(topFragment).commit();
+                if (homeFragment != null) {
+                    homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(HOMEFRAGMENTTAG);
+                    ft.attach(homeFragment).commit();
                     return;
                 } else {
-                    topFragment = new TopFragment();
-                    ft.replace(R.id.placeholder, topFragment, TOPFRAGMENTTAG);
+                    homeFragment = new HomeFragment();
+                    ft.replace(R.id.placeholder, homeFragment, HOMEFRAGMENTTAG);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.commit();
                 }
@@ -411,9 +411,9 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             createShortcut();
         }
-        if (getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG) != null &&
-                getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG).isVisible()) {
-            TopFragment fragment = (TopFragment) getSupportFragmentManager().findFragmentByTag(TOPFRAGMENTTAG);
+        if (getSupportFragmentManager().findFragmentByTag(HOMEFRAGMENTTAG) != null &&
+                getSupportFragmentManager().findFragmentByTag(HOMEFRAGMENTTAG).isVisible()) {
+            HomeFragment fragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(HOMEFRAGMENTTAG);
             fragment.changeHomeCard();
         }
     }
@@ -428,7 +428,7 @@ public class TopActivity extends AppCompatActivity implements OnTabSelectListene
      * which will then save their choice and have it persist. This will then be able to be used by
      * the timetable fragment as the default timetable inflated whenever the app is restarted.
      * <p>
-     * If TopFragment is the currently displayed fragment, it will cause the home stop card to
+     * If HomeFragment is the currently displayed fragment, it will cause the home stop card to
      * change its content to reflect the newly selected stop.
      */
     @Override

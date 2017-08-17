@@ -13,16 +13,16 @@ import java.util.List;
 
 /**
  * This class represents the adapter responsible for displaying and updating the recyclerview in
- * TopFragment
+ * HomeFragment
  */
 
-public class TopFragmentAdapter extends EpoxyAdapter {
-    private static final String TAG = "TopFragmentAdapter";
+public class HomeFragmentAdapter extends EpoxyAdapter {
+    private static final String TAG = "HomeFragmentAdapter";
     private final HomeStopModel home;
     private final ClosestStopMapModel map;
     private final ClosestStopModel instant = new ClosestStopModel();
 
-    public TopFragmentAdapter(List<Object> homeCard, List<Object> mapCard) {
+    public HomeFragmentAdapter(List<Object> homeCard, List<Object> mapCard) {
         enableDiffing();
         if (homeCard != null && !Boolean.parseBoolean(homeCard.get(0).toString())) {
             home = new HomeStopModel_()
