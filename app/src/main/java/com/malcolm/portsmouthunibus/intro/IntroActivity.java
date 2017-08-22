@@ -127,7 +127,7 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
 
     private void animateIntro(){
         ObjectAnimator introVisibility = ObjectAnimator.ofFloat(intro, View.ALPHA, 1, 0).setDuration(1500);
-        introVisibility.setStartDelay(3000);
+        introVisibility.setStartDelay(2000);
         ObjectAnimator lottieVisibility = ObjectAnimator.ofFloat(lottie, View.ALPHA, 0, 1).setDuration(500);
         ObjectAnimator pagerVisibility = ObjectAnimator.ofFloat(viewPager, View.ALPHA, 0, 1).setDuration(500);
         ObjectAnimator indicatorVisibility = ObjectAnimator.ofFloat(indicator, View.ALPHA, 0, 1).setDuration(500);

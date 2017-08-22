@@ -33,23 +33,12 @@ public class AboutActivity extends MaterialAboutActivity {
         app.addItem(new MaterialAboutActionItem.Builder()
                 .text("Changelog")
                 .icon(R.drawable.ic_history)
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("changelog.html");
-                    }
-                })
+                .setOnClickListener(() -> displayLicensesDialog("changelog.html"))
                 .build());
         app.addItem(new MaterialAboutActionItem.Builder()
                 .text("Privacy Policy")
                 .subText("For more information please search Firebase Privacy Policy")
-                .setOnClickListener(new MaterialAboutActionItem.OnClickListener() {
-                    @Override
-                    public void onClick() {
-                        displayLicensesDialog("privacypolicy.html");
-                    }
-                }).build());
-
+                .setOnClickListener(() -> displayLicensesDialog("privacypolicy.html")).build());
 
         MaterialAboutCard.Builder licenses = new MaterialAboutCard.Builder().title("Libraries & Licenses");
         licenses.addItem(new MaterialAboutActionItem.Builder()

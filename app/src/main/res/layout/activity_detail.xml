@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="@color/icons"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline"
+            app:expandedTitleTextAppearance="@style/AppTheme.ActionBar.Headline"
             app:expandedTitleGravity="start|bottom|center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
