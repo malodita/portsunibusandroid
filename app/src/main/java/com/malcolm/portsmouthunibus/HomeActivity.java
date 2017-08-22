@@ -21,7 +21,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -393,7 +392,6 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
 
     @Override
     public void onItemSelected(int position) {
-        Log.d(TAG, "onItemSelected: " + position);
         int current = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 0);
         boolean quickstart = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
         if (position == current) {
