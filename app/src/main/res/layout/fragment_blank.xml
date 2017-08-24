@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -16,24 +17,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:ellipsize="none"
-        android:text="Title"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/icons"
         app:layout_constraintBottom_toTopOf="@id/subtitle"
         app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frame"/>
+        app:layout_constraintTop_toBottomOf="@id/frame"
+        tools:text="Title"/>
 
     <TextView
         android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="64dp"
         android:layout_marginTop="8dp"
-        android:text="Subheading"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/icons"
@@ -41,5 +41,6 @@
         app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="Subheading"
         />
 </android.support.constraint.ConstraintLayout>

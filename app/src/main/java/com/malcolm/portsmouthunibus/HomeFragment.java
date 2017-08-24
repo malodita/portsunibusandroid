@@ -37,7 +37,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.malcolm.portsmouthunibus.adapters.HomeFragmentAdapter;
 import com.malcolm.portsmouthunibus.models.ResponseSchema;
 import com.malcolm.portsmouthunibus.utilities.BusStopUtils;
@@ -585,7 +584,6 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
             Snackbar snackbar = Snackbar.make(layout, "Error displaying the closest stop card", Snackbar.LENGTH_SHORT);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
-            FirebaseCrash.report(new Throwable("No result was returned by DatabaseHelper to set up the Instant Card"));
             return false;
         }
         String time = getTimeToStop(arrayList);
@@ -626,7 +624,6 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
         if (!responseSchema.getStatus().equals("OK")) {
             //If the API is not returning the required response for any reason
             adapter.noConnection();
-            FirebaseCrash.log(TAG + "API request not returned correctly");
             return;
         }
         //Adds the current time to the response body which is used for caching purposes
@@ -668,8 +665,6 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
                     out.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    FirebaseCrash.log(TAG + "JSON write to cache failure");
-                    FirebaseCrash.report(e);
                 }
             }
         }).start();
@@ -683,7 +678,6 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
                     getString(R.string.error_server_response), Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
-            FirebaseCrash.log(TAG + ": Error making API request");
         }
 
     }

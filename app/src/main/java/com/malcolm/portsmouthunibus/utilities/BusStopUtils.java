@@ -14,7 +14,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.crash.FirebaseCrash;
 
 import org.json.JSONException;
 
@@ -76,8 +75,6 @@ public final class BusStopUtils {
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            FirebaseCrash.log(TAG + ": Parsing time failed");
-            FirebaseCrash.report(e);
         }
         return finalTime;
     }
