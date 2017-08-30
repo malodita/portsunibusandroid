@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:textAlignment="center"
         android:text="@string/app_name"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/icons"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,7 +27,7 @@
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie"
         android:layout_width="0dp"
-        android:layout_height="320dp"
+        android:layout_height="340dp"
         android:layout_marginTop="0dp"
         android:alpha="0"
         android:visibility="gone"
@@ -40,34 +40,34 @@
 
     <Button
         android:id="@+id/button2"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="16dp"
         android:alpha="0"
-        tools:alpha="1"
         android:padding="8dp"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        tools:visibility="visible"
-        android:textColor="@color/icons"
         android:text="@string/onboarding_permission"
+        android:textColor="@color/icons"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/indicator"
-        app:layout_constraintTop_toBottomOf="@+id/lottie"/>
+        tools:alpha="1"
+        tools:visibility="visible"
+        />
 
     <com.pixelcan.inkpageindicator.InkPageIndicator
         android:id="@+id/indicator"
-        android:visibility="invisible"
-        android:alpha="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        tools:layout_editor_absoluteX="0dp"
+        android:alpha="0"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        tools:layout_editor_absoluteX="0dp"/>
 
     <com.malcolm.portsmouthunibus.intro.NonSwipeViewPager
         android:id="@+id/viewpager"
@@ -88,19 +88,19 @@
 
     <Button
         android:id="@+id/button_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/onboarding_finish"
-        android:visibility="gone"
-        android:alpha="0"
         style="@style/Widget.AppCompat.Button.Borderless"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/indicator"
         android:layout_marginRight="24dp"
-        tools:alpha="1"
+        android:alpha="0"
+        android:text="@string/onboarding_finish"
         android:textColor="@color/icons"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/indicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:alpha="1"
         tools:visibility="visible"
         />
 

@@ -15,8 +15,6 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -43,7 +41,6 @@ import com.malcolm.unibusutilities.DatabaseHelper;
 import com.malcolm.unibusutilities.TermDates;
 import com.malcolm.unibusutilities.Times;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -74,7 +71,6 @@ public class TimetableFragment extends Fragment implements
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreferences;
     private boolean spinnerReady = false;
-    protected static TimetableHandler handler;
 
 
     public TimetableFragment() {
@@ -142,25 +138,8 @@ public class TimetableFragment extends Fragment implements
                 adapter.swapData(times, stop);
                 sharedPreferences.edit().putInt(getString(R.string.preference_last_viewed_stop), stop).apply();
             }
-            //new TimetableThread(databaseHelper, stop, timeFormat).start();
         }
         recyclerView.setVisibility(View.VISIBLE);
-    }
-
-    @SuppressWarnings("unchecked cast")
-    private void setData(Message message){
-        ArrayList<Object> list = (ArrayList<Object>) message.obj;
-        ArrayList<Times> times = (ArrayList<Times>) list.get(0);
-        int stop = (Integer) list.get(1);
-        if (adapter == null) {
-            recyclerView.setHasFixedSize(true);
-            adapter = new TimetableFragmentAdapter(getContext(), times, stop);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        } else {
-            adapter.swapData(times, stop);
-            sharedPreferences.edit().putInt(getString(R.string.preference_last_viewed_stop), stop).apply();
-        }
     }
 
 
@@ -220,21 +199,22 @@ public class TimetableFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        setUpFab();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            setUpFab();
+        }
     }
 
     /**
      * Sets up the floating action button.
      * <p>
      * As it controls a feature that is dependent on API > 24, it will only set it up if the device
-     * is above this version
+     * is above this version. Hence there are two different layout files for the
      * </p>
      */
+    @TargetApi(Build.VERSION_CODES.N_MR1)
     private void setUpFab() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            floatingActionButton.show();
-            floatingActionButton.setOnClickListener(v -> buildDialog());
-        }
+        floatingActionButton.show();
+        floatingActionButton.setOnClickListener(v -> buildDialog());
     }
 
     /**
@@ -303,9 +283,8 @@ public class TimetableFragment extends Fragment implements
         Snackbar snackbar = Snackbar.make(layout, "Shortcut created", Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
         final AnimatedVectorDrawable vectorDrawable = (AnimatedVectorDrawable) floatingActionButton.getDrawable();
-        int accent = getContext().getColor(R.color.accent);
-        int confirm = getContext().getColor(R.color.fab_confirm);
-        final ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), accent, confirm);
+        final ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), getContext().getColor(R.color.accent)
+                , getContext().getColor(R.color.fab_confirm));
         animator.addUpdateListener(animation -> {
             int color = (int) animator.getAnimatedValue();
             floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(color));
@@ -380,56 +359,7 @@ public class TimetableFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        //handler.removeCallbacksAndMessages(null);
         unbinder.unbind();
     }
 
-    /**
-     * The purpose of this class is to act as a go between for the {@link TimetableFragment} and
-     * {@link TimetableThread}.
-     */
-    private static class TimetableHandler extends Handler{
-
-        private final WeakReference<TimetableFragment> fragment;
-
-        TimetableHandler(TimetableFragment fragment) {
-            this.fragment = new WeakReference<>(fragment);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            TimetableFragment timetableFragment = fragment.get();
-            timetableFragment.setData(msg);
-        }
-    }
-
-    /**
-     * The class carries out the task of searching the database for the enquired stop. This is
-     */
-    private static class TimetableThread extends Thread{
-
-        private final DatabaseHelper databaseHelper;
-        private final int stop;
-        private final boolean timeFormat;
-
-
-
-        TimetableThread(DatabaseHelper databaseHelper, int stop, boolean timeFormat) {
-            this.databaseHelper = databaseHelper;
-            this.stop = stop;
-            this.timeFormat = timeFormat;
-        }
-
-        @Override
-        public void run() {
-            ArrayList<Times> times = databaseHelper.getTimesArray(stop, timeFormat);
-            Message message = new Message();
-            ArrayList<Object> array = new ArrayList<>();
-            array.add(times);
-            array.add(stop);
-            message.obj = array;
-            handler.sendMessage(message);
-            super.run();
-        }
-    }
 }
