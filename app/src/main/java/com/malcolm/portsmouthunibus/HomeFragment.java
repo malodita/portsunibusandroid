@@ -473,30 +473,32 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
     }
 
     private void instantCardCheck(Location location) {
-        boolean instant = sharedPreferences.getBoolean(getString(R.string.preferences_instant_card), true);
-        if (!instant) {
-            removeInstantCard();
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(getContext()
-                , Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location closest = BusStops.getClosestStop(location);
-        if (closest != null) {
-            float distance = location.distanceTo(closest);
-            if (distance <= 45) {
-                if (isInstantCardDisplayed && instantCard != null) {
-                    handler.post(instantCard);
+        if(isAdded()) {
+            boolean instant = sharedPreferences.getBoolean(getString(R.string.preferences_instant_card), true);
+            if (!instant) {
+                removeInstantCard();
+                return;
+            }
+            if (ActivityCompat.checkSelfPermission(getContext()
+                    , Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            Location closest = BusStops.getClosestStop(location);
+            if (closest != null) {
+                float distance = location.distanceTo(closest);
+                if (distance <= 45) {
+                    if (isInstantCardDisplayed && instantCard != null) {
+                        handler.post(instantCard);
+                    } else {
+                        isInstantCardDisplayed = setupInstantCard(closest);
+                    }
                 } else {
-                    isInstantCardDisplayed = setupInstantCard(closest);
+                    removeInstantCard();
                 }
             } else {
                 removeInstantCard();
             }
-        } else {
-            removeInstantCard();
         }
     }
 
@@ -653,19 +655,16 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
      * @param response The response to cache
      */
     private void cacheResponse(final ResponseSchema response) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                ObjectOutput out;
-                try {
-                    out = new ObjectOutputStream(new FileOutputStream(new File(getContext().getCacheDir().getAbsolutePath()) + "response.srl"));
-                    out.writeObject(response);
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+            ObjectOutput out;
+            try {
+                out = new ObjectOutputStream(new FileOutputStream(new File(getContext().getCacheDir().getAbsolutePath()) + "response.srl"));
+                out.writeObject(response);
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }).start();
     }
@@ -715,6 +714,9 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
     @Override
     public void onPause() {
         stopLocationUpdates();
+        if (isInstantCardDisplayed) {
+            instantCard.cancelTask();
+        }
         handler.removeCallbacksAndMessages(null);
         if (call != null) {
             call.cancel();
@@ -799,6 +801,7 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
 
         WeakReference<HomeFragment> parent;
         ArrayList<Integer> list;
+        InstantCardTask task;
 
 
         InstantCard(HomeFragment homeFragment, List<Integer> list) {
@@ -810,8 +813,15 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
         @Override
         public void run() {
             if (parent != null) {
-                new InstantCardTask(parent, list).execute();
+                task = new InstantCardTask(parent, list);
+                task.execute();
                 parent.get().handler.postDelayed(this, 5000);
+            }
+        }
+
+        void cancelTask(){
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                task.cancel(true);
             }
         }
     }
