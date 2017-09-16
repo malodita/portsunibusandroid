@@ -57,7 +57,7 @@
         <activity
             android:name=".settings.AboutActivity"
             android:parentActivityName=".settings.SettingsActivity"
-            android:theme="@style/AppTheme.MaterialAboutActivity"/>
+            android:theme="@style/AppTheme.AboutActivityDay"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
