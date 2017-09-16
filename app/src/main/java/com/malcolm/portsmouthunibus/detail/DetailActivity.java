@@ -103,7 +103,7 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
         BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
         Bitmap bitmap = bitmapDrawable.getBitmap();
         imageView.setImageDrawable(drawable);
-        new Palette.Builder(bitmap).maximumColorCount(16).generate(this);
+        new Palette.Builder(bitmap).maximumColorCount(20).generate(this);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
         toolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.icons));
         if (swatch != null){
             toolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.icons));
-            toolbarLayout.setContentScrimColor(swatch.getRgb());
+            toolbarLayout.setContentScrimColor(palette.getVibrantColor(ContextCompat.getColor(this, R.color.primary)));
         } else {
             toolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.icons));
             toolbarLayout.setContentScrimColor(ContextCompat.getColor(this, R.color.primary));

@@ -14,7 +14,8 @@
         android:layout_height="250dp"
         android:background="@color/image_placeholder"
         android:elevation="4dp"
-        android:id="@+id/app_bar_layout">
+        android:id="@+id/app_bar_layout"
+        tools:targetApi="lollipop">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_wrapper"
@@ -32,7 +33,6 @@
                 app:layout_collapseParallaxMultiplier="0.5"
                 android:scaleType="centerCrop"
                 android:id="@+id/image_view"
-                android:transitionName="default"
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
 
             <android.support.v7.widget.Toolbar

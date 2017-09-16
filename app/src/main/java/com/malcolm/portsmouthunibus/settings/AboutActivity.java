@@ -2,7 +2,12 @@ package com.malcolm.portsmouthunibus.settings;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.webkit.WebView;
@@ -17,6 +22,20 @@ import com.malcolm.portsmouthunibus.R;
 
 public class AboutActivity extends MaterialAboutActivity {
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+        switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK){
+            case Configuration.UI_MODE_NIGHT_YES:
+                setTheme(R.style.AppTheme_AboutActivityNight);
+                break;
+            default:
+                setTheme(R.style.AppTheme_AboutActivityDay);
+                break;
+        }
+    }
+
+    @NonNull
     @Override
     protected MaterialAboutList getMaterialAboutList(Context context) {
         MaterialAboutCard.Builder app = new MaterialAboutCard.Builder()
@@ -33,70 +52,70 @@ public class AboutActivity extends MaterialAboutActivity {
         app.addItem(new MaterialAboutActionItem.Builder()
                 .text("Changelog")
                 .icon(R.drawable.ic_history)
-                .setOnClickListener(() -> displayLicensesDialog("changelog.html"))
+                .setOnClickAction(() -> displayLicensesDialog("changelog.html"))
                 .build());
         app.addItem(new MaterialAboutActionItem.Builder()
                 .text("Privacy Policy")
                 .subText("For more information please search Firebase Privacy Policy")
-                .setOnClickListener(() -> displayLicensesDialog("privacypolicy.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("privacypolicy.html")).build());
 
         MaterialAboutCard.Builder licenses = new MaterialAboutCard.Builder().title("Libraries & Licenses");
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Bottom Bar")
                 .icon(R.drawable.ic_github_circle)
                 .subText("Iiro Krankka (Roughike)")
-                .setOnClickListener(() -> displayLicensesDialog("bottombar.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("bottombar.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Lottie").subText("Airbnb")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("lottie.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("lottie.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Ink Pager Indicator")
                 .subText("David Păcioianu")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("inkpagerindicator.html"))
+                .setOnClickAction(() -> displayLicensesDialog("inkpagerindicator.html"))
                 .build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Material About Library").subText("Daniel Stone")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("materialaboutlibrary.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("materialaboutlibrary.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Retrofit")
                 .subText("Square")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("retrofit.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("retrofit.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Leak Canary")
                 .subText("Square")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("leakcanary.html"))
+                .setOnClickAction(() -> displayLicensesDialog("leakcanary.html"))
                 .build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("TapTargetView")
                 .subText("Keepsafe")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("taptargetview.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("taptargetview.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Butterknife")
                 .subText("Jake Wharton").icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("butterknife.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("butterknife.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Epoxy")
                 .subText("Airbnb")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("epoxy.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("epoxy.html")).build());
         licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Picasso")
                 .subText("Square")
                 .icon(R.drawable.ic_github_circle)
-                .setOnClickListener(() -> displayLicensesDialog("picasso.html")).build());
+                .setOnClickAction(() -> displayLicensesDialog("picasso.html")).build());
 
         MaterialAboutCard.Builder personal = new MaterialAboutCard.Builder().title("Developer");
         personal.addItem(new MaterialAboutActionItem.Builder()
                 .text("Malcolm Odita")
                 .subText("In his spare time, he takes pictures")
                 .icon(R.drawable.ic_google_photos)
-                .setOnClickListener(() -> {
+                .setOnClickAction(() -> {
                     String url = "https://malcolmphoto.co.uk/";
                     Intent view = new Intent(Intent.ACTION_VIEW);
                     view.setData(Uri.parse(url));
@@ -107,7 +126,7 @@ public class AboutActivity extends MaterialAboutActivity {
         thanks.addItem(new MaterialAboutActionItem.Builder()
                 .text("Austin Andrews").subText("For icon use")
                 .icon(R.drawable.ic_twitter)
-                .setOnClickListener(() -> {
+                .setOnClickAction(() -> {
                     String url = "https://twitter.com/Templarian";
                     Intent view = new Intent(Intent.ACTION_VIEW);
                     view.setData(Uri.parse(url));
@@ -117,7 +136,7 @@ public class AboutActivity extends MaterialAboutActivity {
                 .text("Corbin Scott")
                 .subText("For Lottie asset use")
                 .icon(R.drawable.ic_twitter)
-                .setOnClickListener(() -> {
+                .setOnClickAction(() -> {
                     String url = "https://twitter.com/slykuiper";
                     Intent view = new Intent(Intent.ACTION_VIEW);
                     view.setData(Uri.parse(url));

@@ -23,10 +23,19 @@
         <item name="android:textColorSecondary">@color/icons</item>
     </style>
 
-    <style name="AppTheme.MaterialAboutActivity" parent="Theme.Mal">
+    <style name="AppTheme.Detail" parent="AppTheme">
+    </style>
+
+    <style name="AppTheme.AboutActivityDay" parent="Theme.Mal.Dark">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="AppTheme.AboutActivityNight" parent="Theme.Mal.Dark">
+        <item name="colorPrimary">#190c22</item>
+        <item name="colorPrimaryDark">#09040d</item>
+        <item name="colorAccent">#ffd740</item>
     </style>
 
     <style name="AppTheme.ActionBar.Headline" parent="TextAppearance.AppCompat.Headline">
