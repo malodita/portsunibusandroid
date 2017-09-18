@@ -21,7 +21,7 @@ public final class TermDates {
     private static final String EASTER2017START = "31-03-2017";
     private static final String EASTER2017END = "24-04-2017";
     private static final String SUMMER2017START = "02-06-2017";
-    private static final String SUMMER2017END = "25-09-2017";
+    private static final String SUMMER2017END = "17-09-2017";
     private static final String CHRISTMAS2017START = "15-12-2017";
     private static final String CHRISTMAS2017END = "08-01-2018";
     private static final String EASTER2018START = "30-03-2018";
