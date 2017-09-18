@@ -26,7 +26,7 @@
     <style name="AppTheme.Detail" parent="AppTheme">
     </style>
 
-    <style name="AppTheme.AboutActivityDay" parent="Theme.Mal.Dark">
+    <style name="AppTheme.AboutActivityDay" parent="Theme.Mal.Light.DarkActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
