@@ -22,12 +22,12 @@ public final class TermDates {
     private static final String EASTER2017END = "24-04-2017";
     private static final String SUMMER2017START = "02-06-2017";
     private static final String SUMMER2017END = "17-09-2017";
-    private static final String CHRISTMAS2017START = "15-12-2017";
-    private static final String CHRISTMAS2017END = "08-01-2018";
-    private static final String EASTER2018START = "30-03-2018";
-    private static final String EASTER2018END = "23-04-2018";
-    private static final String SUMMER2018START = "01-06-2018";
-    private static final String SUMMER2018END = "14-09-2018";//Provisional
+    private static final String CHRISTMAS2017START = "16-12-2017";
+    private static final String CHRISTMAS2017END = "07-01-2018";
+    private static final String EASTER2018START = "31-03-2018";
+    private static final String EASTER2018END = "22-04-2018";
+    private static final String SUMMER2018START = "02-06-2018";
+    private static final String SUMMER2018END = "16-09-2018";//Provisional
 
     //Bank holidays
     private static final String EASTERMONDAY2017 = "17-04-2017";
