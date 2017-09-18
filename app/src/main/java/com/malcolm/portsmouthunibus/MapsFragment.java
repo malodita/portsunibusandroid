@@ -14,18 +14,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -48,17 +50,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private static final String TAG = "MapsFragment";
     private static final LatLng UPPERBOUNDS = new LatLng(50.810093, -1.040783);
     private static final LatLng LOWERBOUNDS = new LatLng(50.779265, -1.112208);
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    Unbinder unbinder;
+    @BindView(R.id.map_container)
+    LinearLayout container;
     @BindView(R.id.error_hint)
     TextView errorHint;
-    @BindView(R.id.map) MapView mapView;
-    @BindView(R.id.progress_bar)
-    ContentLoadingProgressBar progressBar;
-    Unbinder unbinder;
     private GoogleMap googleMap;
     private String[] stopList;
     private FirebaseAnalytics firebaseAnalytics;
     private int currentNightMode;
+    private SupportMapFragment fragment;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -85,35 +86,60 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         final View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         stopList = getResources().getStringArray(R.array.bus_stops_markers);
+        if (!isGooglePlayServicesAvailable(getActivity()) || !onNoNetwork() || !onNoGps()){
+            return rootView;
+        }
+        GoogleMapOptions options = new GoogleMapOptions();
+        options.camera(CameraPosition.builder().target(new LatLng(50.795261, -1.093634)).zoom(14).build());
+        fragment = SupportMapFragment.newInstance(options);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.map_container, fragment, "Map").commit();
+        fragment.getMapAsync(this);
+        return rootView;
+    }
 
-        if (!isGooglePlayServicesAvailable(getActivity())){
-            return rootView;
-        }
+    /**
+     * Called if the phone GPS isn't available
+     */
+    private boolean onNoGps() {
         LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            onNoGps();
-            return rootView;
+        if (manager != null) {
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                errorHint.setText(getText(R.string.error_GPS_off));
+                errorHint.setVisibility(View.VISIBLE);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            errorHint.setText("This device does not have GPS");
+            errorHint.setVisibility(View.VISIBLE);
+            return false;
         }
+    }
+
+/**
+     * Called if the internet connection isn't available
+     */
+    private boolean onNoNetwork() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (connectivityManager != null) {
+            activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        }
         if (activeNetworkInfo != null && !activeNetworkInfo.isConnected()) {
-            onNoNetwork();
-            return rootView;
+            errorHint.setText(getString(R.string.error_no_connection));
+            errorHint.setVisibility(View.VISIBLE);
+            return false;
+        } else {
+            return true;
         }
-        Bundle mapViewBundle = null;
-        if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
-        }
-        mapView.onCreate(mapViewBundle);
-        mapView.getMapAsync(this);
-        return rootView;
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        progressBar.hide();
-        mapView.setVisibility(View.VISIBLE);
         ArrayList<LatLng> list = BusStops.makeArrayOfStops();
         for (int i = 0; i < list.size(); i++){
             googleMap.addMarker(new MarkerOptions().position(list.get(i))
@@ -173,6 +199,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+/*    */
     private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
         try {
             packageManager.getPackageInfo(packagename, PackageManager.GET_ACTIVITIES);
@@ -191,7 +218,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int status = googleApiAvailability.isGooglePlayServicesAvailable(activity);
         if (status != ConnectionResult.SUCCESS) {
-            progressBar.hide();
             if (googleApiAvailability.isUserResolvableError(status)) {
                 errorHint.setText(getString(R.string.error_play_services_update));
             } else {
@@ -203,90 +229,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return true;
     }
 
-    /**
-     * Called if the internet connection isn't available
-     */
-    private void onNoNetwork() {
-        if (mapView != null) {
-            mapView.setVisibility(View.GONE);
-        }
-        progressBar.hide();
-        errorHint.setText(getString(R.string.error_no_connection));
-        errorHint.setVisibility(View.VISIBLE);
-    }
-    /**
-     * Called if the users location permissions haven't been granted
-     */
-    private void onDeniedPermission() {
-        if (mapView != null) {
-            mapView.setVisibility(View.GONE);
-        }
-        progressBar.hide();
-        errorHint.setText(getText(R.string.location_permission_hint_wide));
-        errorHint.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Called if the phone GPS isn't available
-     */
-    private void onNoGps() {
-        mapView.setVisibility(View.GONE);
-        progressBar.hide();
-        errorHint.setText(getText(R.string.error_GPS_off));
-        errorHint.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
-        if (mapViewBundle == null) {
-            mapViewBundle = new Bundle();
-            outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
-            mapView.onSaveInstanceState(outState);
-        } else {
-            mapView.onSaveInstanceState(outState);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        mapView.onStart();
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        mapView.onResume();
-        super.onResume();
-    }
-
-
-    @Override
-    public void onPause() {
-        mapView.onPause();
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        mapView.onStop();
-        super.onStop();
-    }
-
-    @Override
-    public void onLowMemory() {
-        mapView.onLowMemory();
-        super.onLowMemory();
-    }
-
-
     @Override
     public void onDestroyView() {
-        mapView.onDestroy();
         if (googleMap != null){
-            //googleMap.clear();
-            //googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+            googleMap.clear();
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+            googleMap.setOnMarkerClickListener(null);
             googleMap.setOnInfoWindowClickListener(null);
             try{
                 googleMap.setMyLocationEnabled(false);

@@ -1,42 +1,20 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/maps_layout"
-    tools:context=".MapsFragment">
-
-    <android.support.v4.widget.ContentLoadingProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        style="?android:attr/progressBarStyleLarge"
-        android:id="@+id/progress_bar"
-        />
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/error_hint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/error_hint"
-        android:textAlignment="center"
         android:layout_gravity="center_vertical"
         android:gravity="center"
+        android:padding="@dimen/activity_margin"
+        android:textAlignment="center"
         android:textSize="@dimen/text_title_size"
         android:textStyle="italic"
-        android:padding="@dimen/activity_margin"
         android:visibility="gone"
         />
-
-    <com.google.android.gms.maps.MapView
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        map:cameraZoom="14"
-        android:visibility="gone"
-        android:id="@+id/map"
-        map:cameraTargetLat="50.795261"
-        map:cameraTargetLng="-1.093634"/>
-
-
-
 </LinearLayout>

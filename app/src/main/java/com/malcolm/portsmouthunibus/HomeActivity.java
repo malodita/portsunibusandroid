@@ -402,10 +402,19 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
         }
         String[] array = getResources().getStringArray(R.array.bus_stops_home);
         firebaseLog(getString(R.string.firebase_event_home_stop_changed), getString(R.string.firebase_property_stop_id), array[position - 1]);
+
         sharedPreferences.edit().putInt(getString(R.string.preferences_home_bus_stop), position).apply();
-        Snackbar snackbar = Snackbar.make(layout, "Home stop changed", Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
-        snackbar.show();
+        if (getSupportFragmentManager().findFragmentByTag(TIMETABLETAG) != null &&
+                getSupportFragmentManager().findFragmentByTag(TIMETABLETAG).isVisible()) {
+            TimetableFragment fragment = (TimetableFragment) getSupportFragmentManager().findFragmentByTag(TIMETABLETAG);
+            Snackbar snackbar = Snackbar.make(fragment.layout, "Home stop changed", Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
+            snackbar.show();
+        } else {
+            Snackbar snackbar = Snackbar.make(layout, "Home stop changed", Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
+            snackbar.show();
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             createShortcut();
         }

@@ -583,7 +583,7 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
         }
         ArrayList<Integer> arrayList = databaseHelper.getTimesForArray(search);
         if (arrayList == null) {
-            Snackbar snackbar = Snackbar.make(layout, "Error displaying the closest stop card", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.top_fragment_coordinator), "Error displaying the closest stop card", Snackbar.LENGTH_SHORT);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
             return false;
@@ -616,7 +616,7 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
     public void onResponse(Call<ResponseSchema> call, Response<ResponseSchema> response) {
         if (!response.isSuccessful()) {
             //If the response is not code 200-300
-            Snackbar snackbar = Snackbar.make(layout, getString(R.string.error_server_response), Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.top_fragment_coordinator), getString(R.string.error_server_response), Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
             adapter.noConnection();
@@ -672,8 +672,8 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
     @Override
     public void onFailure(Call<ResponseSchema> call, Throwable t) {
         adapter.noInternet();
-        if (getContext() != null) {
-            Snackbar snackbar = Snackbar.make(layout,
+        if (getView() != null) {
+            Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.top_fragment_coordinator),
                     getString(R.string.error_server_response), Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
             snackbar.show();
