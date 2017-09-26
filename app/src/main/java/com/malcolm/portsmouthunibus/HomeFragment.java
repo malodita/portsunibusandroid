@@ -850,12 +850,14 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
         @Override
         protected ArrayList<Object> doInBackground(Void... params) {
             ArrayList<Object> list = new ArrayList<>();
-            String time = fragment.getTimeToStop(array);
-            list.add(time);
-            if (fragment.closest.getProvider().equals("IMS Eastney (Departures)")) {
-                list.add("IMS Eastney (To university)");
-            } else {
-                list.add(fragment.closest.getProvider());
+            if (fragment != null) {
+                String time = fragment.getTimeToStop(array);
+                list.add(time);
+                if (fragment.closest.getProvider().equals("IMS Eastney (Departures)")) {
+                    list.add("IMS Eastney (To university)");
+                } else {
+                    list.add(fragment.closest.getProvider());
+                }
             }
             return list;
         }

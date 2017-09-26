@@ -83,15 +83,17 @@ public class HomeFragmentAdapter extends EpoxyAdapter {
 
     public void instantCard(List<Object> array) {
         //Check to see if instant card is already added
-        if (!models.contains(instant)) {
-            //If it is not added, check to see where to insert
-            if (map.isShown()) {
-                insertModelAfter(instant, home);
+        if (array != null) {
+            if (!models.contains(instant)) {
+                //If it is not added, check to see where to insert
+                if (map.isShown()) {
+                    insertModelAfter(instant, home);
+                } else {
+                    addModel(instant);
+                }
             } else {
-                addModel(instant);
+                notifyModelChanged(instant, array);
             }
-        } else {
-            notifyModelChanged(instant, array);
         }
     }
 
