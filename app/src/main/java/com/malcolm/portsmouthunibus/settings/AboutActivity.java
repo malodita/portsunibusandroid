@@ -37,7 +37,7 @@ public class AboutActivity extends MaterialAboutActivity {
 
     @NonNull
     @Override
-    protected MaterialAboutList getMaterialAboutList(Context context) {
+    protected MaterialAboutList getMaterialAboutList(@NonNull Context context) {
         MaterialAboutCard.Builder app = new MaterialAboutCard.Builder()
                 .title("About");
 
@@ -56,7 +56,8 @@ public class AboutActivity extends MaterialAboutActivity {
                 .build());
         app.addItem(new MaterialAboutActionItem.Builder()
                 .text("Privacy Policy")
-                .subText("For more information please search Firebase Privacy Policy")
+                .subText("For more information about the services used for analytics and crash reporting," +
+                        "please search for the privacy policies of Firebase and Fabric")
                 .setOnClickAction(() -> displayLicensesDialog("privacypolicy.html")).build());
 
         MaterialAboutCard.Builder licenses = new MaterialAboutCard.Builder().title("Libraries & Licenses");
