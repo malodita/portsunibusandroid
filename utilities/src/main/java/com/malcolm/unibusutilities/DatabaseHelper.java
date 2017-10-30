@@ -30,38 +30,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_WEEKDAY_NAME = "timetable_weekday_normal.sqlite";
     private static final String DB_HOLIDAY_NAME = "timetable_holiday.sqlite";
     private static final String DB_WEEKDAY_WED_NAME = "timetable_weekday_wednesday.sqlite";
-
-    private static final String TABLE_NAME = "Timetable";
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_EASTNEY = "IMS Eastney (Departures)";
-    private static final String COLUMN_LANG_DEPT = "Langstone Campus (for Departures only)";
-    private static final String COLUMN_LOCKSWAY = "Locksway Road (for Milton Park)";
-/*    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_
-    private static final String COLUMN_*/
-
-/*    private static final String CREATE_DB = "CREATE TABLE " + TABLE_NAME + "(" +
-            COLUMN_ID + " Integer DEFAULT (null), " + COLUMN_EASTNEY + " INTEGER, " +
-            COLUMN_LANG_DEPT + " INTEGER, " + COLUMN_LOCKSWAY + " INTEGER, "
-            `Goldsmith Avenue (adj Lidi)`	Integer,
-            `Goldsmith Avenue (opp Fratton Station)`	Integer,
-            `Winston Churchill Avenue (adj Ibis Hotel)`	Integer,
-            `Cambridge Road (adj Student Union for Arrivals only)`	Integer,
-            `Cambridge Road (adj Nuffield Building)`	Integer,
-            `Winston Churchill Avenue (adj Law Courts)`	Integer,
-            `Goldsmith Avenue (adj Fratton Station)`	Integer,
-            `Goldsmith Avenue (opp Lidl)`	Integer,
-            `Goldsmith Avenue (adj Milton Park)`	Integer,
-            `IMS Eastney`	INTEGER,
-            `Langstone Campus (for Arrivals only)`	Integer;*/
     private static String DB_NAME;
     private static String DB_PATH;
     @SuppressLint("StaticFieldLeak")
