@@ -30,6 +30,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_WEEKDAY_NAME = "timetable_weekday_normal.sqlite";
     private static final String DB_HOLIDAY_NAME = "timetable_holiday.sqlite";
     private static final String DB_WEEKDAY_WED_NAME = "timetable_weekday_wednesday.sqlite";
+
+    private static final String TABLE_NAME = "Timetable";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_EASTNEY = "IMS Eastney (Departures)";
+    private static final String COLUMN_LANG_DEPT = "Langstone Campus (for Departures only)";
+    private static final String COLUMN_LOCKSWAY = "Locksway Road (for Milton Park)";
+/*    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_
+    private static final String COLUMN_*/
+
+/*    private static final String CREATE_DB = "CREATE TABLE " + TABLE_NAME + "(" +
+            COLUMN_ID + " Integer DEFAULT (null), " + COLUMN_EASTNEY + " INTEGER, " +
+            COLUMN_LANG_DEPT + " INTEGER, " + COLUMN_LOCKSWAY + " INTEGER, "
+            `Goldsmith Avenue (adj Lidi)`	Integer,
+            `Goldsmith Avenue (opp Fratton Station)`	Integer,
+            `Winston Churchill Avenue (adj Ibis Hotel)`	Integer,
+            `Cambridge Road (adj Student Union for Arrivals only)`	Integer,
+            `Cambridge Road (adj Nuffield Building)`	Integer,
+            `Winston Churchill Avenue (adj Law Courts)`	Integer,
+            `Goldsmith Avenue (adj Fratton Station)`	Integer,
+            `Goldsmith Avenue (opp Lidl)`	Integer,
+            `Goldsmith Avenue (adj Milton Park)`	Integer,
+            `IMS Eastney`	INTEGER,
+            `Langstone Campus (for Arrivals only)`	Integer;*/
     private static String DB_NAME;
     private static String DB_PATH;
     @SuppressLint("StaticFieldLeak")
@@ -38,7 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase myDatabase;
 
     private DatabaseHelper(Context context, boolean isWearable) {
-        super(context, null, null, 1);
+        super(context, null, null, 4);
         if (isWearable) {
             DB_PATH = context.getFilesDir().getPath() + "/";
         } else {
@@ -81,7 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 
     }
 
@@ -168,17 +200,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.e(TAG, "Error opening database");
             e.printStackTrace();
         }
-        if (myDatabase != null) {
-            int version = myDatabase.getVersion();
-            if (version < BuildConfig.VERSION_CODE) {
-                try {
-                    copyDatabase();
-                    myDatabase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-                } catch (IOException e) {
-                    Log.e(TAG, "Error writing new database");
-                }
-            }
-        }
         return myDatabase != null;
     }
 
@@ -210,7 +231,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String stop = "[" + busStop + "]";
         ArrayList<Integer> arrayList = new ArrayList<>();
         Cursor cursor = null;
-        checkAndCopyDatabase();
         if (openDatabase()) {
             try {
                 cursor = queryData("select " + stop + " from Timetable");
@@ -254,7 +274,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String stop = getStopToShow(stopId);
         ArrayList<Integer> arrayList = new ArrayList<>();
         Cursor cursor = null;
-        checkAndCopyDatabase();
         if (openDatabase()) {
             try {
                 cursor = queryData("select " + stop + " from Timetable");
@@ -280,35 +299,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Obtains the stop {@link #getTimesForArray(int) to search the database here}
-     *
-     * @param homeStopId The id of the stop retrieved
-     *
-     * @return A formatted string for the search to use
-     */
-    private String getStopToShow(int homeStopId) {
-        String stopToShowString;
-        switch (homeStopId) {
-            case 1:
-                stopToShowString = "[Langstone Campus (for Departures only)]";
-                break;
-            case 2:
-                stopToShowString = "[Locksway Road (for Milton Park)]";
-                break;
-            case 3:
-                stopToShowString = "[Goldsmith Avenue (adj Lidi)]";
-                break;
-            case 4:
-                stopToShowString = "[Goldsmith Avenue (opp Fratton Station)]";
-                break;
-            default:
-                stopToShowString = "[Winston Churchill Avenue (adj Ibis Hotel)]";
-                break;
-        }
-        return stopToShowString;
-    }
-
-    /**
      * This method opens and obtains the entire database and parses it to find the stops that match
      * the correct stop. It then formats the times and adds to the arrayList (after clearing
      * the list beforehand from previous run results. I could split the method for a v2 but it
@@ -330,7 +320,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Times> getTimesArray(int stop, boolean is24Hours) {
         ArrayList<Times> arrayList = new ArrayList<>();
         Cursor cursor = null;
-        checkAndCopyDatabase();
         if (openDatabase()) {
             try {
                 cursor = queryData("select * from Timetable order by id");
@@ -364,43 +353,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return arrayList;
     }
 
-    //Todo: Rewrite method to make simpler
-    private Times createTime(int stop, Cursor cursor, boolean is24Hours){
-        Times times = new Times();
-        if (stop < 7) { //All stops before Cambridge road are to Cambridge Road
-            if (cursor.getInt(13) != 0) { //Checks if the bus is to go to eastney
-                times.setDestination("IMS Eastney via Cambridge Road");
-            } else {
-                if (cursor.getInt(1) != 0){
-                    times.setDestination("Langstone Campus via Cambridge Road");
-                } else {
-                    times.setDestination("Cambridge Road");
-                }
-            }
-        } else {
-            if (cursor.getInt(13) != 0) { //Checks if the bus is to go to eastney
-                times.setDestination(cursor.getColumnName(13));
-            } else {
-                if (cursor.getInt(14) == 0) {//Checks if bus does not terminate at langstone
-                    times.setDestination("Milton Park");
-                } else {
-                    times.setDestination("Langstone Campus");
-                }
-            }
-        }
-        try {
-            times.setTime(formatTime(cursor.getString(stop), is24Hours));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        times.setId(cursor.getInt(0));
-        return times;
-    }
-
     public ArrayList<Times> getDataForList(int busId, boolean is24Hours) {
         ArrayList<Times> array = new ArrayList<>();
         Cursor cursor = null;
-        checkAndCopyDatabase();
         if (openDatabase()) {
             try {
                 cursor = queryData("select * from Timetable where id=" + busId);
@@ -437,6 +392,71 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return array;
+    }
+
+    /**
+     * Obtains the stop {@link #getTimesForArray(int) to search the database here}
+     *
+     * @param homeStopId The id of the stop retrieved
+     *
+     * @return A formatted string for the search to use
+     */
+    private String getStopToShow(int homeStopId) {
+        String stopToShowString;
+        switch (homeStopId) {
+            case 1:
+                stopToShowString = "[Langstone Campus (for Departures only)]";
+                break;
+            case 2:
+                stopToShowString = "[Locksway Road (for Milton Park)]";
+                break;
+            case 3:
+                stopToShowString = "[Goldsmith Avenue (adj Lidi)]";
+                break;
+            case 4:
+                stopToShowString = "[Goldsmith Avenue (opp Fratton Station)]";
+                break;
+            default:
+                stopToShowString = "[Winston Churchill Avenue (adj Ibis Hotel)]";
+                break;
+        }
+        return stopToShowString;
+    }
+
+    private Times createTime(int stop, Cursor cursor, boolean is24Hours){
+        Times times = new Times();
+        if (stop < 7) { //All stops before Cambridge road are to Cambridge Road
+            if (cursor.getInt(13) != 0) { //Checks if the bus is to go to eastney
+                if (cursor.getInt(14) == 0) {
+                    times.setDestination("IMS Eastney via Cambridge Road");
+                } else {
+                    times.setDestination("Langstone via Cambridge Road & IMS Eastney");
+                }
+            } else {
+                if (cursor.getInt(1) != 0){
+                    times.setDestination("Langstone via Cambridge Road");
+                } else {
+                    times.setDestination("Cambridge Road");
+                }
+            }
+        } else {
+            if (cursor.getInt(13) != 0) { //Checks if the bus is to go to eastney
+                times.setDestination(cursor.getColumnName(13));
+            } else {
+                if (cursor.getInt(14) == 0) {//Checks if bus does not terminate at langstone
+                    times.setDestination("Milton Park");
+                } else {
+                    times.setDestination("Langstone Campus");
+                }
+            }
+        }
+        try {
+            times.setTime(formatTime(cursor.getString(stop), is24Hours));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        times.setId(cursor.getInt(0));
+        return times;
     }
 
     private String formatTime(String input, boolean is24Hours) throws ParseException {
