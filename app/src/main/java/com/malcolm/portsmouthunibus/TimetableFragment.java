@@ -296,14 +296,16 @@ public class TimetableFragment extends Fragment implements
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
-                floatingActionButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                    @Override
-                    public void onHidden(FloatingActionButton fab) {
-                        super.onHidden(fab);
-                        vectorDrawable.reset();
-                        animator.reverse();
-                    }
-                });
+                if (floatingActionButton != null) {
+                    floatingActionButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                        @Override
+                        public void onHidden(FloatingActionButton fab) {
+                            super.onHidden(fab);
+                            vectorDrawable.reset();
+                            animator.reverse();
+                        }
+                    });
+                }
             }
         });
     }
