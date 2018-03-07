@@ -12,8 +12,8 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
-def supportLibraryVersion = "26.1.0"
-def googlePlayServicesVersion = "11.2.2"
+def supportLibraryVersion = "27.0.2"
+def googlePlayServicesVersion = "11.8.0"
 
 
 android {
@@ -25,14 +25,14 @@ android {
             keyPassword keystoreProperties['KEY_PASSWORD']
         }
     }
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.2'
     defaultConfig {
         applicationId "com.malcolm.portsmouthunibus"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 23
-        versionName '1.0.3'
+        versionCode 25
+        versionName '1.0.4.1'
         vectorDrawables.useSupportLibrary = true
         signingConfig signingConfigs.config
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
@@ -104,7 +104,7 @@ dependencies {
     //compile "com.google.dagger:dagger:2.9"
     //annotationProcessor "com.google.dagger:dagger-compiler:2.9"
     compileOnly 'javax.annotation:jsr250-api:1.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
 }

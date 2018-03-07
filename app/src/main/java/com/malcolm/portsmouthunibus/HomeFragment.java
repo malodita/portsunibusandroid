@@ -348,7 +348,7 @@ public class HomeFragment extends Fragment implements Callback<ResponseSchema>, 
 
     @Override
     public void onSuccess(Location location) {
-        if (location == null) {
+        if (location == null || isDetached()) {
             adapter.noConnection();
             return;
         }

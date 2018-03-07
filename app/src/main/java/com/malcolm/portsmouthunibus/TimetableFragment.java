@@ -85,7 +85,6 @@ public class TimetableFragment extends Fragment implements
         firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
         View rootView = inflater.inflate(R.layout.fragment_timetable, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        //handler = new TimetableHandler(this);
         setUpSpinner(spinner);
         int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 1);
         if (getArguments() != null) {
@@ -281,7 +280,7 @@ public class TimetableFragment extends Fragment implements
     @TargetApi(Build.VERSION_CODES.N_MR1)
     private void showConfirmAnimation() {
         Snackbar snackbar = Snackbar.make(layout, "Shortcut created", Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_dark));
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
         final AnimatedVectorDrawable vectorDrawable = (AnimatedVectorDrawable) floatingActionButton.getDrawable();
         final ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), getContext().getColor(R.color.accent)
                 , getContext().getColor(R.color.fab_confirm));
@@ -295,7 +294,6 @@ public class TimetableFragment extends Fragment implements
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
-                super.onDismissed(transientBottomBar, event);
                 if (floatingActionButton != null) {
                     floatingActionButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                         @Override
@@ -306,6 +304,7 @@ public class TimetableFragment extends Fragment implements
                         }
                     });
                 }
+                super.onDismissed(transientBottomBar, event);
             }
         });
     }

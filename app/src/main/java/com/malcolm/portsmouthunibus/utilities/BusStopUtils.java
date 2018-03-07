@@ -116,24 +116,28 @@ public final class BusStopUtils {
                         .addAll(list)
                         .width(20)
                         .color(color);
-                map.addCircle(new CircleOptions()
-                        .radius(50)
-                        .strokeColor(Color.parseColor("#212121"))
-                        .fillColor(Color.parseColor("#FFFFFF"))
-                        .strokeWidth(10)
-                        .center(list.get(last))
-                        .zIndex(1));
-                map.addCircle(new CircleOptions()
-                        .center(list.get(last))
-                        .fillColor(Color.parseColor("#212121"))
-                        .zIndex(2)
-                        .radius(10));
                 LatLngBounds bounds = makeBounds(list);
                 map.addPolyline(options);
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(targetLocation);
-                map.addMarker(markerOptions);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 14f));
+                if (Integer.valueOf(formattedTime) > 12){
+                    map.addCircle(new CircleOptions()
+                            .radius(80)
+                            .strokeColor(Color.parseColor("#212121"))
+                            .fillColor(Color.parseColor("#FFFFFF"))
+                            .strokeWidth(8)
+                            .center(list.get(last))
+                            .zIndex(1));
+                    map.addCircle(new CircleOptions()
+                            .center(list.get(last))
+                            .fillColor(Color.parseColor("#212121"))
+                            .zIndex(2)
+                            .radius(8));
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 13f));
+                } else {
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(targetLocation);
+                    map.addMarker(markerOptions);
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 14f));
+                }
             }
         }
     }

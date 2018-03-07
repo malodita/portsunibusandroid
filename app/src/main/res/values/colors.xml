@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#4C2466</color>
-    <color name="primary_dark">#2A1439</color>
-    <color name="primary_light">#A692B3</color>
+    <color name="primary">#621360</color>
+    <color name="primary_dark">#500E4E</color>
+    <color name="primary_light">#D0B8CF</color>
     <color name="accent">#448AFF</color>
     <color name="accent_muted">#82B1FF</color>
     <color name="primary_text">#DE000000</color>
@@ -22,4 +22,5 @@
     <color name="fab_confirm_muted">#81c784</color>
     <color name="google_maps_inner_fill">#FFFFFF</color>
     <color name="google_maps_outer_fill">#212121</color>
+    <color name="intro">#621360</color>
 </resources>

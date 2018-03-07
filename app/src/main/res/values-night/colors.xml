@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#190C22</color>
-    <color name="primary_dark">#09040d</color>
-    <color name="primary_light">#5E5564</color>
+    <color name="primary">#190c22</color>
+    <color name="primary_dark">#0d000d</color>
+    <color name="primary_light">#9E819E</color>
     <color name="accent">#FFD740</color>
     <color name="accent_muted">#FFE57F</color>
     <color name="primary_text">#ffffffff</color>
@@ -18,5 +18,5 @@
     <color name="polyline">#FFD740</color>
     <color name="onboarding_button">#FFD740</color>
     <color name="onboarding_2_outer_circle">#FFD740</color>
-
+    <color name="intro">#190c22</color>
 </resources>

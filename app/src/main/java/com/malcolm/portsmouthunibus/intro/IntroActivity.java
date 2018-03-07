@@ -43,8 +43,8 @@ import butterknife.ButterKnife;
 
 public class IntroActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener{
     private static final String TAG = "Intro";
-    private final float[] ANIMATION_TIMES = {0f, 0.11f, 0.30f, 0.61f, 1f};
-    private final int[] BACKGROUND_COLOURS = {0xFF4c2466, 0xFFFFC107, 0xFF4CAF50, 0xFF09040d};
+    private final float[] ANIMATION_TIMES = {0f, 0.115f, 0.303f, 0.615f, 1f};
+    private final int[] BACKGROUND_COLOURS = {0xFF621360, 0xFFFFC107, 0xFF4CAF50, 0xFF09040d};
     private final int[] BACKGROUND_COLOURS_NIGHT = { 0XFF190c22, 0xFF846300, 0xFF134116, 0xFF09040d};
     private final int LOCATION_PERMISSION_REQUEST_CODE = 5384;
     private int locationPermission;
@@ -69,9 +69,7 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
         ButterKnife.bind(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primary));
-        }
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.intro));
         locationPermission =  ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         viewPager.setAllowedSwipeDirection(NonSwipeViewPager.SwipeDirection.right);
         viewPager.addOnPageChangeListener(this);
@@ -200,9 +198,7 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
         colour.addUpdateListener(valueAnimator -> {
             int colorId = (int) valueAnimator.getAnimatedValue();
             layout.setBackgroundColor(colorId);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(colorId);
-            }
+            getWindow().setStatusBarColor(colorId);
         });
         ValueAnimator time = ValueAnimator.ofFloat(ANIMATION_TIMES[page], ANIMATION_TIMES[page + 1])
                 .setDuration(duration);
