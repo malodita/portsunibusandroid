@@ -62,11 +62,6 @@ public class AboutActivity extends MaterialAboutActivity {
 
         MaterialAboutCard.Builder licenses = new MaterialAboutCard.Builder().title("Libraries & Licenses");
         licenses.addItem(new MaterialAboutActionItem.Builder()
-                .text("Bottom Bar")
-                .icon(R.drawable.ic_github_circle)
-                .subText("Iiro Krankka (Roughike)")
-                .setOnClickAction(() -> displayLicensesDialog("bottombar.html")).build());
-        licenses.addItem(new MaterialAboutActionItem.Builder()
                 .text("Lottie").subText("Airbnb")
                 .icon(R.drawable.ic_github_circle)
                 .setOnClickAction(() -> displayLicensesDialog("lottie.html")).build());

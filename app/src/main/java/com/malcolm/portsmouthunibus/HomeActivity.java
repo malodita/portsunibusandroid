@@ -12,7 +12,8 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -36,8 +37,6 @@ import com.malcolm.portsmouthunibus.settings.SettingsActivity;
 import com.malcolm.portsmouthunibus.utilities.BottomSheet;
 import com.malcolm.portsmouthunibus.utilities.QuickStartBottomSheet;
 import com.malcolm.unibusutilities.TermDates;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class HomeActivity extends AppCompatActivity implements OnTabSelectListener, BottomSheet.DialogListener, QuickStartBottomSheet.DialogButtonSelectedListener {
+public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, BottomSheet.DialogListener, QuickStartBottomSheet.DialogButtonSelectedListener {
     //Initialise local variables
     private static final String TAG = "HomeActivity";
     private static final String HOMESHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE";
@@ -60,7 +59,7 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
     @BindView(R.id.app_bar)
     Toolbar toolbar;
     @BindView(R.id.bottom_bar_view)
-    BottomBar bottomBar;
+    BottomNavigationView bottomBar;
     @BindView(R.id.placeholder)
     CoordinatorLayout layout;
     private FirebaseAnalytics firebaseAnalytics;
@@ -102,14 +101,14 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
                         .beginTransaction()
                         .replace(R.id.placeholder, new HomeFragment(), HOMEFRAGMENTTAG)
                         .commitNow();
+                bottomBar.setSelectedItemId(R.id.tab_place);
             }
-            bottomBar.setOnTabSelectListener(this, false);
+            bottomBar.setOnNavigationItemSelectedListener(this);
         }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        bottomBar.onRestoreInstanceState(savedInstanceState);
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -154,21 +153,22 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
      * @param action The action accompanying the intent to open the app from a shortcut
      */
     @TargetApi(Build.VERSION_CODES.N_MR1)
-    private boolean shortcutCheck(String action, BottomBar bottomBar) {
+    private boolean shortcutCheck(String action, BottomNavigationView bottomBar) {
         switch (action) {
             case HOMESHORTCUT:
                 ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
                 shortcutManager.reportShortcutUsed(getString(R.string.shortcut_home_timetable));
+                bottomBar.setSelectedItemId(R.id.tab_timetable);
                 TimetableFragment fragment = new TimetableFragment();
                 FragmentManager manager = getSupportFragmentManager();
                 manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 manager.beginTransaction()
                         .replace(R.id.placeholder, fragment, TIMETABLETAG)
                         .commit();
+                toolbar.setTitle(TermDates.getTimetableName());
                 int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 1);
                 firebaseLog(getString(R.string.firebase_event_home_shortcut_used)
                         , getString(R.string.firebase_property_stop_id), String.valueOf(stopToShow));
-                bottomBar.setDefaultTabPosition(0);
                 return true;
             case SPECIFICSHORTCUT:
                 ShortcutManager shortcutManager2 = getSystemService(ShortcutManager.class);
@@ -178,14 +178,14 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
                 firebaseLog(getString(R.string.firebase_event_specific_shortcut_used)
                         , getString(R.string.firebase_property_stop_id), args);
                 fragment2.setArguments(getIntent().getExtras());
+                bottomBar.setSelectedItemId(R.id.tab_timetable);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.placeholder, fragment2, TIMETABLETAG)
                         .commit();
-                bottomBar.setDefaultTabPosition(0);
+                toolbar.setTitle(TermDates.getTimetableName());
                 return true;
             default:
-                bottomBar.setDefaultTabPosition(1);
                 return false;
         }
     }
@@ -210,10 +210,10 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
         });
     }
 
-    private void startOnboardingSequence(final BottomBar bottomBar){
+    private void startOnboardingSequence(final BottomNavigationView bottomBar){
         TapTargetSequence sequence = new TapTargetSequence(this);
         List<TapTarget> targets = new ArrayList<>();
-        targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_timetable),
+        targets.add(TapTarget.forView(bottomBar.findViewById(R.id.tab_timetable),
                 "Timetable tab", "Views the timetables for all the stops for that day")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
@@ -224,7 +224,7 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
                 .id(1));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_find),
+            targets.add(TapTarget.forView(bottomBar.findViewById(R.id.tab_find),
                     "If you want to see stop locations", "Enable the location permission for the app in your phone settings")
                     .targetCircleColor(R.color.primary)
                     .outerCircleColor(R.color.onboarding_2_outer_circle)
@@ -234,7 +234,7 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
                     .drawShadow(true)
                     .id(2));
         } else {
-            targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_find),
+            targets.add(TapTarget.forView(bottomBar.findViewById(R.id.tab_find),
                     "Maps tab", "Views all the stop locations")
                     .targetCircleColor(R.color.primary)
                     .outerCircleColor(R.color.onboarding_2_outer_circle)
@@ -244,7 +244,7 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
                     .cancelable(false)
                     .id(3));
         }
-        targets.add(TapTarget.forView(bottomBar.getTabWithId(R.id.tab_place),
+        targets.add(TapTarget.forView(bottomBar.findViewById(R.id.tab_place),
                 "Don't forget", "Buses can sometimes run late, especially at rush hour!")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
@@ -252,7 +252,7 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
                 .transparentTarget(true)
                 .cancelable(true)
                 .drawShadow(true)
-                .id(4));
+                .id(5));
         sequence.targets(targets);
         sequence.listener(new TapTargetSequence.Listener() {
             @Override
@@ -260,13 +260,13 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
                 if (targetClicked){
                     switch (lastTarget.id()){
                         case 1:
-                            bottomBar.selectTabAtPosition(0, true);
+                            bottomBar.setSelectedItemId(R.id.tab_timetable);
                             break;
                         case 3:
-                            bottomBar.selectTabAtPosition(2, true);
+                            bottomBar.setSelectedItemId(R.id.tab_find);
                             break;
                         case 4:
-                            bottomBar.selectTabAtPosition(1, true);
+                            bottomBar.setSelectedItemId(R.id.tab_place);
                             break;
                         default:
                             break;
@@ -302,69 +302,57 @@ public class HomeActivity extends AppCompatActivity implements OnTabSelectListen
         firebaseAnalytics.logEvent(event, bundle);
     }
 
-    /**
-     * The method being called when currently visible BottomBarTab changes to change the fragment
-     * viewed.
-     *
-     *
-     * @param tabId the new visible BottomBarTab
-     */
     @Override
-    public void onTabSelected(@IdRes int tabId) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentManager manager = getSupportFragmentManager();
         HomeFragment homeFragment = (HomeFragment) manager.findFragmentByTag(HOMEFRAGMENTTAG);
         TimetableFragment timetableFragment = (TimetableFragment) manager.findFragmentByTag(TIMETABLETAG);
         MapsFragment mapsFragment = (MapsFragment) manager.findFragmentByTag(MAPSTAG);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        switch (tabId) {
+        switch (item.getItemId()){
             case R.id.tab_place:
                 toolbar.setTitle(R.string.app_name);
                 if (homeFragment != null) {
                     homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(HOMEFRAGMENTTAG);
                     ft.attach(homeFragment).commit();
-                    return;
                 } else {
                     homeFragment = new HomeFragment();
                     ft.replace(R.id.placeholder, homeFragment, HOMEFRAGMENTTAG);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.commit();
                 }
-                break;
+                return true;
             case R.id.tab_find:
                 toolbar.setTitle(R.string.local_map);
                 if (mapsFragment != null) {
                     mapsFragment = (MapsFragment) getSupportFragmentManager().findFragmentByTag(MAPSTAG);
                     ft.attach(mapsFragment).commit();
-                    return;
                 } else {
                     mapsFragment = new MapsFragment();
                     ft.replace(R.id.placeholder, mapsFragment, MAPSTAG);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                     ft.commit();
                 }
-                break;
+                return true;
             case R.id.tab_timetable:
                 toolbar.setTitle(TermDates.getTimetableName());
                 if (timetableFragment != null) {
                     timetableFragment = (TimetableFragment) getSupportFragmentManager().findFragmentByTag(TIMETABLETAG);
                     ft.attach(timetableFragment).commit();
-                    return;
                 } else {
                     timetableFragment = new TimetableFragment();
                     ft.replace(R.id.placeholder, timetableFragment, TIMETABLETAG);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                     ft.commit();
                 }
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        bottomBar.onSaveInstanceState();
         super.onSaveInstanceState(outState, outPersistentState);
     }
 

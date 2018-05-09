@@ -17,52 +17,49 @@ import java.util.List;
 
 public final class TermDates {
     private static final DateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
-    //Uni dates
-    private static final String EASTER2017START = "31-03-2017";
-    private static final String EASTER2017END = "24-04-2017";
-    private static final String SUMMER2017START = "02-06-2017";
-    private static final String SUMMER2017END = "17-09-2017";
-    private static final String CHRISTMAS2017START = "16-12-2017";
-    private static final String CHRISTMAS2017END = "07-01-2018";
+    //Uni dates, when making bounds use the first & last day of the holiday
+    //i.e. Saturday after & Sunday before
     private static final String EASTER2018START = "31-03-2018";
     private static final String EASTER2018END = "22-04-2018";
     private static final String SUMMER2018START = "02-06-2018";
-    private static final String SUMMER2018END = "16-09-2018";//Provisional
+    private static final String SUMMER2018END = "16-09-2018";
+    private static final String CHRISTMAS2018START = "15-12-2018";
+    private static final String CHRISTMAS2018END = "06-01-2019";
+    private static final String EASTER2019START = "06-04-2019";
+    private static final String EASTER2019END = "28-04-2019";
+    private static final String SUMMER2019START = "08-06-2019";
+    private static final String SUMMER2019END = "15-09-2019"; //Provisional
 
     //Bank holidays
-    private static final String EASTERMONDAY2017 = "17-04-2017";
-    private static final String GOODFRIDAY2017 = "14-04-2017";
-    private static final String EARLYMAY2017 = "01-05-2017";
-    private static final String SPRING2017 = "29-05-2017";
-    private static final String SUMMER2017 = "28-08-2017";
-    private static final String CHRISTMASDAY2017 = "25-12-2017";
-    private static final String BOXINGDAY2017 = "26-12-2017";
-    private static final String NEWYEARS2018 = "01-01-2018";
-    private static final String GOODFRIDAY2018 = "30-03-2018";
-    private static final String EASTERMONDAY2018 = "02-04-2018";
     private static final String EARLYMAY2018 = "07-05-2018";
     private static final String SPRING2018 = "28-05-2018";
     private static final String SUMMER2018 = "27-08-2018";
     private static final String CHRISTMASDAY2018 = "25-12-2018";
     private static final String BOXINGDAY2018 = "26-12-2018";
+    private static final String NYD2019 = "01-01-2019";
+    private static final String GF2019 = "19-04-2019";
+    private static final String EM2019 = "22-04-2019";
+    private static final String MAY2019 = "06-05-2019";
+    private static final String SPRING2019 = "27-05-2019";
+    private static final String SUMMER19 = "26-08-2019";
+    private static final String XMAS19 = "25-12-2019";
+    private static final String BOXING19 = "26-12-2019";
 
-    private static final String[] BANKHOLIDAYS = new String[]{
-            GOODFRIDAY2017, EASTERMONDAY2017, EARLYMAY2017, SPRING2017, SUMMER2017, CHRISTMASDAY2017,
-            BOXINGDAY2017, NEWYEARS2018, GOODFRIDAY2018, EASTERMONDAY2018, EARLYMAY2018, SPRING2018,
+    private static final String[] BANKHOLIDAYS = new String[]{EARLYMAY2018, SPRING2018,
             SUMMER2018, CHRISTMASDAY2018, BOXINGDAY2018};
 
 
     public static boolean isHoliday() {
         Date today = Calendar.getInstance().getTime();
-        List<Date> easter17 = makeDateArray(EASTER2017START, EASTER2017END);
-        List<Date> summer17 = makeDateArray(SUMMER2017START, SUMMER2017END);
-        List<Date> christmas17 = makeDateArray(CHRISTMAS2017START, CHRISTMAS2017END);
         List<Date> easter18 = makeDateArray(EASTER2018START, EASTER2018END);
-        if (today.after(easter17.get(0)) && today.before(easter17.get(easter17.size() - 1))) {
+        List<Date> summer18 = makeDateArray(SUMMER2018START, SUMMER2018END);
+        List<Date> christmas18 = makeDateArray(CHRISTMAS2018START, CHRISTMAS2018END);
+        List<Date> easter19 = makeDateArray(EASTER2019START, EASTER2019END);
+        if (today.after(easter19.get(0)) && today.before(easter19.get(easter19.size() - 1))) {
             return true;
-        } else if (today.after(summer17.get(0)) && today.before(summer17.get(summer17.size() - 1))) {
+        } else if (today.after(summer18.get(0)) && today.before(summer18.get(summer18.size() - 1))) {
             return true;
-        } else if (today.after(christmas17.get(0)) && today.before(christmas17.get(christmas17.size() - 1))) {
+        } else if (today.after(christmas18.get(0)) && today.before(christmas18.get(christmas18.size() - 1))) {
             return true;
         } else
             return today.after(easter18.get(0)) && today.before(easter18.get(easter18.size() - 1));
@@ -80,6 +77,7 @@ public final class TermDates {
                 return false;
         }
     }
+
 
     public static boolean isWeekendInHoliday(){
         return isWeekend() && isHoliday();

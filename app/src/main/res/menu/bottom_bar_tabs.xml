@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/ic_timetable_black"
+        android:id="@+id/tab_timetable"
+        android:title="Timetable"
+        />
+    <item
+        android:icon="@drawable/ic_place"
+        android:id="@+id/tab_place"
+        android:title="Here"
+        />
+    <item
+        android:icon="@drawable/ic_map"
+        android:id="@+id/tab_find"
+        android:title="Find Stop"
+        />
+</menu>

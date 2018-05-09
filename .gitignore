@@ -132,8 +132,6 @@ gradle.properties
 
 app/libs/
 
-/app/src/main/java/com/malcolm/portsmouthunibus/App.java
-
 /app/src/main/assets/timetable_normal.sqlite
 /app/src/main/assets/timetable_holiday.sqlite
 /app/src/main/assets/timetable_weekend.sqlite

@@ -71,7 +71,7 @@
             android:value="${AWARENESS_API_KEY}"/>
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="${CRASHLYTICS_API_KEY}" />
+            android:value="${CRASHLYTICS_API_KEY}"/>
 
         <activity android:name=".intro.IntroActivity"
             android:screenOrientation="portrait">

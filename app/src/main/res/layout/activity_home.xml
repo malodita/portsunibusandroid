@@ -19,7 +19,7 @@
         tools:text="Uni Bus"
         />
 
-    <com.roughike.bottombar.BottomBar
+    <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_bar_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_height"
@@ -27,10 +27,10 @@
         android:elevation="8dp"
         android:background="@color/primary"
         android:foreground="?android:attr/selectableItemBackground"
-        app:bb_activeTabColor="@color/bottom_bar_tabs"
-        app:bb_inActiveTabColor="@color/primary_light"
-        app:bb_tabXmlResource="@xml/bottom_bar_tabs">
-    </com.roughike.bottombar.BottomBar>
+        app:itemIconTint="@drawable/bottom_bar_tab_colour"
+        app:itemTextColor="@drawable/bottom_bar_tab_colour"
+        app:menu="@menu/bottom_bar_tabs">
+    </android.support.design.widget.BottomNavigationView>
 
         <android.support.design.widget.CoordinatorLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
