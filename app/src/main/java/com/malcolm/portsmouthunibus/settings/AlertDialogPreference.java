@@ -50,7 +50,7 @@ public class AlertDialogPreference extends DialogPreference {
 
     public void setResult(boolean positiveResult) {
         if (positiveResult) {
-            persistInt(0);
+            persistInt(-2);
         }
     }
 

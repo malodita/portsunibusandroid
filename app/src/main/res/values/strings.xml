@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Portsmouth University Bus</string>
     <string name="minutes">minutes</string>
-    <string name="uni_leaves_in">Next bus to University</string>
     <string name="metres_away">metres away</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_detail">Stop Times</string>
     <string name="action_settings">Settings</string>
     <string name="change_stop">Change Stop</string>
@@ -12,26 +10,44 @@
     <string name="this_timetable">This Timetable</string>
     <string name="select_stop">Select a stop to view</string>
     <string name="select_default_stop">Select a Home stop</string>
+    <string name="stop_next_departure">%1$s %2$s</string>
     <string name="one_minute">minute</string>
-    <string name="arrival_now">Expected shortly</string>
+    <string name="arrival_now">Departing now</string>
     <string name="set_home_stop">Set Home Stop</string>
-    <string name="location_permission_hint">Enable the location permission to see the closest stop to you</string>
-    <string name="location_permission_hint_wide">Enable the location permission to see the map around you</string>
-    <string name="hour_plus">60+</string>
     <string name="title_activity_settings">Settings</string>
     <string name="toggle_night_mode">Toggle Night Mode</string>
     <string name="local_map">Find Stop</string>
     <string name="next_departure">Next departure</string>
     <string name="dialog_create_shortcut">Do you wish to create a shortcut for the selected stop</string>
-    <string name="card_title">"%1$s to %2$s</string>
+    <string name="set_favourite">Set as favourite</string>
 
-    <!--Strings related to errors-->
+    <!--Strings related to cards-->
+    <string name="detail_toolbar_title">"%1$s to %2$s</string>
+    <string name="home_next_bus_union">Next bus to Union</string>
+    <string name="home_next_bus_uni">Next bus to University</string>
+    <string name="home_closest_stop_next_departure_from">From %1$s</string>
+    <string name="home_viewgroup_closest_map_title">Nearest Stop</string>
+    <string name="time_hour_plus">60+</string>
+    <string name="time_hour_plus_text">Over one hour from now</string>
+    <string name="timetable_next_bus">Next bus due at %1$s</string>
+    <string name="navigate">Navigate</string>
+
+
+
+
+
+    <!--Strings related to the spinner-->
+
+
+
+    <!--Strings related to errors & hints-->
     <string name="error_play_services_needed">Google Play Services is required for location services</string>
     <string name="error_play_services_update">An update to Google Play Services is required for location services</string>
     <string name="error_no_timetable_selected">Please select a timetable to view</string>
     <string name="error_no_location">Location not found</string>
-    <string name="error_no_buses">No more buses are scheduled to stop here today</string>
+    <string name="error_no_buses">No more buses scheduled today</string>
     <string name="error_no_buses_home">No more buses are scheduled to stop at your home stop today</string>
+    <string name="error_no_buses_scheduled">No buses scheduled today</string>
     <string name="error_not_in_portsmouth">Are you in Portsmouth? :/</string>
     <string name="error_no_stop_selected">No Stop Selected</string>
     <string name="error_GPS_off">Device GPS is turned off</string>
@@ -41,6 +57,8 @@
     <string name="error_bank_holiday">The bus service does not run on bank holidays</string>
     <string name="error_weekend_in_holiday">The bus service does not run out of term during the weekend</string>
     <string name="error_server_response">Error getting response from server</string>
+    <string name="location_permission_hint">Enable the location permission to see the closest stop to you</string>
+    <string name="location_permission_hint_wide">Enable the location permission to see the map around you</string>
 
 
     <!--Strings related to preferences, shortcuts and intents-->
@@ -49,6 +67,7 @@
     <string name="preferences_home_bus_stop" translatable="false">com.malcolm.portsmouthunibus.homebusstop</string>
     <string name="preferences_instant_card" translatable="false">com.malcolm.portsmouthunibus.instantcard</string>
     <string name="preferences_maps_card" translatable="false">com.malcolm.portsmouthunibus.mapscard</string>
+    <string name="preferences_night_mode_new" translatable="false">com.malcolm.portsmouthunibus.nightmode.new</string>
     <string name="preferences_night_mode" translatable="false">com.malcolm.portsmouthunibus.nightmode</string>
     <string name="preferences_onboarding" translatable="false">com.malcolm.portsmouthunibus.onboarding</string>
     <string name="preferences_onboarding_2" translatable="false">com.malcolm.portsmouthunibus.onboarding2</string>
@@ -56,6 +75,19 @@
     <string name="preferences_shortcuts_reset" translatable="false">com.malcolm.portsmouthunibus.shortcuts</string>
     <string name="preferences_24hourclock" translatable="false">com.malcolm.portsmouthunibus.24hourclock</string>
     <string name="preference_last_viewed_stop" translatable="false">com.malcolm.portsmouthunibus.lastviewed</string>
+
+    <string-array name="preferences_night_mode_list">
+        <item>Automatic</item>
+        <item>Day</item>
+        <item>Night</item>
+    </string-array>
+
+    <string-array name="preferences_night_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string name="shortcut_home_timetable_name_long">Home Timetable</string>
     <string name="shortcut_home_timetable_name_short">Home Stop</string>
     <string name="shortcut_home_timetable" translatable="false">home_timetable</string>
@@ -66,6 +98,8 @@
     <string name="intent_stop" translatable="false">com.malcolm.portsmouthunibus.VIEW.STOP</string>
     <string name="intent_stop_time" translatable="false">com.malcolm.portsmouthunibus.VIEW.STOP.TIME</string>
     <string name="intent_stop_viewed" translatable="false">com.malcolm.portsmouthunibus.VIEW.CALLING.STOP</string>
+    <string name="intent_stop_via" translatable="false">com.malcolm.portsmouthunibus.VIEW.CALLING.STOP.VIA</string>
+
 
 
     <!--Strings related to firebase analytics-->
@@ -113,21 +147,6 @@
 
 
     <string-array name="bus_stops_home">
-        <item
-            >Langstone</item>
-        <item
-            >Locksway Road</item>
-        <item
-            >Goldsmith Avenue adj Lidl</item>
-        <item
-            >Goldsmith Avenue opp Station</item>
-        <item
-            >Winston Churchill Avenue</item>
-    </string-array>
-
-    <string-array name="bus_stops_home_selected">
-        <item
-            >No Stop Selected</item>
         <item
             >Langstone</item>
         <item
@@ -269,23 +288,42 @@
             >IMS Eastney</item>
     </string-array>
 
-    <string-array name="bus_stops_markers">
+    <string-array name="bus_stops_marker_title">
         <item
             >Langstone</item>
         <item
             >Locksway Road</item>
         <item
-            >Goldsmith Avenue for Lidl</item>
+            >Goldsmith Avenue (Pompey Centre)</item>
         <item
-            >Goldsmith Avenue for Fratton Station</item>
+            >Goldsmith Avenue (Fratton Bridge)</item>
         <item
             >Winston Churchill Avenue</item>
         <item
-            >Cambridge Road for Student Union</item>
+            >Cambridge Road</item>
         <item
-            >Goldsmith Avenue for Milton Park</item>
+            >Goldsmith Avenue (Prince Albert Road)</item>
         <item
             >IMS Eastney</item>
+    </string-array>
+
+    <string-array name="bus_stops_marker_detail">
+        <item
+            >For Langstone Campus</item>
+        <item
+            >For Milton Park</item>
+        <item
+            >For Lidl, Tesco &amp; Fratton Park Stadium</item>
+        <item
+            >For Fawcett Road, Fratton Station &amp; ASDA</item>
+        <item
+            >For University Central</item>
+        <item
+            >For Student Union, University Library &amp; Spinnaker Sports Hall</item>
+        <item
+            >For Milton Park</item>
+        <item
+            >For the Institute of Marine Science &amp; Hayling Ferry </item>
     </string-array>
 
     <string-array name="bus_stops_analytics">
@@ -316,6 +354,8 @@
         <item
             >Langstone</item>
     </string-array>
+
+    <!--Content description related-->
 
 
 </resources>

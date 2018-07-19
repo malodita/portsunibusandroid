@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--New colours-->
+    <color name="primaryColor">#3c023c</color>
+    <color name="primaryLightColor">#692f67</color>
+    <color name="primaryDarkColor">#1d0018</color>
+    <color name="secondaryColor">#00A0FF</color>   <!--505457-->
+    <color name="secondaryLightColor">#74C6F7</color> <!--7c8084-->
+    <color name="secondaryDarkColor">#005588</color>
+    <color name="primaryTextColor">@color/textview_primary_color</color>
+    <color name="secondaryTextColor">@color/textview_secondary_color</color>
+    <color name="tertiaryColor">#FFD740</color>
+    <color name="tertiaryLightColor">#FFF3c3</color>
+    <color name="tertiaryDarkColor">#C9A20E</color>
+    <color name="background">#212121</color>
+    <color name="button">#00A0FF</color>
+    <color name="selector_on">#00A0FF</color>
+    <color name="selector_off">#C2005588</color>
+    <color name="scrollbar">#005588</color>
+    <!--Legacy colours-->
     <color name="primary">#190c22</color>
     <color name="primary_dark">#0d000d</color>
     <color name="primary_light">#9E819E</color>
@@ -12,7 +30,6 @@
     <color name="divider">#BDBDBD</color>
     <color name="inverse_text">#DE000000</color>
     <color name="inverse_text_disabled">#61000000</color>
-    <color name="background">#212121</color>
     <color name="image_placeholder">#111111</color>
     <color name="bottom_bar_tabs">#FFD740</color>
     <color name="polyline">#FFD740</color>

@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="240dp"
-    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/closest_stop_map_card_view"
-        android:layout_width="0dp"
-        android:layout_height="240dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="140dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="@dimen/card_spacing_vertical"
         android:layout_marginLeft="@dimen/card_margin"
+        android:layout_marginTop="@dimen/card_spacing_vertical"
         android:layout_marginRight="@dimen/card_margin"
-        android:layout_marginBottom="@dimen/card_margin"
+        android:layout_marginBottom="@dimen/card_spacing_vertical"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
         tools:layout_editor_absoluteX="8dp">
@@ -28,68 +24,85 @@
             android:id="@+id/closest_stop_error_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:paddingLeft="@dimen/activity_margin"
             android:paddingRight="@dimen/activity_margin"
             android:gravity="center"
             android:textAlignment="center"
             android:textSize="@dimen/text_title_size"
             android:textStyle="italic"
-            android:visibility="gone"
-            />
+            android:visibility="gone"/>
 
-        <android.support.v4.widget.ContentLoadingProgressBar
-            android:id="@+id/closest_stop_progress_bar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:paddingBottom="80dp"
-            android:paddingTop="80dp"
-            android:visibility="visible"/>
-
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/closest_stop_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/margin"
             android:paddingLeft="@dimen/margin"
+            android:paddingTop="24dp"
             android:paddingRight="@dimen/margin"
-            android:visibility="gone">
-
+            android:paddingBottom="@dimen/margin"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
-                android:id="@+id/closest_stop_time_hero"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="left"
-                android:paddingTop="@dimen/margin"
-                android:textSize="@dimen/text_title_size"
-                tools:text="30 minutes to nearest stop"/>
+                android:id="@+id/closest_stop_nearest_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_viewgroup_closest_map_title"
+                android:textAllCaps="true"
+                app:layout_constraintBottom_toTopOf="@+id/closest_stop_stop_hero"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Nearest Stop"/>
 
             <TextView
                 android:id="@+id/closest_stop_stop_hero"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                tools:text="Goldsmith Avenue adj Fratton Station"
-                android:textSize="@dimen/text_primary_size"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:maxLines="2"
+                app:autoSizeMaxTextSize="18dp"
+                app:autoSizeMinTextSize="12dp"
+                app:layout_constraintBottom_toTopOf="@+id/closest_stop_time_hero"
+                app:layout_constraintEnd_toStartOf="@+id/map_view"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/closest_stop_nearest_stop"
+                tools:text="Goldsmith Avenue adj Fratton Station"/>
+
+            <TextView
+                android:id="@+id/closest_stop_time_hero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/closest_stop_button_nav"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/closest_stop_stop_hero"
+                tools:text="30 minutes walk"/>
+
+            <Button
+                android:id="@+id/closest_stop_button_nav"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="@string/navigate"
+                android:textAlignment="viewStart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/closest_stop_time_hero"/>
 
             <com.google.android.gms.maps.MapView
                 xmlns:map="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/map_view"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                map:cameraZoom="14"
+                map:layout_constraintBottom_toBottomOf="parent"
+                map:layout_constraintRight_toRightOf="parent"
+                map:layout_constraintTop_toTopOf="parent"
                 map:liteMode="true"
                 map:mapType="none"
-                map:cameraZoom="14"
-                map:uiCompass="false">
-            </com.google.android.gms.maps.MapView>
+                map:uiCompass="false"/>
 
-
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
-
-</android.support.constraint.ConstraintLayout>

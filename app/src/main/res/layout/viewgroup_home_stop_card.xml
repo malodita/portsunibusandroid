@@ -1,109 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_stop_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:minHeight="160dp"
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginTop="@dimen/card_margin"
+    android:layout_marginRight="@dimen/card_margin"
+    android:layout_marginBottom="@dimen/card_spacing_vertical"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/home_stop_card_view"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/home_error_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
+        android:gravity="center"
+        android:paddingLeft="@dimen/margin"
+        android:paddingRight="@dimen/margin"
+        android:scrollHorizontally="false"
+        android:textAlignment="center"
+        android:textSize="@dimen/text_title_size"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginBottom="@dimen/card_spacing_vertical"
-        >
+        tools:text="No stop selected"
+        tools:visibility="visible"/>
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/home_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin"
+        android:visibility="visible"
+        tools:visibility="gone">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/home_layout"
+        <ImageView
+            android:id="@+id/home_image"
             android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:layout_constraintBottom_toTopOf="@id/home_time_hero_intro"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/adj_lidl"/>
+
+        <TextView
+            android:id="@+id/home_time_hero_intro"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:minHeight="190dp"
-            android:visibility="visible">
+            android:layout_marginTop="16dp"
+            android:gravity="start|top"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"
+            android:text="@string/home_next_bus_uni"
+            android:textSize="@dimen/text_primary_size"
+            app:layout_constraintBottom_toTopOf="@+id/home_time_hero"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_image"/>
 
-            <TextView
-                android:id="@+id/home_error_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginTop="0dp"
-                android:gravity="center"
-                android:scrollHorizontally="false"
-                android:textSize="@dimen/text_title_size"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="No stop selected"/>
+        <TextView
+            android:id="@+id/home_time_hero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            app:layout_constraintBottom_toTopOf="@+id/home_bus_stop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_time_hero_intro"
+            tools:text="10 minutes"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"/>
 
-            <TextView
-                android:id="@+id/home_bus_stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:gravity="start"
-                android:textSize="@dimen/text_title_size"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Home Stop to Uni"/>
+        <TextView
+            android:id="@+id/home_bus_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_time_hero"
+            tools:text="From Goldsmith Avenue adj Lidl"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"/>
 
-            <TextView
-                android:id="@+id/home_time_hero_intro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start|top"
-                android:text="@string/uni_leaves_in"
-                android:textSize="@dimen/text_primary_size"
-                app:layout_constraintLeft_toLeftOf="@+id/home_bus_stop"
-                app:layout_constraintTop_toBottomOf="@+id/home_bus_stop"/>
-
-            <TextView
-                android:id="@+id/home_time_hero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:fontFamily="sans-serif-light"
-                android:includeFontPadding="false"
-                android:textSize="@dimen/text_minute_hero_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@+id/home_time_hero_intro"
-                app:layout_constraintTop_toBottomOf="@+id/home_time_hero_intro"
-                tools:text="10"/>
-
-
-            <TextView
-                android:id="@+id/home_time_hero_minutes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/home_time_hero"
-                android:layout_alignBottom="@+id/home_time_hero"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:layout_toEndOf="@id/home_time_hero"
-                android:layout_toRightOf="@+id/home_time_hero"
-                android:text="@string/minutes"
-                android:textSize="@dimen/text_primary_size"
-                app:layout_constraintBaseline_toBaselineOf="@+id/home_time_hero"
-                app:layout_constraintLeft_toRightOf="@+id/home_time_hero"/>
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

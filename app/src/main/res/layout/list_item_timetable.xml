@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="72dp"
-    app:cardCornerRadius="0dp"
-    android:transitionName="default"
-    app:cardUseCompatPadding="false"
-    android:orientation="vertical"
-    android:id="@+id/card_view"
-    >
-
     <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:selectableItemBackground"
-        android:id="@+id/layout">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:textSize="@dimen/text_primary_size"
-            tools:text="12:00"
-            tools:layout_editor_absoluteX="0dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/rubik"
+            android:textSize="16.26sp"
             app:layout_constraintBottom_toTopOf="@+id/destination"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="@dimen/margin"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"/>
+            app:layout_constraintVertical_chainStyle="spread"
+            tools:text="12:00"/>
 
         <TextView
             android:id="@+id/destination"
             android:layout_width="352dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="@dimen/margin"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:textSize="@dimen/text_secondary_size"
-            tools:text="To Cambridge Road (University Library)"
-            tools:layout_editor_absoluteX="0dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/rubik"
+            android:textSize="16.26sp"
+            app:layout_constraintBottom_toTopOf="@+id/via"
+            app:layout_constraintStart_toStartOf="@+id/time"
             app:layout_constraintTop_toBottomOf="@+id/time"
-            android:layout_marginTop="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="20dp"/>
+            tools:text="To Cambridge Road (University Library)"
+            />
 
+        <TextView
+            android:id="@+id/via"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginBottom="8dp"
+            app:layout_goneMarginBottom="8dp"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="12.19sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/destination"
+            app:layout_constraintTop_toBottomOf="@+id/destination"
+            tools:text="TextView"
+            />
     </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.CardView>

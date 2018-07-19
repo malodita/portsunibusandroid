@@ -1,16 +1,31 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+
+def lifecycle_version = "1.1.1"
+def room_version = "1.1.0"
+def googlePlayServices_version = "11.2.2"
+
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
 
+
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 27
+        minSdkVersion 21
+        targetSdkVersion 28
         //DO NOT UPDATE THE VERSION CODE UNLESS YOU CHANGE THE DATABASE
-        versionCode 4
-        versionName "4.0"
+        versionCode 6
+        versionName "6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -18,7 +33,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            it.buildConfigField 'String', 'API_KEY', APIKEYRELEASE
+            manifestPlaceholders = [MAPS_API: keystoreProperties['NEW_MAPS_API_KEY']]
         }
+        debug {
+            it.buildConfigField 'String', 'API_KEY', APIKEYDEBUG
+            manifestPlaceholders = [MAPS_API: keystoreProperties['NEW_MAPS_DEBUG_API_KEY']]
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
@@ -27,9 +52,17 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    api 'com.google.android.gms:play-services-maps:11.2.2'
+    api "com.google.android.gms:play-services-maps:$googlePlayServices_version"
+    api "com.google.android.gms:play-services-location:$googlePlayServices_version"
     testImplementation 'junit:junit:4.12'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    api 'com.github.daolq3012:AssetSQLiteOpenHelper:1.0'
+    api 'com.squareup.retrofit2:retrofit:2.1.0'
+    api 'com.squareup.retrofit2:converter-gson:2.1.0'
+    api "android.arch.lifecycle:extensions:$lifecycle_version"
+    api "android.arch.persistence.room:runtime:$room_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
 }
 repositories {
     mavenCentral()

@@ -15,10 +15,7 @@ import com.malcolm.portsmouthunibus.R;
  */
 
 public class PreferencesFragment extends PreferenceFragmentCompat{
-    private final String homeBusStopPref = "com.malcolm.portsmouthunibus.homebusstop";
     private final String shortcutsPref = "com.malcolm.portsmouthunibus.shortcuts";
-    private final String nightMode = "com.malcolm.portsmouthunibus.nightmode";
-    private final String mapsCard = "com.malcolm.portsmouthunibus.mapscard";
     SharedPreferences sharedPreferences;
 
     @Override
@@ -30,11 +27,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat{
             shortcuts.setEnabled(true);
             shortcuts.setSummary("Clears all extra shortcuts");
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -58,10 +50,5 @@ public class PreferencesFragment extends PreferenceFragmentCompat{
         else {
             super.onDisplayPreferenceDialog(preference);
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 }

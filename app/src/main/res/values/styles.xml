@@ -6,6 +6,32 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/textview_primary_color</item>
+        <item name="android:textColorPrimaryInverse">@color/textview_inverse_color</item>
+        <item name="android:textColorSecondary">@color/textview_secondary_color</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/card_transition</item>
+        <item name="android:windowSharedElementReturnTransition">@transition/card_transition</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:popupBackground">@color/background</item>
+        <item name="android:colorBackground">@color/background</item>
+    </style>
+
+
+
+<!--    <style name="AppTheme.New.Day" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        &lt;!&ndash;<item name="colorSecondaryDark">@color/secondaryDarkColor</item>&ndash;&gt;
+        &lt;!&ndash;Todo: Continue working on new theme colours and fonts, enable when components stable
         <item name="android:textColorPrimary">@color/textview_primary_color</item>
         <item name="android:textColorPrimaryInverse">@color/textview_inverse_color</item>
         <item name="android:textColorSecondary">@color/textview_secondary_color</item>
@@ -14,16 +40,43 @@
         <item name="android:colorBackground">@color/background</item>
     </style>
 
-    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.DayNight">
+    <style name="AppTheme.New.Night" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:popupBackground">#121212</item>
+        <item name="android:colorBackground">#121212</item>
+        &lt;!&ndash;<item name="android:statusBarColor">@color/primary_dark</item>&ndash;&gt;
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/card_transition</item>
+        <item name="android:windowSharedElementReturnTransition">@transition/card_transition</item>
+    </style>
+    
+    <style name="AppTheme.New.Toolbar" parent="AppTheme.New.DayNight">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/textview_primary_color</item>
         <item name="android:textColorPrimaryInverse">@color/icons</item>
         <item name="android:textColorSecondary">@color/icons</item>
+    </style>-->
+
+    <!--<style name="AppTheme.New.DayNight" parent="AppTheme.New.Day"/>-->
+
+    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.DayNight">
+        <item name="colorPrimary">@color/inverse_text</item>
+        <item name="android:textColorPrimary">@color/textview_primary_color</item>
+        <item name="android:textColorSecondary">@color/textview_primary_color</item>
+        <item name="colorControlActivated">@color/textview_primary_color</item>
     </style>
 
     <style name="AppTheme.Detail" parent="AppTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.AboutActivityDay" parent="Theme.Mal.Light.DarkActionBar">

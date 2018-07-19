@@ -1,94 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/closest_stop_timetable_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:minHeight="140dp"
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginTop="@dimen/card_spacing_vertical"
+    android:layout_marginRight="@dimen/card_margin"
+    android:layout_marginBottom="@dimen/card_spacing_vertical"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp"
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="0dp"
+    >
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/closest_stop_timetable_card_view"
+    <TextView
+        android:id="@+id/mini_error_text"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginLeft="@dimen/card_margin"
-        android:layout_marginRight="@dimen/card_margin"
-        android:layout_marginTop="@dimen/card_spacing_vertical"
-        android:layout_marginBottom="@dimen/card_spacing_vertical"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="0dp"
-        >
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="8dp"
+        android:scrollHorizontally="false"
+        android:textAlignment="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/error_no_buses"/>
 
-        <android.support.constraint.ConstraintLayout
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/instant_stop_layout">
+
+        <ImageView
+            android:id="@+id/mini_nearest_stop_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/eastney_night"/>
 
-            <TextView
-                android:id="@+id/mini_error_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginTop="0dp"
-                android:gravity="center"
-                android:scrollHorizontally="false"
-                android:textSize="@dimen/text_title_size"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/error_no_buses"/>
+        <TextView
+            android:id="@+id/mini_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"
+            android:text="@string/next_departure"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mini_nearest_stop_image"/>
 
-            <TextView
-                android:id="@+id/mini_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/next_departure"
-                android:textSize="@dimen/text_title_size"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/mini_time_hero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mini_title"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="8 minutes"/>
 
-            <TextView
-                android:id="@+id/mini_stop_hero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_primary_size"
-                app:layout_constraintLeft_toLeftOf="@+id/mini_title"
-                app:layout_constraintTop_toBottomOf="@+id/mini_title"
-                tools:text="Nearest Stop"/>
-
-            <TextView
-                android:id="@+id/mini_time_hero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:includeFontPadding="false"
-                android:textSize="@dimen/text_minute_hero_size"
-                app:layout_constraintLeft_toLeftOf="@+id/mini_stop_hero"
-                app:layout_constraintTop_toBottomOf="@+id/mini_stop_hero"
-                tools:text="8"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="16dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:id="@+id/mini_time_hero_minutes"
-                app:layout_constraintBaseline_toBaselineOf="@+id/mini_time_hero"
-                app:layout_constraintLeft_toRightOf="@+id/mini_time_hero"
-                tools:text="@string/minutes"/>
+        <TextView
+            android:id="@+id/mini_stop_hero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mini_time_hero"
+            tools:text="From IMS Eastney"
+            />
 
 
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
-
-</LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

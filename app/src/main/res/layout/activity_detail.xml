@@ -14,8 +14,7 @@
         android:layout_height="250dp"
         android:background="@color/image_placeholder"
         android:elevation="4dp"
-        android:id="@+id/app_bar_layout"
-        tools:targetApi="lollipop">
+        android:id="@+id/app_bar_layout">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_wrapper"
@@ -40,7 +39,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:elevation="4dp"
-                android:theme="@style/AppTheme.ActionBar"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="enterAlways"
                 app:titleTextColor="@color/icons"/>

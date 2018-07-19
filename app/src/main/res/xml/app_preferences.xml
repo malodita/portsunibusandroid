@@ -3,11 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:title="Appearance">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/preferences_night_mode"
-            android:summaryOff="Uses the day theme only. Requires app restart to apply changes"
-            android:summaryOn="Switches to a dark theme at night. Requires app restart to apply changes"
+        <ListPreference
+            android:defaultValue="0"
+            android:key="@string/preferences_night_mode_new"
+            android:entries="@array/preferences_night_mode_list"
+            android:entryValues="@array/preferences_night_mode_values"
+            android:summary="Select the theme for the app."
+            android:dialogTitle="Night mode"
             android:title="Night mode"/>
         <SwitchPreference
             android:defaultValue="true"
@@ -50,6 +52,15 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="Other">
+        <SwitchPreference
+            android:title="Allow crash reporting and analytics."
+            android:key="@string/preferences_analytics"
+            android:summaryOn="Allow crash reporting and analytics to be collected. This is used to improve the app and not
+            to identify users or for advertising."
+            android:summaryOff="Analytics and crash reporting will not be collected from this device. Please consider enabling this
+            as it allows for more improvements to be made to the app."
+
+            />
         <Preference android:title="About">
             <intent
                 android:action="android.intent.action.VIEW"

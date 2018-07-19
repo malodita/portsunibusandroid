@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--New colours-->
+    <color name="primaryColor">#621360</color>
+    <color name="primaryLightColor">#92438e</color>
+    <color name="primaryDarkColor">#350036</color>
+    <color name="secondaryColor">#d1d1d1</color>
+    <color name="secondaryLightColor">#ffffff</color>
+    <color name="secondaryDarkColor">#a0a0a0</color>
+    <color name="tertiaryColor">#FFD740</color>
+    <color name="tertiaryLightColor">#FFF3c3</color>
+    <color name="tertiaryDarkColor">#C9A20E</color>
+    <color name="primaryTextColor">@color/textview_primary_color</color>
+    <color name="secondaryTextColor">@color/textview_secondary_color</color>
+    <color name="background">#ffffff</color>
+    <color name="button">#621360</color>
+    <color name="selector_on">#621360</color>
+    <color name="selector_off">#C2a0a0a0</color>
+    <color name="scrollbar">#350036</color>
+    <!--Legacy colours-->
     <color name="primary">#621360</color>
     <color name="primary_dark">#500E4E</color>
     <color name="primary_light">#D0B8CF</color>
@@ -12,7 +30,6 @@
     <color name="divider">#BDBDBD</color>
     <color name="inverse_text">#ffffff</color>
     <color name="inverse_text_disabled">#80ffffff</color>
-    <color name="background">#ffffff</color>
     <color name="bottom_bar_tabs">#FFFFFF</color>
     <color name="polyline">#2A1439</color>
     <color name="image_placeholder">#aaaaaa</color>
