@@ -36,7 +36,8 @@
 
 
 
-    <!--Strings related to the spinner-->
+    <!--Strings related to transitions and animations-->
+    <string name="transition_image">imageTransition</string>
 
 
 

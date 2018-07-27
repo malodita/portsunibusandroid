@@ -58,9 +58,7 @@
             android:summaryOn="Allow crash reporting and analytics to be collected. This is used to improve the app and not
             to identify users or for advertising."
             android:summaryOff="Analytics and crash reporting will not be collected from this device. Please consider enabling this
-            as it allows for more improvements to be made to the app."
-
-            />
+            as it allows for more improvements to be made to the app."/>
         <Preference android:title="About">
             <intent
                 android:action="android.intent.action.VIEW"

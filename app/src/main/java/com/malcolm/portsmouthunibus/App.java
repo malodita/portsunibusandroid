@@ -22,7 +22,6 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
-        super.onCreate();
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }
@@ -42,6 +41,7 @@ public class App extends Application {
             firebase.setAnalyticsCollectionEnabled(true);
         }
         nightModeSwitching(Integer.valueOf(nightMode));
+        super.onCreate();
     }
 
     public MainRepository getMainRepository() {

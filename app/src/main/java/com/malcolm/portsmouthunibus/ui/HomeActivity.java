@@ -46,7 +46,7 @@ import com.malcolm.portsmouthunibus.ui.timetable.TimetableFragment;
 import com.malcolm.unibusutilities.helper.TermDateUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,7 +54,7 @@ import butterknife.ButterKnife;
 
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        StopBottomSheet.DialogListener, QuickStartBottomSheet.DialogButtonSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        StopBottomSheet.DialogListener, QuickStartBottomSheet.DialogButtonSelectedListener {
     //Initialise local variables
     private static final String TAG = "HomeActivity";
     private static final String HOMESHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE";
@@ -102,7 +102,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 sheet.setCancelable(false);
                 sheet.show(getSupportFragmentManager(), QUICKSTART);
             }
-            boolean shortcutUsed = shortcutCheck(getIntent().getAction(), bottomBar);
+            boolean shortcutUsed = shortcutCheck(getIntent(), bottomBar);
             if (!shortcutUsed && savedInstanceState == null){
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -112,7 +112,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             }
             bottomBar.setOnNavigationItemSelectedListener(this);
         }
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -158,13 +157,16 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
      * create one isn't even exposed to non compatible devices), the usual path for this is to
      * simply set the tab position and therefore HomeFragment.
      *
-     * @param action The action accompanying the intent to open the app from a shortcut
+     * @param intent The intent to open the app from a shortcut.
      */
     @TargetApi(Build.VERSION_CODES.N_MR1)
-    private boolean shortcutCheck(String action, BottomNavigationView bottomBar) {
-        switch (action) {
+    private boolean shortcutCheck(Intent intent, BottomNavigationView bottomBar) {
+        if (intent.getAction() == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1){
+            return false;
+        }
+        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+        switch (intent.getAction()) {
             case HOMESHORTCUT:
-                ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
                 shortcutManager.reportShortcutUsed(getString(R.string.shortcut_home_timetable));
                 bottomBar.setSelectedItemId(R.id.tab_timetable);
                 TimetableFragment fragment = new TimetableFragment();
@@ -179,8 +181,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                         , getString(R.string.firebase_property_stop_id), String.valueOf(stopToShow));
                 return true;
             case SPECIFICSHORTCUT:
-                ShortcutManager shortcutManager2 = getSystemService(ShortcutManager.class);
-                shortcutManager2.reportShortcutUsed(getString(R.string.shortcut_specific_timetable));
+                shortcutManager = getSystemService(ShortcutManager.class);
+                shortcutManager.reportShortcutUsed(getString(R.string.shortcut_specific_timetable));
                 TimetableFragment fragment2 = new TimetableFragment();
                 String args = getIntent().getExtras().getString(getString(R.string.shortcut_specific_timetable));
                 firebaseLog(getString(R.string.firebase_event_specific_shortcut_used)
@@ -295,13 +297,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             }
         });
         sequence.start();
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if (s.equals(getString(R.string.preferences_night_mode_new))) {
-            recreate();
-        }
     }
 
     /**
@@ -458,11 +453,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        super.onDestroy();
-    }
 
     /**
      * Creates a shortcut for the newly selected home stop. Instead of adding all the time, it
@@ -480,7 +470,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                         .setClass(this, HomeActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP))
                 .build();
-        manager.addDynamicShortcuts(Arrays.asList(shortcutInfo));
+        manager.addDynamicShortcuts(Collections.singletonList(shortcutInfo));
     }
 
     @Override

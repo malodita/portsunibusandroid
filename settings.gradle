@@ -1,1 +1,1 @@
-include ':app', ':utilities', ':wearable'
+include ':app', ':utilities'

@@ -7,12 +7,10 @@ import com.malcolm.portsmouthunibus.models.ClosestStopMapModel_;
 import com.malcolm.portsmouthunibus.models.ClosestStopModel_;
 import com.malcolm.portsmouthunibus.models.HomeStopModel_;
 import com.malcolm.unibusutilities.entity.DirectionsApi;
-import com.squareup.picasso.RequestCreator;
 
 import java.util.HashMap;
 import java.util.List;
-
-public class HomeEpoxyController extends TypedEpoxyController<HashMap<String, Object>> {
+ class HomeEpoxyController extends TypedEpoxyController<HashMap<String, Object>> {
 
     @AutoModel HomeStopModel_ homeModel;
     @AutoModel ClosestStopMapModel_ mapModel;
@@ -35,7 +33,7 @@ public class HomeEpoxyController extends TypedEpoxyController<HashMap<String, Ob
                         .isHoliday((boolean) home.get(3))
                         .isWeekendInHoliday((boolean) home.get(4));
                 if (home.get(5) != null){
-                    homeModel.request((RequestCreator) home.get(5));
+                    homeModel.stopNumber((int) home.get(5));
                 }
             } else {
                 homeModel.visibility(false)
@@ -49,9 +47,6 @@ public class HomeEpoxyController extends TypedEpoxyController<HashMap<String, Ob
             if (shouldDisplay){
                 closestModel.stopHero((String) closest.get(1));
                 closestModel.timeHero((String) closest.get(2));
-                if (closest.get(3) != null) {
-                    closestModel.imageRequest((RequestCreator) closest.get(3));
-                }
                 closestModel.addTo(this);
             }
         }

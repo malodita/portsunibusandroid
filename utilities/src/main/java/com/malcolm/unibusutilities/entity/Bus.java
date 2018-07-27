@@ -262,10 +262,6 @@ public class Bus {
     @Dao
     public interface BusDao {
 
-        /**Fetches the identified bus and each stop used.*/
-        @Query("select * from Timetable where id=:busId")
-        LiveData<Bus> getBusDetail(int busId);
-
         /**Fetches the raw list of stop times the identified stop has to identify when
          * the next bus is*/
         @Query("select :stopName from Timetable order by id")
@@ -279,6 +275,10 @@ public class Bus {
 
         @Query("select * from Timetable where id=:busId")
         Cursor getBusDetailCursor(int busId);
+
+        /**Fetches the identified bus and each stop used.*/
+        @Query("select * from Timetable where id=:busId")
+        LiveData<Bus> getBusDetail(int busId);
     }
 
 }

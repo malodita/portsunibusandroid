@@ -30,19 +30,25 @@ public class MainRepository {
 
     private static final String TAG = "MainRepository";
     private static MainRepository instance;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private final MutableLiveData<String> focusedCountdown = new MutableLiveData<>();
-    private static final Handler handler = new Handler(Looper.getMainLooper());
     private final MutableLiveData<StopAndTime> instantCountdown = new MutableLiveData<>();
-    private final List<Bus> buses;
+    private final MutableLiveData<String> timetableCountdown = new MutableLiveData<>();
     private final LocationRepository locationRepository;
+    private List<Bus> buses;
     private Bus.BusDao busDao;
     private TimeRunnable focusedStop;
+    private TimeRunnable timetableStop;
     private InstantRunnable instantStop;
     private MediatorLiveData<Location> locationLiveData;
     private android.arch.lifecycle.Observer<Location> locationObserver;
 
 
     private MainRepository(final BusDatabase database, Application application) {
+        Runnable runnable = () -> {
+
+        };
+        //appExecutors.getBackgroundThreadExecutor().execute(runnable);
         busDao = database.busDao();
         buses = busDao.getAll();
         locationRepository = LocationRepository.getInstance(application);
@@ -57,6 +63,14 @@ public class MainRepository {
 
     public LiveData<StopAndTime> getInstantCountdown() {
         return instantCountdown;
+    }
+
+    public LiveData<String> getCountdown() {
+        return focusedCountdown;
+    }
+
+    public LiveData<String> getTimetableCountdown() {
+        return timetableCountdown;
     }
 
     public void fetchListForInstantCountdown() {
@@ -98,6 +112,30 @@ public class MainRepository {
         }
     }
 
+    public void fetchListForTimetableCountdown(int stop, int hours) {
+        if (stop < 0) {
+            timetableCountdown.setValue("-1");
+            if (timetableStop != null) {
+                handler.removeCallbacks(timetableStop);
+            }
+            return;
+        }
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < buses.size(); i++) {
+            Integer integer = (buses.get(i).get(stop));
+            if (integer != null) {
+                list.add(integer);
+            }
+        }
+        if (timetableStop == null) {
+            timetableStop = new TimeRunnable(this, list, hours);
+            handler.post(timetableStop);
+        } else {
+            timetableStop.setList(list, hours);
+            handler.post(timetableStop);
+        }
+    }
+
     public void fetchListForFocusedCountdown(int stop, int hours) {
         if (stop < 0) {
             focusedCountdown.setValue("-1");
@@ -118,13 +156,8 @@ public class MainRepository {
             handler.post(focusedStop);
         } else {
             focusedStop.setList(list, hours);
-            handler.removeCallbacks(focusedStop);
             handler.post(focusedStop);
         }
-    }
-
-    public LiveData<String> getCountdown() {
-        return focusedCountdown;
     }
 
     public void stopObservingInstantStop() {
@@ -141,6 +174,12 @@ public class MainRepository {
         }
     }
 
+    public void stopObservingTimetableStop() {
+        if (timetableStop != null) {
+            handler.removeCallbacks(timetableStop);
+        }
+    }
+
     /**
      * Uses a cursor to retrieve a list of Times objects for each stop that one particular bus will
      * alight at on one journey
@@ -151,14 +190,16 @@ public class MainRepository {
      * @return A list of times for one bus
      */
     public List<Times> getDataForList(int busId, boolean is24Hours) {
-        Cursor cursor = busDao.getBusDetailCursor(busId);
+//        Runnable runnable = () -> listCursor = busDao.getBusDetailCursor(busId);
+//        appExecutors.getBackgroundThreadExecutor().execute(runnable);
+        Cursor listCursor = busDao.getBusDetailCursor(busId);
         List<Times> array = new ArrayList<>();
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                for (int i = 1; i < cursor.getColumnCount(); i++) {
-                    if (cursor.getString(i) != null) {
+        if (listCursor != null) {
+            if (listCursor.moveToFirst()) {
+                for (int i = 1; i < listCursor.getColumnCount(); i++) {
+                    if (listCursor.getString(i) != null) {
                         Times times = new Times();
-                        switch (cursor.getColumnName(i)) {
+                        switch (listCursor.getColumnName(i)) {
                             case "Langstone Campus (for Departures only)":
                                 times.setDestination("Langstone Campus");
                                 break;
@@ -169,10 +210,10 @@ public class MainRepository {
                                 times.setDestination("Cambridge Road (Student Union)");
                                 break;
                             default:
-                                times.setDestination(cursor.getColumnName(i));
+                                times.setDestination(listCursor.getColumnName(i));
                                 break;
                         }
-                        times.setTime(DatabaseUtils.formatTime(cursor.getString(i), is24Hours));
+                        times.setTime(DatabaseUtils.formatTime(listCursor.getString(i), is24Hours));
                         array.add(times);
                     }
                 }
@@ -192,24 +233,27 @@ public class MainRepository {
      */
     @SuppressWarnings("unchecked")
     public List<Times> getListOfTimesForStop(int stop, boolean is24Hours) {
+        //Runnable runnable = () -> stopCursor = busDao.getAllCursor();
+        //appExecutors.getBackgroundThreadExecutor().execute(runnable);
+        //private final AppExecutors appExecutors = new AppExecutors();
+        Cursor stopCursor = busDao.getAllCursor();
         if (stop == -1){
             stop++;
         }
         ArrayList<Times> array = new ArrayList();
-        Cursor cursor = busDao.getAllCursor();
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
+        if (stopCursor != null) {
+            if (stopCursor.moveToFirst()) {
                 do {
-                    if (cursor.getString(stop) != null) {
-                        Times times = DatabaseUtils.createTime(stop, cursor, is24Hours);
-                        if (cursor.getInt(0) == 48 && stop >= 7) {
+                    if (stopCursor.getString(stop) != null) {
+                        Times times = DatabaseUtils.createTime(stop, stopCursor, is24Hours);
+                        if (stopCursor.getInt(0) == 48 && stop >= 7) {
                             //Checks to see if last row (Which should only be seen for return bus). Hardcoded value.
                             array.add(times);
                         } else {
                             array.add(times);
                         }
                     }
-                } while (cursor.moveToNext());
+                } while (stopCursor.moveToNext());
             }
         } else {
             return null;
@@ -229,21 +273,22 @@ public class MainRepository {
             this.timeReport = timeReport;
         }
 
-        protected void setList(@NonNull List<Integer> list, int timeReport) {
+        void setList(@NonNull List<Integer> list, int timeReport) {
             this.list = list;
             this.timeReport = timeReport;
             MainRepository repository = parent.get();
             String time;
             if (timeReport == NOT_TIMETABLE) {
                 time = DatabaseUtils.getTimeToStop(list);
+                repository.focusedCountdown.setValue(time);
             } else {
                 if (timeReport == TWELVE_HOUR){
                     time = DatabaseUtils.getBestBus(list, false);
                 } else {
                     time = DatabaseUtils.getBestBus(list, true);
                 }
+                repository.timetableCountdown.setValue(time);
             }
-            repository.focusedCountdown.setValue(time);
         }
 
         @Override
@@ -253,15 +298,17 @@ public class MainRepository {
                 String time;
                 if (timeReport == NOT_TIMETABLE) {
                     time = DatabaseUtils.getTimeToStop(list);
+                    repository.focusedCountdown.setValue(time);
                 } else {
                     if (timeReport == TWELVE_HOUR){
                         time = DatabaseUtils.getBestBus(list, false);
                     } else {
                         time = DatabaseUtils.getBestBus(list, true);
                     }
+                    repository.timetableCountdown.setValue(time);
+
                 }
-                handler.postDelayed(this, 1000);
-                repository.focusedCountdown.setValue(time);
+                repository.handler.postDelayed(this, 1000);
             }
         }
 
@@ -302,7 +349,7 @@ public class MainRepository {
             stopAndTime.setTime(DatabaseUtils.getTimeToStop(list));
             stopAndTime.setStop(location);
             repository.instantCountdown.setValue(stopAndTime);
-            handler.postDelayed(this, 8000);
+            repository.handler.postDelayed(this, 8000);
         }
     }
 

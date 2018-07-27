@@ -30,7 +30,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.App;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.ui.HomeActivity;
-import com.malcolm.portsmouthunibus.utilities.ImageGenerator;
 import com.malcolm.unibusutilities.entity.DirectionsApi;
 import com.malcolm.unibusutilities.helper.TermDateUtils;
 import com.malcolm.unibusutilities.model.StopAndTime;
@@ -87,7 +86,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, rootView);
@@ -172,9 +171,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                     array.add(s);
                     array.add(TermDateUtils.isBankHoliday());
                     array.add(TermDateUtils.isWeekendInHoliday());
-                    if (getContext() != null) {
-                        array.add(ImageGenerator.generateKeyImage(getContext(), stopToShow));
-                    }
+                    array.add(stopToShow);
                 }
             }
             controllerItems.put(HOMEKEY, array);
@@ -216,7 +213,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             ArrayList<Object> array = new ArrayList<>();
             if (stopAndTime != null) {
                 String stop = stopAndTime.getStop();
-                if (stopAndTime.getStop().equals("IMS Eastney")) {
+                if (stop.equals("IMS Eastney")) {
                     if (TermDateUtils.isHoliday() || TermDateUtils.isWeekend()) {
                         array.add(false);
                         controllerItems.put(INSTANTKEY, array);
@@ -227,9 +224,6 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                 array.add(true);
                 array.add(stop);
                 array.add(stopAndTime.getTime());
-                if (getContext() != null) {
-                    array.add(ImageGenerator.generateImage(getContext(), stopAndTime.getStop()));
-                }
                 controllerItems.put(INSTANTKEY, array);
                 controller.setData(controllerItems);
             } else {
@@ -319,6 +313,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     public void onDestroyView() {
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         recyclerView.setAdapter(null);
+        recyclerView.getRecycledViewPool().clear();
         unbinder.unbind();
         RefWatcher refWatcher = App.getRefWatcher(getActivity());
         refWatcher.watch(this);

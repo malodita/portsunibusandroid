@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -107,15 +108,17 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
 
         }
         BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-        Bitmap bitmap = bitmapDrawable.getBitmap();
-        imageView.setImageDrawable(drawable);
-        new Palette.Builder(bitmap).maximumColorCount(20).generate(this);
-        Picasso.with(this).cancelRequest(imageView);
+        if (bitmapDrawable != null) {
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            imageView.setImageDrawable(drawable);
+            new Palette.Builder(bitmap).maximumColorCount(20).generate(this);
+            Picasso.with(this).cancelRequest(imageView);
+        }
 
     }
 
     @Override
-    public void onGenerated(Palette palette) {
+    public void onGenerated(@NonNull Palette palette) {
         Palette.Swatch swatch = palette.getVibrantSwatch();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(palette.getVibrantColor(ContextCompat.getColor(this, R.color.primary_dark)));
@@ -153,11 +156,5 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }

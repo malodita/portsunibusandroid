@@ -17,9 +17,8 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@transition/card_transition</item>
-        <item name="android:windowSharedElementReturnTransition">@transition/card_transition</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:navigationBarColor">@color/primary_dark</item>
         <item name="android:popupBackground">@color/background</item>
         <item name="android:colorBackground">@color/background</item>
     </style>
@@ -30,6 +29,7 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="android:navigationBarColor">@color/primaryColor</item>
         &lt;!&ndash;<item name="colorSecondaryDark">@color/secondaryDarkColor</item>&ndash;&gt;
         &lt;!&ndash;Todo: Continue working on new theme colours and fonts, enable when components stable
         <item name="android:textColorPrimary">@color/textview_primary_color</item>

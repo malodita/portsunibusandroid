@@ -32,7 +32,8 @@
                 app:layout_collapseParallaxMultiplier="0.5"
                 android:scaleType="centerCrop"
                 android:id="@+id/image_view"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                android:transitionName="@string/transition_image"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

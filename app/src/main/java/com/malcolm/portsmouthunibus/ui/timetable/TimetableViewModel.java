@@ -24,17 +24,17 @@ public class TimetableViewModel extends AndroidViewModel {
     private MutableLiveData<List<Times>> timesLiveData;
     private MainRepository repository;
 
-    TimetableViewModel(@NonNull Application application, int stop, boolean is24Hours) {
+    private TimetableViewModel(@NonNull Application application, int stop, boolean is24Hours) {
         super(application);
         repository = ((App) application).getMainRepository();
         timesLiveData = new MutableLiveData<>();
         timesLiveData.setValue(repository.getListOfTimesForStop(stop, is24Hours));
         countdown = new MediatorLiveData<>();
-        countdown.addSource(repository.getCountdown(), countdown::setValue);
+        countdown.addSource(repository.getTimetableCountdown(), countdown::setValue);
         if (is24Hours) {
-            repository.fetchListForFocusedCountdown(stop - 1, MainRepository.TWENTYFOUR_HOUR);
+            repository.fetchListForTimetableCountdown(stop - 1, MainRepository.TWENTYFOUR_HOUR);
         } else {
-            repository.fetchListForFocusedCountdown(stop - 1, MainRepository.TWELVE_HOUR);
+            repository.fetchListForTimetableCountdown(stop - 1, MainRepository.TWELVE_HOUR);
         }
     }
 
@@ -72,14 +72,14 @@ public class TimetableViewModel extends AndroidViewModel {
      */
     void updateStopList(int stop, boolean is24Hours){
         if (is24Hours) {
-            repository.fetchListForFocusedCountdown(stop - 1, MainRepository.TWENTYFOUR_HOUR);
+            repository.fetchListForTimetableCountdown(stop - 1, MainRepository.TWENTYFOUR_HOUR);
         } else {
-            repository.fetchListForFocusedCountdown(stop - 1, MainRepository.TWELVE_HOUR);
+            repository.fetchListForTimetableCountdown(stop - 1, MainRepository.TWELVE_HOUR);
         }    }
 
     @Override
     protected void onCleared() {
-        repository.stopObservingFocusedStop();
+        repository.stopObservingTimetableStop();
         super.onCleared();
     }
 
@@ -90,7 +90,7 @@ public class TimetableViewModel extends AndroidViewModel {
         private final boolean is24Hours;
         private final int stop;
 
-        public Factory(@NonNull Application application, boolean is24Hours, int stop) {
+        Factory(@NonNull Application application, boolean is24Hours, int stop) {
             this.application = application;
             this.is24Hours = is24Hours;
             this.stop = stop;
