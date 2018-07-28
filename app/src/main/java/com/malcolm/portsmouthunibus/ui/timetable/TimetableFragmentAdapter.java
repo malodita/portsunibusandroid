@@ -9,7 +9,6 @@ import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.viewholders.TimetableItemViewHolder;
 import com.malcolm.unibusutilities.entity.Times;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,11 +16,11 @@ import java.util.List;
  */
 public class TimetableFragmentAdapter extends RecyclerView.Adapter<TimetableItemViewHolder>{
     private static final String TAG = "TimesAdaptor";
-    private List<Times> times = Collections.emptyList();
+    private List<Times> times;
     private LayoutInflater inflater;
     private int currentStopId;
 
-    public TimetableFragmentAdapter(Context context, List<Times> times, int currentStopId){
+    TimetableFragmentAdapter(Context context, List<Times> times, int currentStopId){
         inflater = LayoutInflater.from(context);
         this.times = times;
         this.currentStopId = currentStopId;

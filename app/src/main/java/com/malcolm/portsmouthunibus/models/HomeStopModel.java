@@ -62,7 +62,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
 
     private void updateViewHolder(HomeStopHolder holder) {
         if (Integer.valueOf(timeHero) < 60) {
-            ImageGenerator.generateImage(holder.timeHero.getContext(), stopNumber)
+            ImageGenerator.generateKeyImage(holder.timeHero.getContext(), stopNumber)
                     .into(holder.image);
             holder.error.setVisibility(View.GONE);
             holder.layout.setVisibility(View.VISIBLE);
@@ -83,7 +83,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
             holder.error.setVisibility(View.VISIBLE);
             holder.layout.setVisibility(View.GONE);
         } else {
-            ImageGenerator.generateImage(holder.timeHero.getContext(), stopNumber)
+            ImageGenerator.generateKeyImage(holder.timeHero.getContext(), stopNumber)
                     .into(holder.image);
             holder.error.setVisibility(View.GONE);
             holder.layout.setVisibility(View.VISIBLE);

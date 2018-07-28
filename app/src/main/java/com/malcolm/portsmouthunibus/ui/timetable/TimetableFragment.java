@@ -24,8 +24,10 @@ import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AlertDialog;
@@ -38,7 +40,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,8 +77,6 @@ public class TimetableFragment extends Fragment implements
     TextView noTimetable;
     @BindView(R.id.timetableFragment)
     CoordinatorLayout layout;
-    @BindView(R.id.top_layout_favourite)
-    Button spinnerFavourite;
     @BindView(R.id.top_layout_next_bus)
     TextView topLayoutNextBus;
     private final Observer<String> countdownObserver = makeCountdownObserver();
@@ -165,7 +164,6 @@ public class TimetableFragment extends Fragment implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             favourite.setVisibility(View.VISIBLE);
             favourite.setOnClickListener(l -> buildDialog(stop));
-            //spinnerFavourite.setVisibility(View.VISIBLE);
         }
     }
 
@@ -208,6 +206,19 @@ public class TimetableFragment extends Fragment implements
             } else {
                 animateColorChanges(swatch);
             }
+        } else {
+            swatch = palette.getVibrantSwatch();
+            if (topCard.getVisibility() != View.VISIBLE) {
+                topCard.setCardBackgroundColor(swatch.getRgb());
+                topLayoutNextBus.setTextColor(swatch.getTitleTextColor());
+                topLayoutStop.setTextColor(swatch.getBodyTextColor());
+                currentIconColor = swatch.getTitleTextColor();
+                favourite.getDrawable().setTint(currentIconColor);
+                setupFab(swatch);
+                animateCardVisibility();
+            } else {
+                animateColorChanges(swatch);
+            }
         }
     }
 
@@ -223,6 +234,7 @@ public class TimetableFragment extends Fragment implements
     }
 
     private void animateColorChanges(Palette.Swatch swatch){
+        currentIconColor = swatch.getTitleTextColor();
         ObjectAnimator titleAnimation = ObjectAnimator.ofObject(topLayoutStop, "textColor"
                 , new ArgbEvaluator(), topLayoutStop.getTextColors().getDefaultColor(), swatch.getBodyTextColor());
         ObjectAnimator textAnimation = ObjectAnimator.ofObject(topLayoutNextBus, "textColor",
@@ -233,9 +245,16 @@ public class TimetableFragment extends Fragment implements
                 "tint", new ArgbEvaluator(),currentIconColor, swatch.getBodyTextColor());
         ValueAnimator fabAnimation = ValueAnimator.ofArgb(fab.getBackgroundTintList().getDefaultColor(), swatch.getRgb());
         fabAnimation.addUpdateListener(animation -> fab.setBackgroundTintList(ColorStateList.valueOf((int) animation.getAnimatedValue())));
-        VectorDrawable drawable = (VectorDrawable) fab.getDrawable();
-        ObjectAnimator iconAnimation = ObjectAnimator.ofObject(drawable, "tint", new ArgbEvaluator(),
-                currentIconColor, swatch.getBodyTextColor());
+        ObjectAnimator iconAnimation;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            VectorDrawableCompat drawable = (VectorDrawableCompat) fab.getDrawable();
+            iconAnimation = ObjectAnimator.ofObject(drawable, "tint", new ArgbEvaluator(),
+                    currentIconColor, swatch.getBodyTextColor());
+        } else {
+            VectorDrawable drawable = (VectorDrawable) fab.getDrawable();
+            iconAnimation = ObjectAnimator.ofObject(drawable, "tint", new ArgbEvaluator(),
+                    currentIconColor, swatch.getBodyTextColor());
+        }
         AnimatorSet set = new AnimatorSet();
         set.setInterpolator(new FastOutSlowInInterpolator());
         set.setDuration(200);
@@ -243,13 +262,20 @@ public class TimetableFragment extends Fragment implements
         set.start();
     }
 
-    private void setupFab(Palette.Swatch swatch) {
+    private void setupFab(@Nullable Palette.Swatch swatch) {
         //StopPickerAdapter pickerAdapter = new StopPickerAdapter(this, stopsArray);
         //pickerList.setLayoutManager(new LinearLayoutManager(getContext()));
         //pickerList.setAdapter(pickerAdapter);
-        fab.setBackgroundTintList(ColorStateList.valueOf(swatch.getRgb()));
-        VectorDrawable drawable = (VectorDrawable) fab.getDrawable();
-        drawable.setTint(swatch.getBodyTextColor());
+        if (swatch != null){
+            fab.setBackgroundTintList(ColorStateList.valueOf(swatch.getRgb()));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                VectorDrawableCompat drawableCompat = (VectorDrawableCompat) fab.getDrawable();
+                drawableCompat.setTint(swatch.getBodyTextColor());
+            } else {
+                VectorDrawable drawable = (VectorDrawable) fab.getDrawable();
+                drawable.setTint(swatch.getBodyTextColor());
+            }
+        }
         fab.show();
         fab.setOnClickListener(l -> new AlertDialog.Builder(getContext())
                 .setTitle("Select a stop")
@@ -462,44 +488,6 @@ public class TimetableFragment extends Fragment implements
         };
     }
 
-    /*   /**
-     * Animates the FAB and raises the snackbar.
-     * <p>
-     * When this method completes, the FAB is then hidden. This behavior is because the vector
-     * animation cannot be reversed. This should be kept even after Android O is released as this is
-     * a workaround for API 25 </P>
-     *//*
-    @TargetApi(Build.VERSION_CODES.N_MR1)
-    private void showConfirmAnimation() {
-        Snackbar snackbar = Snackbar.make(layout, "Shortcut created", Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
-        final AnimatedVectorDrawable vectorDrawable = (AnimatedVectorDrawable) floatingActionButton.getDrawable();
-        final ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), getContext().getColor(R.color.accent)
-                , getContext().getColor(R.color.fab_confirm));
-        animator.addUpdateListener(animation -> {
-            int color = (int) animator.getAnimatedValue();
-            floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(color));
-        });
-        animator.start();
-        vectorDrawable.start();
-        snackbar.show();
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                if (floatingActionButton != null) {
-                    floatingActionButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                        @Override
-                        public void onHidden(FloatingActionButton fab) {
-                            super.onHidden(fab);
-                            vectorDrawable.reset();
-                            animator.reverse();
-                        }
-                    });
-                }
-                super.onDismissed(transientBottomBar, event);
-            }
-        });
-    }*/
 
     @Override
     public void onResume() {
