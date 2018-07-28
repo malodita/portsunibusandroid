@@ -16,14 +16,13 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '27.0.3'
 
 
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        //DO NOT UPDATE THE VERSION CODE UNLESS YOU CHANGE THE DATABASE
         versionCode 6
         versionName "6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -55,7 +54,6 @@ dependencies {
     api "com.google.android.gms:play-services-maps:$googlePlayServices_version"
     api "com.google.android.gms:play-services-location:$googlePlayServices_version"
     testImplementation 'junit:junit:4.12'
-    api 'com.github.daolq3012:AssetSQLiteOpenHelper:1.0'
     api 'com.squareup.retrofit2:retrofit:2.1.0'
     api 'com.squareup.retrofit2:converter-gson:2.1.0'
     api "android.arch.lifecycle:extensions:$lifecycle_version"

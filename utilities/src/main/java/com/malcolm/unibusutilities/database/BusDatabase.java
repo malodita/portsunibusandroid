@@ -6,20 +6,11 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
-import com.fstyle.library.helper.AssetSQLiteOpenHelperFactory;
 import com.malcolm.unibusutilities.entity.Bus;
 import com.malcolm.unibusutilities.helper.TermDateUtils;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Calendar;
 
 @Database(entities = Bus.class, exportSchema = false, version = 6)
@@ -30,7 +21,6 @@ public abstract class BusDatabase extends RoomDatabase {
     private static final String DB_WEEKDAY_NAME = "timetable_weekday_normal.sqlite";
     private static final String DB_HOLIDAY_NAME = "timetable_holiday.sqlite";
     private static final String DB_WEEKDAY_WED_NAME = "timetable_weekday_wednesday.sqlite";
-    private static String DB_PATH;
     private static final String DB_NAME = getDBName();
     private static volatile BusDatabase instance = null;
     public abstract Bus.BusDao busDao();
@@ -290,10 +280,6 @@ public abstract class BusDatabase extends RoomDatabase {
 
     // FIXME: 04/07/2018 First run crashes.
     public synchronized static BusDatabase getInstance(Context context){
-        DB_PATH = ContextCompat.getDataDir(context) + "/databases/";
-        if (!checkDatabase()){
-            copyDatabase(context);
-        }
         if (instance == null){
             instance = createRoomDatabase(context.getApplicationContext());
         }
@@ -305,7 +291,14 @@ public abstract class BusDatabase extends RoomDatabase {
                 Room.databaseBuilder(context.getApplicationContext()
                         , BusDatabase.class, DB_NAME)
                         .allowMainThreadQueries()
-                        .addMigrations(defaultMigration);
+                        .addMigrations(defaultMigration)
+                        .addCallback(new Callback() {
+                            @Override
+                            public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                                new Thread(() -> populateDatabase(db)).start();
+                                super.onCreate(db);
+                            }
+                        });
         switch (DB_NAME) {
             case DB_HOLIDAY_NAME:
                 builder.addMigrations(enhancedMigrationHoliday);
@@ -320,10 +313,26 @@ public abstract class BusDatabase extends RoomDatabase {
                 builder.addMigrations(enhancedMigrationWeekend);
                 break;
         }
-        return (builder.openHelperFactory(new AssetSQLiteOpenHelperFactory()).build());
+        return builder.build();
     }
 
-
+    private static void populateDatabase(SupportSQLiteDatabase database){
+        switch (DB_NAME) {
+            case DB_HOLIDAY_NAME:
+                DatabasePopulater.populateHolidayTimetable(database);
+                break;
+            case DB_WEEKDAY_NAME:
+                DatabasePopulater.populateNormalTimetable(database);
+                break;
+            case DB_WEEKDAY_WED_NAME:
+                DatabasePopulater.populateWednesdayTimetable(database);
+                break;
+            case DB_WEEKEND_NAME:
+                DatabasePopulater.populateWeekendTimetable(database);
+                break;
+        }
+        database.setVersion(1);
+    }
 
     private static String getDBName() {
         Calendar calendar = Calendar.getInstance();
@@ -343,43 +352,6 @@ public abstract class BusDatabase extends RoomDatabase {
             }
         }
         return name;
-    }
-
-    private static boolean checkDatabase() {
-        SQLiteDatabase checkDB = null;
-        try {
-            String myPath = DB_PATH + DB_NAME;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-        } catch (SQLException e) {
-            Log.w(TAG, "Database error, it may not have been created");
-            e.printStackTrace();
-            return false;
-        }
-        if (checkDB != null) {
-            checkDB.close();
-        }
-        return checkDB != null;
-    }
-
-    private static void copyDatabase(Context context){
-        new Thread(() -> {
-            InputStream myInput;
-            try {
-                myInput = context.getAssets().open(DB_NAME);
-                String outFileName = DB_PATH + DB_NAME;
-                OutputStream myOutput = new FileOutputStream(outFileName);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = myInput.read(buffer)) > 0) {
-                    myOutput.write(buffer, 0, length);
-                }
-                myOutput.flush();
-                myOutput.close();
-                myInput.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 
 }
