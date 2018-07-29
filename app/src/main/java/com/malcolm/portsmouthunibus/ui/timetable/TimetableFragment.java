@@ -132,22 +132,22 @@ public class TimetableFragment extends Fragment implements
     }
 
     private void setUpRecyclerView() {
-        int stop = stopNumberGenerator(getStartingStop());
+        viewedStop = stopNumberGenerator(getStartingStop());
         boolean timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
-        TimetableViewModel.Factory factory = new TimetableViewModel.Factory(getActivity().getApplication(), timeFormat, stop);
+        TimetableViewModel.Factory factory = new TimetableViewModel.Factory(getActivity().getApplication(), timeFormat, viewedStop);
         viewModel = ViewModelProviders.of(this, factory).get(TimetableViewModel.class);
         Observer<List<Times>> observer = timesList -> {
             if (adapter == null) {
                 recyclerView.setHasFixedSize(true);
-                adapter = new TimetableFragmentAdapter(getContext(), timesList, stop);
+                adapter = new TimetableFragmentAdapter(getContext(), timesList, viewedStop);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setVisibility(View.VISIBLE);
                 LayoutAnimationController animationController =
                         AnimationUtils.loadLayoutAnimation(getContext(), R.anim.home_appear_animation);
                 recyclerView.setLayoutAnimation(animationController);
-                sharedPreferences.edit().putInt(getString(R.string.preference_last_viewed_stop), stop).apply();
-                generateImage(stop);
+                sharedPreferences.edit().putInt(getString(R.string.preference_last_viewed_stop), viewedStop).apply();
+                generateImage(viewedStop);
             } else {
                 adapter.swapData(timesList, viewedStop);
                 recyclerView.scheduleLayoutAnimation();
@@ -163,7 +163,7 @@ public class TimetableFragment extends Fragment implements
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             favourite.setVisibility(View.VISIBLE);
-            favourite.setOnClickListener(l -> buildDialog(stop));
+            favourite.setOnClickListener(l -> buildDialog(viewedStop));
         }
     }
 
@@ -303,18 +303,18 @@ public class TimetableFragment extends Fragment implements
                 noTimetable.setVisibility(View.VISIBLE);
                 adapter.clearData();
                 viewModel.updateStopList(0, timeFormat);//Reports back as -1 to hide the next stop TextView
-                generateImage(stop);
+                generateImage(viewedStop);
                 return;
             }
         }
         viewedStop = stop;
         String[] array = getContext().getResources().getStringArray(R.array.bus_stops_spinner);
-        viewModel.changeListOfStops(stop, timeFormat);
+        viewModel.changeListOfStops(viewedStop, timeFormat);
         noTimetable.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         if (!TermDateUtils.isWeekendInHoliday() && !TermDateUtils.isBankHoliday()) {
             if (viewModel.getCurrentCountdown().hasActiveObservers()) {
-                viewModel.updateStopList(stop, timeFormat);
+                viewModel.updateStopList(viewedStop, timeFormat);
             } else {
                 viewModel.getCurrentCountdown().observe(this, countdownObserver);
             }
@@ -324,7 +324,7 @@ public class TimetableFragment extends Fragment implements
         firebaseAnalytics.logEvent(getString(R.string.firebase_event_timetable_changed_stop), bundle);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             favourite.setOnClickListener(null);
-            favourite.setOnClickListener(l -> buildDialog(stop));
+            favourite.setOnClickListener(l -> buildDialog(viewedStop));
         }
     }
 

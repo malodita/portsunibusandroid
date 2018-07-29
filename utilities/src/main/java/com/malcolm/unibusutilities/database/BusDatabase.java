@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import com.malcolm.unibusutilities.entity.Bus;
 import com.malcolm.unibusutilities.helper.DatabasePopulater;
 import com.malcolm.unibusutilities.helper.TermDateUtils;
+import com.malcolm.unibusutilities.utils.AppExecutors;
 
 import java.util.Calendar;
 
@@ -25,6 +26,7 @@ public abstract class BusDatabase extends RoomDatabase {
     private static final String DB_NAME = getDBName();
     private static volatile BusDatabase instance = null;
     public abstract Bus.BusDao busDao();
+    private static final AppExecutors appExecutors = AppExecutors.getInstance();
 
     // FIXME: 04/07/2018 First run crashes.
     public synchronized static BusDatabase getInstance(Context context){
@@ -38,16 +40,21 @@ public abstract class BusDatabase extends RoomDatabase {
         android.arch.persistence.room.RoomDatabase.Builder<BusDatabase> builder =
                 Room.databaseBuilder(context.getApplicationContext()
                         , BusDatabase.class, DB_NAME)
-                        .allowMainThreadQueries()
                         .addCallback(new Callback() {
                             @Override
                             public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                                new Thread(() -> populateDatabase(db)).start();
+                                appExecutors.getBackgroundThread().execute(() -> populateDatabase(db));
                                 super.onCreate(db);
                             }
                         });
         switch (DB_NAME) {
             case DB_HOLIDAY_NAME:
+                builder.addMigrations(new Migration(1, 6) {
+                    @Override
+                    public void migrate(@NonNull SupportSQLiteDatabase database) {
+                        DatabasePopulater.migrateHolidayTimetable(database);
+                    }
+                });
                 builder.addMigrations(new Migration(4, 6) {
                     @Override
                     public void migrate(@NonNull SupportSQLiteDatabase database) {
@@ -56,6 +63,12 @@ public abstract class BusDatabase extends RoomDatabase {
                 });
                 break;
             case DB_WEEKDAY_NAME:
+                builder.addMigrations(new Migration(1, 6) {
+                    @Override
+                    public void migrate(@NonNull SupportSQLiteDatabase database) {
+                        DatabasePopulater.migrateNormalTimetable(database);
+                    }
+                });
                 builder.addMigrations(new Migration(4, 6) {
                     @Override
                     public void migrate(@NonNull SupportSQLiteDatabase database) {
@@ -64,6 +77,12 @@ public abstract class BusDatabase extends RoomDatabase {
                 });
                 break;
             case DB_WEEKDAY_WED_NAME:
+                builder.addMigrations(new Migration(1, 6) {
+                    @Override
+                    public void migrate(@NonNull SupportSQLiteDatabase database) {
+                        DatabasePopulater.migrateWednesdayTimetable(database);
+                    }
+                });
                 builder.addMigrations(new Migration(4, 6) {
                     @Override
                     public void migrate(@NonNull SupportSQLiteDatabase database) {
@@ -72,6 +91,12 @@ public abstract class BusDatabase extends RoomDatabase {
                 });
                 break;
             case DB_WEEKEND_NAME:
+                builder.addMigrations(new Migration(1, 6) {
+                    @Override
+                    public void migrate(@NonNull SupportSQLiteDatabase database) {
+                        DatabasePopulater.migrateWeekendTimetable(database);
+                    }
+                });
                 builder.addMigrations(new Migration(4, 6) {
                     @Override
                     public void migrate(@NonNull SupportSQLiteDatabase database) {

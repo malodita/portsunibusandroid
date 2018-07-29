@@ -69,8 +69,8 @@ public class LocationRepository {
                     }
                 }
             };
-            closestStopLiveData.addSource(liveLocation, currentLocationObserver);
         }
+        closestStopLiveData.addSource(liveLocation, currentLocationObserver);
         return closestStopLiveData;
     }
 

@@ -4,7 +4,6 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
@@ -21,14 +20,15 @@ import java.util.List;
 public class TimetableViewModel extends AndroidViewModel {
 
     private final MediatorLiveData<String> countdown;
-    private MutableLiveData<List<Times>> timesLiveData;
+    private MediatorLiveData<List<Times>> timesLiveData;
     private MainRepository repository;
 
     private TimetableViewModel(@NonNull Application application, int stop, boolean is24Hours) {
         super(application);
         repository = ((App) application).getMainRepository();
-        timesLiveData = new MutableLiveData<>();
-        timesLiveData.setValue(repository.getListOfTimesForStop(stop, is24Hours));
+        timesLiveData = new MediatorLiveData<>();
+        //timesLiveData.setValue(repository.findListOfTimesForStop(stop, is24Hours));
+        timesLiveData.addSource(repository.findListOfTimesForStop(stop, is24Hours), timesLiveData::setValue);
         countdown = new MediatorLiveData<>();
         countdown.addSource(repository.getTimetableCountdown(), countdown::setValue);
         if (is24Hours) {
@@ -44,7 +44,7 @@ public class TimetableViewModel extends AndroidViewModel {
      * @param is24Hours If should be reported in 12 or 24 hour format
      */
     void changeListOfStops(int stop, boolean is24Hours){
-        timesLiveData.setValue(repository.getListOfTimesForStop(stop, is24Hours));
+        repository.findListOfTimesForStop(stop, is24Hours);
     }
 
     /**

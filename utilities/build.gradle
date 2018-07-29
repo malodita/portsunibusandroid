@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 
 def lifecycle_version = "1.1.1"
-def room_version = "1.1.0"
+def room_version = "1.1.1"
 def googlePlayServices_version = "11.2.2"
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
@@ -58,9 +58,14 @@ dependencies {
     api 'com.squareup.retrofit2:converter-gson:2.1.0'
     api "android.arch.lifecycle:extensions:$lifecycle_version"
     api "android.arch.persistence.room:runtime:$room_version"
+    api "android.arch.persistence.room:rxjava2:$room_version"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    api 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    api 'io.reactivex.rxjava2:rxjava:2.1.17'
+
+
 }
 repositories {
     mavenCentral()

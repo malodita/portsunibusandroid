@@ -21,6 +21,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class MainRepository {
 
     public static final int NOT_TIMETABLE = 0;
@@ -34,6 +40,7 @@ public class MainRepository {
     private final MutableLiveData<String> focusedCountdown = new MutableLiveData<>();
     private final MutableLiveData<StopAndTime> instantCountdown = new MutableLiveData<>();
     private final MutableLiveData<String> timetableCountdown = new MutableLiveData<>();
+    private final MutableLiveData<List<Times>> liveBusList = new MutableLiveData<>();
     private final LocationRepository locationRepository;
     private List<Bus> buses;
     private Bus.BusDao busDao;
@@ -45,12 +52,8 @@ public class MainRepository {
 
 
     private MainRepository(final BusDatabase database, Application application) {
-        Runnable runnable = () -> {
-
-        };
-        //appExecutors.getBackgroundThreadExecutor().execute(runnable);
         busDao = database.busDao();
-        buses = busDao.getAll();
+
         locationRepository = LocationRepository.getInstance(application);
     }
 
@@ -74,90 +77,147 @@ public class MainRepository {
     }
 
     public void fetchListForInstantCountdown() {
-        if (locationLiveData == null) {
-            locationLiveData = new MediatorLiveData<>();
-            locationObserver = location -> {
-                if (location != null) {
-                    if (!location.getProvider().equals("null")) {
-                        if (location.getProvider().equals("IMS Eastney") && TermDateUtils.isHoliday() || TermDateUtils.isWeekend()) {
-                            instantCountdown.setValue(null);
+        Single<List<Bus>> single = Single.fromCallable(() -> busDao.getAll());
+        single.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Bus>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Bus> buses) {
+                        if (locationLiveData == null) {
+                            locationLiveData = new MediatorLiveData<>();
+                            locationObserver = location -> {
+                                if (location != null) {
+                                    if (!location.getProvider().equals("null")) {
+                                        if (location.getProvider().equals("IMS Eastney") && TermDateUtils.isHoliday() || TermDateUtils.isWeekend()) {
+                                            instantCountdown.setValue(null);
+                                            return;
+                                        }
+                                        List<Integer> list = new ArrayList<>();
+                                        for (int i = 0; i < buses.size(); i++) {
+                                            Integer integer = (buses.get(i).get(location.getProvider()));
+                                            if (integer != null) {
+                                                list.add(integer);
+                                            }
+                                        }
+                                        if (instantStop == null) {
+                                            instantStop = new InstantRunnable(MainRepository.this, list, location.getProvider());
+                                            handler.post(instantStop);
+                                        } else {
+                                            handler.removeCallbacks(instantStop);
+                                            instantStop.setList(list, location.getProvider());
+                                            handler.post(instantStop);
+                                        }
+                                        instantStop.setRunning(true);
+                                    } else {
+                                        instantCountdown.setValue(null);
+                                        if (instantStop != null && instantStop.isRunning()) {
+                                            handler.removeCallbacks(instantStop);
+                                            instantStop.setRunning(false);
+                                        }
+                                    }
+                                }
+                            };
+                        }
+                        locationRepository.getClosestStop().observeForever(locationObserver);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    public void fetchListForTimetableCountdown(int stop, int hours) {
+        Single<List<Bus>> single = Single.fromCallable(() -> busDao.getAll());
+        single.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Bus>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Bus> buses) {
+                        if (stop < 0) {
+                            timetableCountdown.setValue("-1");
+                            if (timetableStop != null) {
+                                handler.removeCallbacks(timetableStop);
+                            }
                             return;
                         }
                         List<Integer> list = new ArrayList<>();
                         for (int i = 0; i < buses.size(); i++) {
-                            Integer integer = (buses.get(i).get(location.getProvider()));
+                            Integer integer = (buses.get(i).get(stop));
                             if (integer != null) {
                                 list.add(integer);
                             }
                         }
-                        if (instantStop == null) {
-                            instantStop = new InstantRunnable(MainRepository.this, list, location.getProvider());
-                            handler.post(instantStop);
+                        if (timetableStop == null) {
+                            timetableStop = new TimeRunnable(MainRepository.this, list, hours);
+                            handler.post(timetableStop);
                         } else {
-                            handler.removeCallbacks(instantStop);
-                            instantStop.setList(list, location.getProvider());
-                            handler.post(instantStop);
-                        }
-                        instantStop.setRunning(true);
-                    } else {
-                        instantCountdown.setValue(null);
-                        if (instantStop != null && instantStop.isRunning()) {
-                            handler.removeCallbacks(instantStop);
-                            instantStop.setRunning(false);
+                            timetableStop.setList(list, hours);
+                            handler.post(timetableStop);
                         }
                     }
-                }
-            };
-            locationRepository.getClosestStop().observeForever(locationObserver);
-        }
-    }
 
-    public void fetchListForTimetableCountdown(int stop, int hours) {
-        if (stop < 0) {
-            timetableCountdown.setValue("-1");
-            if (timetableStop != null) {
-                handler.removeCallbacks(timetableStop);
-            }
-            return;
-        }
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < buses.size(); i++) {
-            Integer integer = (buses.get(i).get(stop));
-            if (integer != null) {
-                list.add(integer);
-            }
-        }
-        if (timetableStop == null) {
-            timetableStop = new TimeRunnable(this, list, hours);
-            handler.post(timetableStop);
-        } else {
-            timetableStop.setList(list, hours);
-            handler.post(timetableStop);
-        }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
     }
 
     public void fetchListForFocusedCountdown(int stop, int hours) {
-        if (stop < 0) {
-            focusedCountdown.setValue("-1");
-            if (focusedStop != null) {
-                handler.removeCallbacks(focusedStop);
-            }
-            return;
-        }
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < buses.size(); i++) {
-            Integer integer = (buses.get(i).get(stop));
-            if (integer != null) {
-                list.add(integer);
-            }
-        }
-        if (focusedStop == null) {
-            focusedStop = new TimeRunnable(this, list, hours);
-            handler.post(focusedStop);
-        } else {
-            focusedStop.setList(list, hours);
-            handler.post(focusedStop);
-        }
+        //Single<List<Bus>> single = Single.just(busDao.getAll());
+        Single<List<Bus>> single = Single.fromCallable(() -> busDao.getAll());
+        single.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Bus>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Bus> buses) {
+                        if (stop < 0) {
+                            focusedCountdown.setValue("-1");
+                            if (focusedStop != null) {
+                                handler.removeCallbacks(focusedStop);
+                            }
+                            return;
+                        }
+                        List<Integer> list = new ArrayList<>();
+                        for (int i = 0; i < buses.size(); i++) {
+                            Integer integer = (buses.get(i).get(stop));
+                            if (integer != null) {
+                                list.add(integer);
+                            }
+                        }
+                        if (focusedStop == null) {
+                            focusedStop = new TimeRunnable(MainRepository.this, list, hours);
+                            handler.post(focusedStop);
+                        } else {
+                            focusedStop.setList(list, hours);
+                            handler.post(focusedStop);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
     }
 
     public void stopObservingInstantStop() {
@@ -190,11 +250,53 @@ public class MainRepository {
      * @return A list of times for one bus
      */
     public List<Times> getDataForList(int busId, boolean is24Hours) {
-//        Runnable runnable = () -> listCursor = busDao.getBusDetailCursor(busId);
-//        appExecutors.getBackgroundThreadExecutor().execute(runnable);
-        Cursor listCursor = busDao.getBusDetailCursor(busId);
+        Single<Cursor> cursorSingle = Single.fromCallable(() -> busDao.getBusDetailCursor(busId));
         List<Times> array = new ArrayList<>();
-        if (listCursor != null) {
+        cursorSingle.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Cursor>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onSuccess(Cursor listCursor) {
+                        if (listCursor != null) {
+                            if (listCursor.moveToFirst()) {
+                                for (int i = 1; i < listCursor.getColumnCount(); i++) {
+                                    if (listCursor.getString(i) != null) {
+                                        Times times = new Times();
+                                        switch (listCursor.getColumnName(i)) {
+                                            case "Langstone Campus (for Departures only)":
+                                                times.setDestination("Langstone Campus");
+                                                break;
+                                            case "Langstone Campus (for Arrivals only)":
+                                                times.setDestination("Langstone Campus");
+                                                break;
+                                            case "Cambridge Road (adj Student Union for Arrivals only)":
+                                                times.setDestination("Cambridge Road (Student Union)");
+                                                break;
+                                            default:
+                                                times.setDestination(listCursor.getColumnName(i));
+                                                break;
+                                        }
+                                        times.setTime(DatabaseUtils.formatTime(listCursor.getString(i), is24Hours));
+                                        array.add(times);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+        return array;
+        //Cursor listCursor = busDao.getBusDetailCursor(busId);
+        //List<Times> array = new ArrayList<>();
+/*        if (listCursor != null) {
             if (listCursor.moveToFirst()) {
                 for (int i = 1; i < listCursor.getColumnCount(); i++) {
                     if (listCursor.getString(i) != null) {
@@ -219,7 +321,7 @@ public class MainRepository {
                 }
             }
         }
-        return array;
+        return array;*/
     }
 
     /**
@@ -232,34 +334,48 @@ public class MainRepository {
      * @return A list of times for one stop
      */
     @SuppressWarnings("unchecked")
-    public List<Times> getListOfTimesForStop(int stop, boolean is24Hours) {
-        //Runnable runnable = () -> stopCursor = busDao.getAllCursor();
-        //appExecutors.getBackgroundThreadExecutor().execute(runnable);
-        //private final AppExecutors appExecutors = new AppExecutors();
-        Cursor stopCursor = busDao.getAllCursor();
+    public LiveData<List<Times>> findListOfTimesForStop(int stop, boolean is24Hours) {
         if (stop == -1){
             stop++;
         }
-        ArrayList<Times> array = new ArrayList();
-        if (stopCursor != null) {
-            if (stopCursor.moveToFirst()) {
-                do {
-                    if (stopCursor.getString(stop) != null) {
-                        Times times = DatabaseUtils.createTime(stop, stopCursor, is24Hours);
-                        if (stopCursor.getInt(0) == 48 && stop >= 7) {
-                            //Checks to see if last row (Which should only be seen for return bus). Hardcoded value.
-                            array.add(times);
-                        } else {
-                            array.add(times);
+        Single<Cursor> single = Single.fromCallable(() -> busDao.getAllCursor());
+        int finalStop = stop;
+        single.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Cursor>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onSuccess(Cursor stopCursor) {
+                        ArrayList<Times> array = new ArrayList();
+                        if (stopCursor != null) {
+                            if (stopCursor.moveToFirst()) {
+                                do {
+                                    if (stopCursor.getString(finalStop) != null) {
+                                        Times times = DatabaseUtils.createTime(finalStop, stopCursor, is24Hours);
+                                        if (stopCursor.getInt(0) == 48 && finalStop >= 7) {
+                                            //Checks to see if last row (Which should only be seen for return bus). Hardcoded value.
+                                            array.add(times);
+                                        } else {
+                                            array.add(times);
+                                        }
+                                    }
+                                } while (stopCursor.moveToNext());
+                            }
+                            liveBusList.postValue(array);
                         }
                     }
-                } while (stopCursor.moveToNext());
-            }
-        } else {
-            return null;
-        }
-        return array;
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+        return liveBusList;
     }
+
 
     private final class TimeRunnable implements Runnable {
 

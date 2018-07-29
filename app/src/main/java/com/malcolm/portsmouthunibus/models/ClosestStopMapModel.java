@@ -107,13 +107,13 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
                 break;
                 default:
                     holder.layout.setVisibility(View.VISIBLE);
-/*                    holder.mapView.onCreate(null);
+                    holder.mapView.onCreate(null);
                     if (googleMap != null) {
                         setUpGoogleMap(googleMap);
                     } else {
                         holder.mapView.getMapAsync(this);
                     }
-                    holder.mapView.onResume();*/
+                    holder.mapView.onResume();
                     break;
         }
     }
@@ -157,6 +157,7 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
             TimeUtils.markStop(googleMap, null, null, targetLocation);
             start.distanceTo(end);
             holder.timeHero.setText(TimeUtils.setTimeAndDistanceToClosestStop(-1.0, start.distanceTo(end)));
+            holder.navigateButton.setVisibility(View.GONE);
         } else {
             String summary = directionsApi.getRoutes().get(0).getSummary(); //Not currently used. Gets route summary
             String polyline = directionsApi.getRoutes().get(0).getOverviewPolyline().getPoints();
@@ -166,14 +167,15 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
             holder.timeHero.setText(TimeUtils.setTimeAndDistanceToClosestStop(time, -1));
             int last = (decodedList.size() - 1);
             targetLocation = new LatLng(decodedList.get(last).latitude, decodedList.get(last).longitude);
+
+            holder.navigateButton.setOnClickListener(l -> {
+                String string = "geo:0,0?q=" + targetLocation.latitude +
+                        "," + targetLocation.longitude + "(Nearest Stop)";
+                Uri uri = Uri.parse(string);
+                Intent i = new Intent(Intent.ACTION_VIEW, uri);
+                holder.timeHero.getContext().getApplicationContext().startActivity(i);
+            });
         }
-        holder.navigateButton.setOnClickListener(l -> {
-            String string = "geo:0,0?q=" + targetLocation.latitude +
-                    "," + targetLocation.longitude + "(Nearest Stop)";
-            Uri uri = Uri.parse(string);
-            Intent i = new Intent(Intent.ACTION_VIEW, uri);
-            holder.timeHero.getContext().getApplicationContext().startActivity(i);
-        });
         this.googleMap = googleMap;
     }
 
