@@ -167,6 +167,8 @@ public class TimetableFragment extends Fragment implements
         }
     }
 
+
+
     @Override
     public void onSuccess() {
         Drawable drawable = stopImage.getDrawable();
@@ -488,7 +490,6 @@ public class TimetableFragment extends Fragment implements
         };
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -517,8 +518,8 @@ public class TimetableFragment extends Fragment implements
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroyView();
         unbinder.unbind();
     }
 

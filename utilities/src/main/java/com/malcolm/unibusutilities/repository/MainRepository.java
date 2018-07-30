@@ -177,7 +177,6 @@ public class MainRepository {
     }
 
     public void fetchListForFocusedCountdown(int stop, int hours) {
-        //Single<List<Bus>> single = Single.just(busDao.getAll());
         Single<List<Bus>> single = Single.fromCallable(() -> busDao.getAll());
         single.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

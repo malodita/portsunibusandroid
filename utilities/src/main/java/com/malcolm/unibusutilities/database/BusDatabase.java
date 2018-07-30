@@ -7,6 +7,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.malcolm.unibusutilities.entity.Bus;
 import com.malcolm.unibusutilities.helper.DatabasePopulater;
@@ -23,31 +24,44 @@ public abstract class BusDatabase extends RoomDatabase {
     private static final String DB_WEEKDAY_NAME = "timetable_weekday_normal.sqlite";
     private static final String DB_HOLIDAY_NAME = "timetable_holiday.sqlite";
     private static final String DB_WEEKDAY_WED_NAME = "timetable_weekday_wednesday.sqlite";
-    private static final String DB_NAME = getDBName();
     private static volatile BusDatabase instance = null;
+    private static String currentName;
     public abstract Bus.BusDao busDao();
     private static final AppExecutors appExecutors = AppExecutors.getInstance();
 
-    // FIXME: 04/07/2018 First run crashes.
+    // FIXME: 04/07/2018 dynamic database loading needed
     public synchronized static BusDatabase getInstance(Context context){
         if (instance == null){
-            instance = createRoomDatabase(context.getApplicationContext());
+            currentName = getDBName();
+            instance = createRoomDatabase(context.getApplicationContext(), currentName);
+        } else {
+            if (!currentName.equals(getDBName()) && instance.isOpen()){
+                instance.close();
+                currentName = getDBName();
+                instance = createRoomDatabase(context.getApplicationContext(), currentName);
+            }
         }
         return instance;
     }
 
-    private static BusDatabase createRoomDatabase(Context context){
+    private static BusDatabase createRoomDatabase(Context context, String name){
         android.arch.persistence.room.RoomDatabase.Builder<BusDatabase> builder =
                 Room.databaseBuilder(context.getApplicationContext()
-                        , BusDatabase.class, DB_NAME)
+                        , BusDatabase.class, name)
                         .addCallback(new Callback() {
                             @Override
                             public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                                appExecutors.getBackgroundThread().execute(() -> populateDatabase(db));
+                                appExecutors.getBackgroundThread().execute(() -> populateDatabase(db, name));
                                 super.onCreate(db);
                             }
+
+                            @Override
+                            public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                                Log.d(TAG, "onOpen: " + db.getPath());
+                                super.onOpen(db);
+                            }
                         });
-        switch (DB_NAME) {
+        switch (name) {
             case DB_HOLIDAY_NAME:
                 builder.addMigrations(new Migration(1, 6) {
                     @Override
@@ -108,8 +122,8 @@ public abstract class BusDatabase extends RoomDatabase {
         return builder.build();
     }
 
-    private static void populateDatabase(SupportSQLiteDatabase database){
-        switch (DB_NAME) {
+    private static void populateDatabase(SupportSQLiteDatabase database, String name){
+        switch (name) {
             case DB_HOLIDAY_NAME:
                 DatabasePopulater.populateHolidayTimetable(database);
                 break;

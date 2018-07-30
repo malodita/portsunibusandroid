@@ -76,6 +76,7 @@
     <string name="preferences_shortcuts_reset" translatable="false">com.malcolm.portsmouthunibus.shortcuts</string>
     <string name="preferences_24hourclock" translatable="false">com.malcolm.portsmouthunibus.24hourclock</string>
     <string name="preference_last_viewed_stop" translatable="false">com.malcolm.portsmouthunibus.lastviewed</string>
+    <string name="preferences_transient_last_image_viewed" translatable="false">com.malcolm.portsmouthunibus.transient.image</string>
 
     <string-array name="preferences_night_mode_list">
         <item>Automatic</item>

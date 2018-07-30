@@ -27,7 +27,6 @@ public class TimetableViewModel extends AndroidViewModel {
         super(application);
         repository = ((App) application).getMainRepository();
         timesLiveData = new MediatorLiveData<>();
-        //timesLiveData.setValue(repository.findListOfTimesForStop(stop, is24Hours));
         timesLiveData.addSource(repository.findListOfTimesForStop(stop, is24Hours), timesLiveData::setValue);
         countdown = new MediatorLiveData<>();
         countdown.addSource(repository.getTimetableCountdown(), countdown::setValue);
