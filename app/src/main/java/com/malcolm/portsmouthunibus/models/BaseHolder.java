@@ -1,10 +1,10 @@
 package com.malcolm.portsmouthunibus.models;
 
-import android.support.annotation.CallSuper;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyHolder;
 
+import androidx.annotation.CallSuper;
 import butterknife.ButterKnife;
 
 /**

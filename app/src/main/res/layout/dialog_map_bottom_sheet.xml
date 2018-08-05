@@ -1,62 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background"
-    android:padding="16dp">
+    android:background="@color/card_background">
 
     <ImageView
         android:id="@+id/map_sheet_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginEnd="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/eastney"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/map_sheet_navigate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="@+id/map_sheet_title"/>
 
     <TextView
         android:id="@+id/map_sheet_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="?attr/textAppearanceHeadline5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textColor="@color/textview_secondary_color"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="none"
+        android:maxLines="2"
+        app:autoSizeMaxTextSize="24.24sp"
+        app:autoSizeMinTextSize="16sp"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/map_sheet_detail"
+        app:layout_constraintEnd_toStartOf="@+id/map_sheet_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="IMS Eastney"
-        />
+        app:layout_constraintVertical_chainStyle="spread"
+        tools:ignore="EllipsizeMaxLines"
+        tools:text="Goldsmith Avenue (Pompey Centre)"/>
 
     <TextView
         android:id="@+id/map_sheet_detail"
+        style="?attr/textAppearanceCaption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="16dp"
-        android:textColor="@color/textview_secondary_color"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@id/map_sheet_navigate"
-        app:layout_constraintEnd_toStartOf="@+id/map_sheet_image"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/map_sheet_title"
+        app:layout_constraintStart_toStartOf="@+id/map_sheet_title"
         app:layout_constraintTop_toBottomOf="@+id/map_sheet_title"
         tools:text="For the Institute of Marine Sciences"/>
 
     <Button
         android:id="@+id/map_sheet_navigate"
-        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.IconButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/rubik_medium"
-        android:text="@string/navigate"
+        android:text="@string/directions"
         android:textAllCaps="true"
         android:textColor="@color/button"
+        app:icon="@drawable/ic_directions_walk_black_24dp"
+        app:iconTint="@color/button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/map_sheet_detail"
         app:layout_constraintTop_toBottomOf="@id/map_sheet_detail"
-        />
-</android.support.constraint.ConstraintLayout>
+        app:strokeColor="@color/button"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

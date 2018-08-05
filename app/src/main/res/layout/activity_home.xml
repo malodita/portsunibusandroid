@@ -8,26 +8,30 @@
     android:clipToPadding="false"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:elevation="4dp"
-        android:theme="@style/AppTheme.ActionBar"
-        tools:text="Uni Bus"/>
+        app:titleTextAppearance="?attr/toolbarStyle"
+        app:subtitleTextAppearance="?attr/textAppearanceCaption"
+        style="?attr/toolbarStyle">
 
-    <android.support.design.widget.BottomNavigationView
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_bar_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_height"
         android:layout_alignParentBottom="true"
         android:elevation="8dp"
+        android:background="@color/background"
         app:itemIconTint="@color/selection_color"
         app:itemTextColor="@color/selection_color"
         app:menu="@menu/bottom_bar_tabs"/>
 
-        <android.support.design.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"

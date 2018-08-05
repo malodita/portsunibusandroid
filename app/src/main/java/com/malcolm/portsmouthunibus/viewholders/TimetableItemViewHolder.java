@@ -3,9 +3,6 @@ package com.malcolm.portsmouthunibus.viewholders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,6 +10,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.ui.detail.DetailActivity;
 
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

@@ -55,10 +55,8 @@
         <SwitchPreference
             android:title="Allow crash reporting and analytics."
             android:key="@string/preferences_analytics"
-            android:summaryOn="Allow crash reporting and analytics to be collected. This is used to improve the app and not
-            to identify users or for advertising."
-            android:summaryOff="Analytics and crash reporting will not be collected from this device. Please consider enabling this
-            as it allows for more improvements to be made to the app."/>
+            android:summaryOn="@string/preferences_analytics_on"
+            android:summaryOff="@string/preferences_analytics_off"/>
         <Preference android:title="About">
             <intent
                 android:action="android.intent.action.VIEW"

@@ -1,11 +1,11 @@
 package com.malcolm.unibusutilities.entity;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.Query;
+import androidx.lifecycle.LiveData;
+import androidx.room.ColumnInfo;
+import androidx.room.Dao;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.Query;
 import android.database.Cursor;
 
 import java.util.List;

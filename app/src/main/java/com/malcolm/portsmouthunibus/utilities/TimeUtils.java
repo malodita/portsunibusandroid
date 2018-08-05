@@ -2,8 +2,6 @@ package com.malcolm.portsmouthunibus.utilities;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,7 +11,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * This class contains some useful methods relating to formatting time and displaying maps and information
@@ -122,33 +121,12 @@ public final class TimeUtils {
      *
      * @param map The googlemap to be edited.
      */
-    public static void markStop(@NonNull GoogleMap map, Double time, List<LatLng> list,
-                                @Nullable LatLng singleLocation) {
-        if (singleLocation != null) {
+    public static void markStop(GoogleMap map,@NonNull LatLng singleLocation) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(singleLocation, 16f));
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(singleLocation);
             map.addMarker(markerOptions);
-        } else {
-            String formattedTime = formatTime(time.intValue());
-            int last = (list.size() - 1);
-            LatLng targetLocation = list.get(last);
-            if (Integer.valueOf(formattedTime) <= 2) {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 15f));
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(targetLocation);
-                map.addMarker(markerOptions);
-            } else {
-                if (Integer.valueOf(formattedTime) > 12) {
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 13f));
-                } else {
-                    MarkerOptions markerOptions = new MarkerOptions()
-                            .position(targetLocation);
-                    map.addMarker(markerOptions);
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 14f));
-                }
-            }
-        }
+
     }
 
     /**

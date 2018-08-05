@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/card_background"
+    android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical">
     
     <TextView
         android:layout_width="match_parent"
-        android:theme="@style/AppTheme"
-        android:textSize="@dimen/text_primary_size"
+        style="?attr/textAppearanceOverline"
         android:gravity="center|start"
-        android:textColor="@color/textview_secondary_color"
         android:layout_height="56dp"
         android:text="@string/select_default_stop"
         android:paddingLeft="@dimen/margin"
         android:paddingRight="@dimen/margin"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
+        tools:listitem="@layout/list_item_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler_view"

@@ -7,13 +7,12 @@
 
     <TextView
         android:id="@+id/picker_text"
-        style="?android:attr/spinnerItemStyle"
+        style="?attr/textAppearanceBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:maxLines="1"
         android:textAlignment="inherit"
-        android:textColor="?android:attr/textColorTertiary"
         android:layout_margin="@dimen/margin"
         tools:text="Goldsmith Avenue adj Lidl"
         tools:ignore="EllipsizeMaxLines"/>

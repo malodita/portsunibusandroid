@@ -6,8 +6,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,29 +21,18 @@ import android.graphics.drawable.Icon;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.graphics.drawable.VectorDrawableCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.BuildConfig;
 import com.malcolm.portsmouthunibus.R;
@@ -60,6 +47,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -67,7 +68,7 @@ import butterknife.Unbinder;
 
 public class TimetableFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener, StopPickerAdapter.StopSelectedListener,
-        DialogInterface.OnClickListener, Callback, Palette.PaletteAsyncListener {
+        Callback, Palette.PaletteAsyncListener {
 
     private static final String TAG = "TimetableFragment";
     Unbinder unbinder;
@@ -87,17 +88,16 @@ public class TimetableFragment extends Fragment implements
     private int currentIconColor;
 
     @BindView(R.id.top_favourite)
-    ImageButton favourite;
+    MaterialButton favourite;
     @BindView(R.id.top_image)
     ImageView stopImage;
     @BindView(R.id.top_layout_card)
     CardView topCard;
 
-    //@BindView(R.id.picker_recycler_view)
-    //RecyclerView pickerList;
-    //@BindView(R.id.scrim)
-    //View scrim;
-    // TODO: 11/07/2018 Enable with final components release
+    @BindView(R.id.picker_recycler_view)
+    RecyclerView pickerList;
+    @BindView(R.id.scrim)
+    View scrim;
     private TimetableFragmentAdapter adapter;
     private FirebaseAnalytics firebaseAnalytics;
     private SharedPreferences sharedPreferences;
@@ -124,7 +124,6 @@ public class TimetableFragment extends Fragment implements
 
         }
         View rootView = inflater.inflate(R.layout.fragment_timetable, container, false);
-        // TODO: 27/07/2018 change back to butterknife binding
         unbinder = ButterKnife.bind(this, rootView);
         stopsArray = getResources().getStringArray(R.array.bus_stops_spinner);
         setUpRecyclerView();
@@ -160,10 +159,6 @@ public class TimetableFragment extends Fragment implements
             viewModel.getCurrentCountdown().observe(this, countdownObserver);
         } else {
             topLayoutNextBus.setText(getString(R.string.error_no_buses_scheduled));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            favourite.setVisibility(View.VISIBLE);
-            favourite.setOnClickListener(l -> buildDialog(viewedStop));
         }
     }
 
@@ -202,7 +197,9 @@ public class TimetableFragment extends Fragment implements
                 topLayoutNextBus.setTextColor(swatch.getTitleTextColor());
                 topLayoutStop.setTextColor(swatch.getBodyTextColor());
                 currentIconColor = swatch.getTitleTextColor();
-                favourite.getDrawable().setTint(currentIconColor);
+                favourite.getIcon().setTint(swatch.getTitleTextColor());
+                favourite.setTextColor(swatch.getTitleTextColor());
+                favourite.setStrokeColor(ColorStateList.valueOf(swatch.getTitleTextColor()));
                 setupFab(swatch);
                 animateCardVisibility();
             } else {
@@ -210,21 +207,44 @@ public class TimetableFragment extends Fragment implements
             }
         } else {
             swatch = palette.getVibrantSwatch();
-            if (topCard.getVisibility() != View.VISIBLE) {
-                topCard.setCardBackgroundColor(swatch.getRgb());
-                topLayoutNextBus.setTextColor(swatch.getTitleTextColor());
-                topLayoutStop.setTextColor(swatch.getBodyTextColor());
-                currentIconColor = swatch.getTitleTextColor();
-                favourite.getDrawable().setTint(currentIconColor);
-                setupFab(swatch);
-                animateCardVisibility();
-            } else {
-                animateColorChanges(swatch);
+            if (swatch != null) {
+                if (topCard.getVisibility() != View.VISIBLE) {
+                    topCard.setCardBackgroundColor(swatch.getRgb());
+                    topLayoutNextBus.setTextColor(swatch.getTitleTextColor());
+                    topLayoutStop.setTextColor(swatch.getBodyTextColor());
+                    currentIconColor = swatch.getTitleTextColor();
+                    favourite.getIcon().setTint(swatch.getTitleTextColor());
+                    favourite.setTextColor(swatch.getTitleTextColor());
+                    favourite.setStrokeColor(ColorStateList.valueOf(swatch.getTitleTextColor()));
+                    setupFab(swatch);
+                    animateCardVisibility();
+                } else {
+                    animateColorChanges(swatch);
+                }
             }
         }
     }
 
     private void animateCardVisibility(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            int currentFavourite = sharedPreferences.getInt(getString(R.string.preferences_favourite), -1);
+            if (currentFavourite == viewedStop) {
+                ValueAnimator buttonAnimation = ValueAnimator.ofArgb(favourite.getIconTint().getDefaultColor(),
+                        ContextCompat.getColor(getContext(), R.color.gold));
+                buttonAnimation.addUpdateListener(animation -> {
+                    favourite.setIconTint(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setStrokeColor(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setTextColor(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setText(R.string.favorited);
+                });
+                buttonAnimation.setInterpolator(new FastOutSlowInInterpolator());
+                buttonAnimation.setDuration(200);
+                buttonAnimation.start();
+                favourite.setText(R.string.favorited);
+            }
+            favourite.setVisibility(View.VISIBLE);
+            favourite.setOnClickListener(l -> buildDialog(viewedStop));
+        }
         ValueAnimator visibilityAnimator = ValueAnimator.ofFloat(0f, 1f);
         visibilityAnimator.setDuration(200);
         visibilityAnimator.addUpdateListener(animation -> {
@@ -243,8 +263,6 @@ public class TimetableFragment extends Fragment implements
                 new ArgbEvaluator(), topLayoutNextBus.getTextColors().getDefaultColor(), swatch.getTitleTextColor());
         ObjectAnimator cardAnimation = ObjectAnimator.ofObject(topCard, "cardBackgroundColor",
                 new ArgbEvaluator(), topCard.getCardBackgroundColor().getDefaultColor(), swatch.getRgb());
-        ObjectAnimator imageAnimation = ObjectAnimator.ofObject(favourite.getDrawable(),
-                "tint", new ArgbEvaluator(),currentIconColor, swatch.getBodyTextColor());
         ValueAnimator fabAnimation = ValueAnimator.ofArgb(fab.getBackgroundTintList().getDefaultColor(), swatch.getRgb());
         fabAnimation.addUpdateListener(animation -> fab.setBackgroundTintList(ColorStateList.valueOf((int) animation.getAnimatedValue())));
         ObjectAnimator iconAnimation;
@@ -260,14 +278,39 @@ public class TimetableFragment extends Fragment implements
         AnimatorSet set = new AnimatorSet();
         set.setInterpolator(new FastOutSlowInInterpolator());
         set.setDuration(200);
-        set.playTogether(titleAnimation, textAnimation, cardAnimation, imageAnimation, fabAnimation, iconAnimation);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            int currentFavourite = sharedPreferences.getInt(getString(R.string.preferences_favourite), -1);
+            ValueAnimator buttonAnimation;
+            if (currentFavourite == viewedStop) {
+                buttonAnimation = ValueAnimator.ofArgb(favourite.getIconTint().getDefaultColor(),
+                        ContextCompat.getColor(getContext(), R.color.gold));
+                buttonAnimation.addUpdateListener(animation -> {
+                    favourite.setIconTint(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setStrokeColor(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setTextColor(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setText(R.string.favorited);
+                });
+            } else {
+                buttonAnimation = ValueAnimator.ofArgb(favourite.getIconTint().getDefaultColor(),
+                swatch.getBodyTextColor());
+                buttonAnimation.addUpdateListener(animation -> {
+                    favourite.setIconTint(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setStrokeColor(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setTextColor(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+                    favourite.setText(R.string.set_favourite);
+                });
+            }
+            set.playTogether(titleAnimation, textAnimation, cardAnimation, fabAnimation, iconAnimation, buttonAnimation);
+        } else {
+            set.playTogether(titleAnimation, textAnimation, cardAnimation, fabAnimation, iconAnimation);
+        }
         set.start();
     }
 
     private void setupFab(@Nullable Palette.Swatch swatch) {
-        //StopPickerAdapter pickerAdapter = new StopPickerAdapter(this, stopsArray);
-        //pickerList.setLayoutManager(new LinearLayoutManager(getContext()));
-        //pickerList.setAdapter(pickerAdapter);
+        StopPickerAdapter pickerAdapter = new StopPickerAdapter(this, stopsArray);
+        pickerList.setLayoutManager(new LinearLayoutManager(getContext()));
+        pickerList.setAdapter(pickerAdapter);
         if (swatch != null){
             fab.setBackgroundTintList(ColorStateList.valueOf(swatch.getRgb()));
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -279,55 +322,8 @@ public class TimetableFragment extends Fragment implements
             }
         }
         fab.show();
-        fab.setOnClickListener(l -> new AlertDialog.Builder(getContext())
-                .setTitle("Select a stop")
-                .setItems(R.array.bus_stops_spinner, this)
-                .create()
-                .show());
-        // TODO: 19/06/2018 Enable this when Components stable and remove placeholder
-        //fab.setOnClickListener(l -> fab.setExpanded(!fab.isExpanded()));
-        //scrim.setOnClickListener(l -> fab.setExpanded(false));
-    }
-
-    @Override // TODO: 19/06/2018 Remove when Components stable
-    public void onClick(DialogInterface dialogInterface, int position) {
-        int stop = stopNumberGenerator(position);
-        if (stop == viewedStop){
-            return;
-        }
-        boolean timeFormat = sharedPreferences.getBoolean(getString(R.string.preferences_24hourclock), true);
-        topLayoutStop.setText(stopsArray[position]);
-        if (position == 10) {
-            if (TermDateUtils.isHoliday() || TermDateUtils.isWeekend()) {
-                viewedStop = 1;
-                recyclerView.setVisibility(View.GONE);
-                noTimetable.setText(R.string.error_eastney);
-                noTimetable.setVisibility(View.VISIBLE);
-                adapter.clearData();
-                viewModel.updateStopList(0, timeFormat);//Reports back as -1 to hide the next stop TextView
-                generateImage(viewedStop);
-                return;
-            }
-        }
-        viewedStop = stop;
-        String[] array = getContext().getResources().getStringArray(R.array.bus_stops_spinner);
-        viewModel.changeListOfStops(viewedStop, timeFormat);
-        noTimetable.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
-        if (!TermDateUtils.isWeekendInHoliday() && !TermDateUtils.isBankHoliday()) {
-            if (viewModel.getCurrentCountdown().hasActiveObservers()) {
-                viewModel.updateStopList(viewedStop, timeFormat);
-            } else {
-                viewModel.getCurrentCountdown().observe(this, countdownObserver);
-            }
-        }
-        Bundle bundle = new Bundle();
-        bundle.putString(getString(R.string.firebase_property_stop_id), array[position]);
-        firebaseAnalytics.logEvent(getString(R.string.firebase_event_timetable_changed_stop), bundle);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            favourite.setOnClickListener(null);
-            favourite.setOnClickListener(l -> buildDialog(viewedStop));
-        }
+        fab.setOnClickListener(l -> fab.setExpanded(!fab.isExpanded()));
+        scrim.setOnClickListener(l -> fab.setExpanded(false));
     }
 
     private int getStartingStop() {
@@ -367,7 +363,7 @@ public class TimetableFragment extends Fragment implements
     /**
      * Saves the shortcut chosen by the user
      */
-    @TargetApi(Build.VERSION_CODES.N_MR1)//Todo: Shortcuts currently disabled
+    @TargetApi(Build.VERSION_CODES.N_MR1)
     private void saveShortcut(int stopToSave) {
         String shortcutLong = getResources().getStringArray(R.array.bus_stops_shortcuts_long)[stopToSave];
         String shortcutShort = getResources().getStringArray(R.array.bus_stops_shortcuts_short)[stopToSave];
@@ -391,6 +387,19 @@ public class TimetableFragment extends Fragment implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.isRequestPinShortcutSupported()) {
             manager.requestPinShortcut(shortcutInfo, null);
         }
+        ValueAnimator buttonAnimation = ValueAnimator.ofArgb(favourite.getIconTint().getDefaultColor(),
+                ContextCompat.getColor(getContext(), R.color.gold));
+        buttonAnimation.addUpdateListener(animation -> {
+            favourite.setIconTint(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+            favourite.setStrokeColor(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+            favourite.setTextColor(ColorStateList.valueOf((int) animation.getAnimatedValue()));
+            favourite.setText(R.string.favorited);
+        });
+        buttonAnimation.setInterpolator(new FastOutSlowInInterpolator());
+        buttonAnimation.setDuration(200);
+        buttonAnimation.start();
+        favourite.setText(R.string.favorited);
+        sharedPreferences.edit().putInt(getString(R.string.preferences_favourite), stopToSave).apply();
     }
 
     /**
@@ -421,7 +430,7 @@ public class TimetableFragment extends Fragment implements
 
 
 
-    @Override // TODO: 27/07/2018 Activate when components stable
+    @Override
     public void onStopSelected(int position) {
         int stop = stopNumberGenerator(position);
         if (stop == viewedStop){
@@ -431,23 +440,25 @@ public class TimetableFragment extends Fragment implements
         topLayoutStop.setText(stopsArray[position]);
         if (position == 10) {
             if (TermDateUtils.isHoliday() || TermDateUtils.isWeekend()) {
+                viewedStop = 1;
                 recyclerView.setVisibility(View.GONE);
                 noTimetable.setText(R.string.error_eastney);
                 noTimetable.setVisibility(View.VISIBLE);
                 adapter.clearData();
                 viewModel.updateStopList(0, timeFormat);//Reports back as -1 to hide the next stop TextView
-                generateImage(stop);
+                generateImage(viewedStop);
+                fab.setExpanded(false);
                 return;
             }
         }
         viewedStop = stop;
         String[] array = getContext().getResources().getStringArray(R.array.bus_stops_spinner);
-        viewModel.changeListOfStops(stop, timeFormat);
+        viewModel.changeListOfStops(viewedStop, timeFormat);
         noTimetable.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         if (!TermDateUtils.isWeekendInHoliday() && !TermDateUtils.isBankHoliday()) {
             if (viewModel.getCurrentCountdown().hasActiveObservers()) {
-                viewModel.updateStopList(stop, timeFormat);
+                viewModel.updateStopList(viewedStop, timeFormat);
             } else {
                 viewModel.getCurrentCountdown().observe(this, countdownObserver);
             }
@@ -457,10 +468,9 @@ public class TimetableFragment extends Fragment implements
         firebaseAnalytics.logEvent(getString(R.string.firebase_event_timetable_changed_stop), bundle);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             favourite.setOnClickListener(null);
-            favourite.setOnClickListener(l -> buildDialog(stop));
+            favourite.setOnClickListener(l -> buildDialog(viewedStop));
         }
-        // TODO: 19/06/2018 When Components stable, uncomment
-        // fab.setExpanded(false);
+        fab.setExpanded(false);
     }
 
     private int stopNumberGenerator(int position) {

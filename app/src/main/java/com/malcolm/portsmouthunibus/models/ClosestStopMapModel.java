@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,6 +24,9 @@ import com.malcolm.unibusutilities.entity.DirectionsApi;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresPermission;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import butterknife.BindView;
 
 /**
@@ -154,7 +154,7 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
             Location end = directionsApi.getEndLocation();
             Location start = directionsApi.getStartLocation();
             targetLocation = new LatLng(end.getLatitude(), end.getLongitude());
-            TimeUtils.markStop(googleMap, null, null, targetLocation);
+            TimeUtils.markStop(googleMap, targetLocation);
             start.distanceTo(end);
             holder.timeHero.setText(TimeUtils.setTimeAndDistanceToClosestStop(-1.0, start.distanceTo(end)));
             holder.navigateButton.setVisibility(View.GONE);
@@ -163,11 +163,10 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
             String polyline = directionsApi.getRoutes().get(0).getOverviewPolyline().getPoints();
             double time = directionsApi.getRoutes().get(0).getLegs().get(0).getDuration().getValue();
             final List<LatLng> decodedList = PolyUtil.decode(polyline);
-            TimeUtils.markStop(googleMap, time, decodedList, null);
             holder.timeHero.setText(TimeUtils.setTimeAndDistanceToClosestStop(time, -1));
             int last = (decodedList.size() - 1);
             targetLocation = new LatLng(decodedList.get(last).latitude, decodedList.get(last).longitude);
-
+            TimeUtils.markStop(googleMap, targetLocation);
             holder.navigateButton.setOnClickListener(l -> {
                 String string = "geo:0,0?q=" + targetLocation.latitude +
                         "," + targetLocation.longitude + "(Nearest Stop)";

@@ -1,11 +1,12 @@
 package com.malcolm.unibusutilities.helper;
 
 import android.location.Location;
-import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
 
 /**
  * A small class which holds all the bus stop locations. It exposes static methods

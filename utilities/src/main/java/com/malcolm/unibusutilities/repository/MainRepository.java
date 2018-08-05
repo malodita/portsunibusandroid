@@ -1,14 +1,14 @@
 package com.malcolm.unibusutilities.repository;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.malcolm.unibusutilities.database.BusDatabase;
 import com.malcolm.unibusutilities.entity.Bus;
@@ -48,7 +48,7 @@ public class MainRepository {
     private TimeRunnable timetableStop;
     private InstantRunnable instantStop;
     private MediatorLiveData<Location> locationLiveData;
-    private android.arch.lifecycle.Observer<Location> locationObserver;
+    private androidx.lifecycle.Observer<Location> locationObserver;
 
 
     private MainRepository(final BusDatabase database, Application application) {

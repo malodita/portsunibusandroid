@@ -1,6 +1,6 @@
 package com.malcolm.unibusutilities.helper;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 public class DatabasePopulater {
 

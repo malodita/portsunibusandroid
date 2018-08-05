@@ -1,7 +1,5 @@
 package com.malcolm.portsmouthunibus.models;
 
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +9,8 @@ import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.utilities.ImageGenerator;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import butterknife.BindString;
 import butterknife.BindView;
 
@@ -98,7 +98,7 @@ public class ClosestStopModel extends EpoxyModelWithHolder<ClosestStopModel.Clos
         String nextDeparture;
         @BindString(R.string.home_closest_stop_next_departure_from)
         String nextDepartureStop;
-        @BindString(R.string.error_no_buses)
+        @BindString(R.string.error_no_buses_from_here)
         String stringError;
 
 

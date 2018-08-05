@@ -13,26 +13,16 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.malcolm.portsmouthunibus.BuildConfig;
 import com.malcolm.portsmouthunibus.R;
@@ -49,6 +39,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -97,6 +95,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             ButterKnife.bind(this);
             toolbar.inflateMenu(R.menu.action_bar_items);
             setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            toolbar.setTitle(R.string.app_name);
             if (!onboarding2) {
                 QuickStartBottomSheet sheet = new QuickStartBottomSheet();
                 sheet.setCancelable(false);
@@ -175,7 +175,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 manager.beginTransaction()
                         .replace(R.id.placeholder, fragment, TIMETABLETAG)
                         .commit();
-                toolbar.setTitle(TermDateUtils.getTimetableName());
+                toolbar.setTitle(R.string.timetable);
+                toolbar.setSubtitle(TermDateUtils.getTimetableName());
                 int stopToShow = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), 1);
                 firebaseLog(getString(R.string.firebase_event_home_shortcut_used)
                         , getString(R.string.firebase_property_stop_id), String.valueOf(stopToShow));
@@ -193,7 +194,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                         .beginTransaction()
                         .replace(R.id.placeholder, fragment2, TIMETABLETAG)
                         .commit();
-                toolbar.setTitle(TermDateUtils.getTimetableName());
+                toolbar.setTitle(R.string.timetable);
+                toolbar.setSubtitle(TermDateUtils.getTimetableName());
                 return true;
             default:
                 return false;
@@ -202,7 +204,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
 
     private void startQuickStart(Toolbar toolbar) {
-        TapTargetView.showFor(this, TapTarget.forToolbarMenuItem(toolbar, R.id.default_stop_icon
+        /*TapTargetView.showFor(this, TapTarget.forToolbarMenuItem(toolbar, R.id.default_stop_icon
                 , "Home is where the heart is", "Tap to set your home stop")
                 .targetCircleColor(R.color.primary)
                 .outerCircleColor(R.color.onboarding_2_outer_circle)
@@ -217,7 +219,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 sheet.show(getSupportFragmentManager(), BOTTOMSHEET);
                 super.onTargetClick(view);
             }
-        });
+        });*/
     }
 
     private void startOnboardingSequence(final BottomNavigationView bottomBar){
@@ -322,6 +324,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         switch (item.getItemId()){
             case R.id.tab_place:
                 toolbar.setTitle(R.string.app_name);
+                toolbar.setSubtitle(null);
                 if (homeFragment != null) {
                     homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(HOMEFRAGMENTTAG);
                     ft.attach(homeFragment).commit();
@@ -334,6 +337,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
             case R.id.tab_find:
                 toolbar.setTitle(R.string.local_map);
+                toolbar.setSubtitle(null);
                 if (mapsFragment != null) {
                     mapsFragment = (MapsFragment) getSupportFragmentManager().findFragmentByTag(MAPSTAG);
                     ft.attach(mapsFragment).commit();
@@ -346,7 +350,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 }
                 return true;
             case R.id.tab_timetable:
-                toolbar.setTitle(TermDateUtils.getTimetableName());
+                toolbar.setTitle(R.string.timetable);
+                toolbar.setSubtitle(TermDateUtils.getTimetableName());
                 if (timetableFragment != null) {
                     timetableFragment = (TimetableFragment) getSupportFragmentManager().findFragmentByTag(TIMETABLETAG);
                     ft.attach(timetableFragment).commit();
@@ -362,16 +367,12 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar_items, menu);
+        //todo Long term goal to use custom rubik typeface on menu
         return true;
     }
 
@@ -478,11 +479,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         if (getSupportFragmentManager().findFragmentByTag(TIMETABLETAG) != null &&
                 getSupportFragmentManager().findFragmentByTag(TIMETABLETAG).isVisible()) {
             TimetableFragment fragment = (TimetableFragment) getSupportFragmentManager().findFragmentByTag(TIMETABLETAG);
-            // TODO: 04/07/2018 Enable when components is used
-            /*if (fragment.getFab().isExpanded()){
+            if (fragment.getFab().isExpanded()){
                 fragment.getFab().setExpanded(false);
                 return;
-            }*/
+            }
         }
         super.onBackPressed();
     }

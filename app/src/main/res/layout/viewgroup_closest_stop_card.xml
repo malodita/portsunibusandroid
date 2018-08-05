@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -18,7 +18,8 @@
         android:layout_marginBottom="@dimen/card_spacing_vertical"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
-        tools:layout_editor_absoluteX="8dp">
+        tools:layout_editor_absoluteX="8dp"
+        style="?attr/materialCardViewStyle">
 
         <TextView
             android:id="@+id/closest_stop_error_text"
@@ -28,12 +29,10 @@
             android:paddingLeft="@dimen/activity_margin"
             android:paddingRight="@dimen/activity_margin"
             android:gravity="center"
-            android:textAlignment="center"
-            android:textSize="@dimen/text_title_size"
-            android:textStyle="italic"
+            style="?attr/textAppearanceHeadline6"
             android:visibility="gone"/>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/closest_stop_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -49,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_viewgroup_closest_map_title"
-                android:textAllCaps="true"
+                style="?attr/textAppearanceOverline"
                 app:layout_constraintBottom_toTopOf="@+id/closest_stop_stop_hero"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -58,17 +57,20 @@
 
             <TextView
                 android:id="@+id/closest_stop_stop_hero"
+                style="?attr/textAppearanceHeadline5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
                 android:maxLines="2"
-                app:autoSizeMaxTextSize="18dp"
-                app:autoSizeMinTextSize="12dp"
+                app:autoSizeMaxTextSize="24.24sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="1sp"
+                app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toTopOf="@+id/closest_stop_time_hero"
                 app:layout_constraintEnd_toStartOf="@+id/map_view"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/closest_stop_nearest_stop"
+                app:layout_constraintTop_toTopOf="@+id/map_view"
                 tools:text="Goldsmith Avenue adj Fratton Station"/>
 
             <TextView
@@ -78,14 +80,19 @@
                 app:layout_constraintBottom_toTopOf="@+id/closest_stop_button_nav"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/closest_stop_stop_hero"
+                style="?attr/textAppearanceCaption"
                 tools:text="30 minutes walk"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/closest_stop_button_nav"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.IconButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:text="@string/navigate"
+                android:textColor="@color/button"
+                app:icon="@drawable/ic_navigation_black_24dp"
+                app:iconTint="@color/button"
+                app:strokeColor="@color/button"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -104,5 +111,5 @@
                 map:mapType="none"
                 map:uiCompass="false"/>
 
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>

@@ -1,88 +1,83 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
-        <item name="android:colorAccent">@color/accent</item>
-        <item name="android:textColorPrimary">@color/textview_primary_color</item>
-        <item name="android:textColorPrimaryInverse">@color/textview_inverse_color</item>
-        <item name="android:textColorSecondary">@color/textview_secondary_color</item>
-        <item name="android:statusBarColor">@color/primary_dark</item>
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="android:navigationBarColor">@color/primary_dark</item>
-        <item name="android:popupBackground">@color/background</item>
-        <item name="android:colorBackground">@color/background</item>
-    </style>
+    <!--<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/primary</item>-->
+        <!--<item name="colorPrimaryDark">@color/primary_dark</item>-->
+        <!--<item name="colorAccent">@color/accent</item>-->
+        <!--<item name="android:colorPrimary">@color/primary</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/primary_dark</item>-->
+        <!--<item name="android:colorAccent">@color/accent</item>-->
+        <!--<item name="android:textColorPrimary">@color/textview_primary_color</item>-->
+        <!--<item name="android:textColorPrimaryInverse">@color/textview_inverse_color</item>-->
+        <!--<item name="android:textColorSecondary">@color/textview_secondary_color</item>-->
+        <!--<item name="android:statusBarColor">@color/primary_dark</item>-->
+        <!--<item name="android:windowActivityTransitions">true</item>-->
+        <!--<item name="android:windowContentTransitions">true</item>-->
+        <!--<item name="android:windowAllowEnterTransitionOverlap">true</item>-->
+        <!--<item name="android:windowAllowReturnTransitionOverlap">true</item>-->
+        <!--<item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>-->
+        <!--<item name="android:navigationBarColor">@color/primary_dark</item>-->
+        <!--<item name="android:popupBackground">@color/background</item>-->
+        <!--<item name="android:colorBackground">@color/background</item>-->
+    <!--</style>-->
 
 
 
-<!--    <style name="AppTheme.New.Day" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme.New.Day" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorSecondary">@color/secondaryColor</item>
+        <!--<item name="colorSecondaryDark">@color/secondaryDarkColor</item>-->
         <item name="android:navigationBarColor">@color/primaryColor</item>
-        &lt;!&ndash;<item name="colorSecondaryDark">@color/secondaryDarkColor</item>&ndash;&gt;
-        &lt;!&ndash;Todo: Continue working on new theme colours and fonts, enable when components stable
         <item name="android:textColorPrimary">@color/textview_primary_color</item>
         <item name="android:textColorPrimaryInverse">@color/textview_inverse_color</item>
         <item name="android:textColorSecondary">@color/textview_secondary_color</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:popupBackground">@color/background</item>
         <item name="android:colorBackground">@color/background</item>
+        <item name="colorControlNormal">@color/toolbar_text</item>
+        <item name="materialCardViewStyle">@style/AppTheme.New.MaterialCard</item>
+        <item name="textAppearanceButton">@style/TextAppearance.AppTheme.New.DayNight.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.AppTheme.New.DayNight.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.AppTheme.New.DayNight.Overline</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.AppTheme.New.DayNight.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.AppTheme.New.DayNight.Body2</item>
+        <item name="textAppearanceHeadline1">@style/TextAppearance.AppTheme.New.DayNight.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.AppTheme.New.DayNight.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.AppTheme.New.DayNight.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.AppTheme.New.DayNight.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.AppTheme.New.DayNight.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.AppTheme.New.DayNight.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.AppTheme.New.DayNight.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.AppTheme.New.DayNight.Subtitle2</item>
+        <item name="toolbarStyle">@style/AppTheme.New.Toolbar</item>
+
+
+
     </style>
 
     <style name="AppTheme.New.Night" parent="Theme.MaterialComponents.NoActionBar">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:popupBackground">#121212</item>
         <item name="android:colorBackground">#121212</item>
-        &lt;!&ndash;<item name="android:statusBarColor">@color/primary_dark</item>&ndash;&gt;
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@transition/card_transition</item>
-        <item name="android:windowSharedElementReturnTransition">@transition/card_transition</item>
-    </style>
-    
-    <style name="AppTheme.New.Toolbar" parent="AppTheme.New.DayNight">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
-        <item name="android:colorAccent">@color/accent</item>
-        <item name="android:textColorPrimary">@color/textview_primary_color</item>
-        <item name="android:textColorPrimaryInverse">@color/icons</item>
-        <item name="android:textColorSecondary">@color/icons</item>
-    </style>-->
-
-    <!--<style name="AppTheme.New.DayNight" parent="AppTheme.New.Day"/>-->
-
-    <style name="AppTheme.ActionBar" parent="Theme.AppCompat.DayNight">
-        <item name="colorPrimary">@color/inverse_text</item>
-        <item name="android:textColorPrimary">@color/textview_primary_color</item>
-        <item name="android:textColorSecondary">@color/textview_primary_color</item>
-        <item name="colorControlActivated">@color/textview_primary_color</item>
+        <item name="android:statusBarColor">@color/primaryDarkColor</item>
     </style>
 
-    <style name="AppTheme.Detail" parent="AppTheme">
+
+    <style name="AppTheme.New.DayNight" parent="AppTheme.New.Day"/>
+
+
+    <style name="AppTheme.Detail" parent="AppTheme.New.DayNight">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.AboutActivityDay" parent="Theme.Mal.Light.DarkActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
     </style>
 
     <style name="AppTheme.AboutActivityNight" parent="Theme.Mal.Dark">
@@ -91,8 +86,126 @@
         <item name="colorAccent">#ffd740</item>
     </style>
 
-    <style name="AppTheme.ActionBar.Headline" parent="TextAppearance.AppCompat.Headline">
-        <item name="android:textColor">@color/icons</item>
+    <!--Custom View Styles-->
+
+    <style name="AppTheme.New.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="colorPrimary">@color/background</item>
+        <item name="android:textColor">@color/toolbar_text</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.AppTheme.New.DayNight.Caption</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorControlNormal">@color/toolbar_text</item>
+        <item name="actionOverflowButtonStyle">@style/AppTheme.New.Toolbar.Overflow</item>
+        <item name="fontFamily">@font/raleway_semibold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:actionBarPopupTheme">@style/AppTheme.New.Menu</item>
+    </style>
+
+    <style name="AppTheme.New.Menu" parent="Widget.AppCompat.ListPopupWindow">
+        <item name="android:colorPrimary">@color/background</item>
+        <item name="android:textColor">@color/toolbar_text</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="android:fontFamily">@font/rubik</item>
+    </style>
+
+    <style name="AppTheme.New.Toolbar.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/toolbar_text</item>
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.Toolbar.Title" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:fontFamily">@font/raleway_semibold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.CollapsibleToolbar.Expanded.Title" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.CollapsibleToolbar.Collapsed.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AppTheme.New.MaterialCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/card_background</item>
+    </style>
+
+    <!--Custom typography-->
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/raleway_light</item>
+        <item name="android:textSize">97.57sp</item>
+        <!--<item name="android:letterSpacing">-1.5</item>-->
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/raleway_light</item>
+        <item name="android:textSize">60.96sp</item>
+        <!--<item name="android:letterSpacing">-0.5</item>-->
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/raleway</item>
+        <item name="android:textSize">48.67sp</item>
+    </style>
+    
+    <style name="TextAppearance.AppTheme.New.DayNight.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/raleway_medium</item>
+        <item name="android:textSize">34.41sp</item>
+        <!--<item name="android:letterSpacing">0.25</item>-->
+    </style>
+    
+    <style name="TextAppearance.AppTheme.New.DayNight.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/raleway_semibold</item>
+        <item name="android:textSize">24.24sp</item>
+    </style>
+    
+    <style name="TextAppearance.AppTheme.New.DayNight.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/raleway_semibold</item>
+        <item name="android:textSize">20.2sp</item>
+        <!--<item name="android:letterSpacing">0.25</item>-->
+    </style>
+    
+    <style name="TextAppearance.AppTheme.New.DayNight.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/rubik</item>
+        <item name="android:textSize">16.26sp</item>
+        <!--<item name="android:letterSpacing">0.15</item>-->
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="fontFamily">@font/rubik</item>
+        <item name="android:textSize">14.22sp</item>
+        <!--<item name="android:letterSpacing">0.1</item>-->
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/rubik</item>
+        <item name="android:textSize">16.26sp</item>
+        <!--<item name="android:letterSpacing">0.5</item>-->
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/rubik</item>
+        <item name="android:textSize">14.22sp</item>
+        <!--<item name="android:letterSpacing">0.25</item>-->
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">14.12sp</item>
+        <!--<item name="android:letterSpacing">1.25</item>-->
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Overline" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="fontFamily">@font/rubik_medium</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">12.19sp</item>
+        <!--<item name="android:letterSpacing">2</item>-->
+    </style>
+
+    <style name="TextAppearance.AppTheme.New.DayNight.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/rubik</item>
+        <item name="android:textSize">12.19sp</item>
+        <!--<item name="android:letterSpacing">0.4</item>-->
     </style>
 
 </resources>

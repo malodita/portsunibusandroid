@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="72dp">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:selectableItemBackground"
@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_primary_size"
             tools:text="12:00"
+            style="?attr/textAppearanceSubtitle1"
             tools:layout_editor_absoluteX="0dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/destination"
@@ -32,6 +33,7 @@
             android:layout_width="352dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="@dimen/margin"
+            style="?attr/textAppearanceBody1"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_secondary_size"
             tools:text="To Cambridge Road (University Library)"
@@ -41,5 +43,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="20dp"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

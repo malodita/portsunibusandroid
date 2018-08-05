@@ -39,7 +39,7 @@ android {
         versionName '2.0alpha'
         vectorDrawables.useSupportLibrary = true
         signingConfig signingConfigs.config
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -71,42 +71,41 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha1'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //implementation 'com.android.support:design:28.0.0-alpha3'
     //implementation 'com.google.android.gms:play-services-awareness:10.2.1'
     implementation project(':utilities')
-    implementation "com.android.support:appcompat-v7:${supportLibraryVersion}"
-    implementation "com.android.support:cardview-v7:${supportLibraryVersion}"
-    implementation "com.android.support:recyclerview-v7:${supportLibraryVersion}"
-    implementation "com.android.support:support-fragment:${supportLibraryVersion}"
-    implementation "com.android.support:design:${supportLibraryVersion}"
-    implementation "com.android.support:support-vector-drawable:${supportLibraryVersion}"
-    implementation "com.android.support:preference-v14:${supportLibraryVersion}"
-    implementation "com.android.support:palette-v7:${supportLibraryVersion}"
+    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
+    implementation 'androidx.cardview:cardview:1.0.0-beta01'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0-beta01'
+    implementation 'androidx.fragment:fragment:1.0.0-beta01'
+    implementation 'com.google.android.material:material:1.0.0-beta01'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.0-beta01'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0-beta01'
+    implementation 'androidx.palette:palette:1.0.0-beta01'
     implementation "com.google.android.gms:play-services-location:${googlePlayServicesVersion}"
     implementation "com.google.android.gms:play-services-maps:${googlePlayServicesVersion}"
     implementation 'com.google.maps.android:android-maps-utils:0.4.4'
     implementation "com.google.firebase:firebase-core:${googlePlayServicesVersion}"
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     implementation 'com.github.daniel-stoneuk:material-about-library:2.2.1'
-    implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
     implementation 'com.airbnb.android:epoxy:2.14.0'
     implementation 'com.airbnb.android:lottie:2.5.5'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.pacioianu.david:ink-page-indicator:1.2.0'
-    implementation 'com.reddit:indicator-fast-scroll:1.0'
-    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    androidTestImplementation "android.arch.persistence.room:testing:$room_version"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
+    implementation 'androidx.room:room-runtime:2.0.0-beta01'
+    androidTestImplementation 'androidx.room:room-testing:2.0.0-beta01'
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     testImplementation 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    annotationProcessor 'com.airbnb.android:epoxy-processor:2.14.0'
-    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
+     annotationProcessor 'com.airbnb.android:epoxy-processor:2.14.0'
+    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0-beta01'
+    annotationProcessor 'androidx.room:room-compiler:2.0.0-beta01'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

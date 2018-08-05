@@ -5,7 +5,7 @@
     <string name="title_activity_detail">Stop Times</string>
     <string name="action_settings">Settings</string>
     <string name="change_stop">Change Stop</string>
-    <string name="timetables">Timetables</string>
+    <string name="timetable">Timetable</string>
     <string name="find_a_stop">Find Stop</string>
     <string name="this_timetable">This Timetable</string>
     <string name="select_stop">Select a stop to view</string>
@@ -19,7 +19,6 @@
     <string name="local_map">Find Stop</string>
     <string name="next_departure">Next departure</string>
     <string name="dialog_create_shortcut">Do you wish to create a shortcut for the selected stop</string>
-    <string name="set_favourite">Set as favourite</string>
 
     <!--Strings related to cards-->
     <string name="detail_toolbar_title">"%1$s to %2$s</string>
@@ -27,10 +26,13 @@
     <string name="home_next_bus_uni">Next bus to University</string>
     <string name="home_closest_stop_next_departure_from">From %1$s</string>
     <string name="home_viewgroup_closest_map_title">Nearest Stop</string>
-    <string name="time_hour_plus">60+</string>
     <string name="time_hour_plus_text">Over one hour from now</string>
     <string name="timetable_next_bus">Next bus due at %1$s</string>
     <string name="navigate">Navigate</string>
+    <string name="directions">Directions</string>
+    <string name="set_favourite">Favourite</string>
+    <string name="favorited">Favorited</string>
+
 
 
 
@@ -46,10 +48,11 @@
     <string name="error_play_services_update">An update to Google Play Services is required for location services</string>
     <string name="error_no_timetable_selected">Please select a timetable to view</string>
     <string name="error_no_location">Location not found</string>
-    <string name="error_no_buses">No more buses scheduled today</string>
+    <string name="error_no_buses">No more buses scheduled</string>
+    <string name="error_no_buses_from_here">No more buses scheduled from this stop</string>
     <string name="error_no_buses_home">No more buses are scheduled to stop at your home stop today</string>
     <string name="error_no_buses_scheduled">No buses scheduled today</string>
-    <string name="error_not_in_portsmouth">Are you in Portsmouth? :/</string>
+    <string name="error_not_in_portsmouth">Are you in Portsmouth?</string>
     <string name="error_no_stop_selected">No Stop Selected</string>
     <string name="error_GPS_off">Device GPS is turned off</string>
     <string name="error_no_connection">No internet connection available</string>
@@ -68,6 +71,7 @@
     <string name="preferences_home_bus_stop" translatable="false">com.malcolm.portsmouthunibus.homebusstop</string>
     <string name="preferences_instant_card" translatable="false">com.malcolm.portsmouthunibus.instantcard</string>
     <string name="preferences_maps_card" translatable="false">com.malcolm.portsmouthunibus.mapscard</string>
+    <string name="preferences_favourite" translatable="false">com.malcolm.portsmouthunibus.favourite</string>
     <string name="preferences_night_mode_new" translatable="false">com.malcolm.portsmouthunibus.nightmode.new</string>
     <string name="preferences_night_mode" translatable="false">com.malcolm.portsmouthunibus.nightmode</string>
     <string name="preferences_onboarding" translatable="false">com.malcolm.portsmouthunibus.onboarding</string>
@@ -77,6 +81,10 @@
     <string name="preferences_24hourclock" translatable="false">com.malcolm.portsmouthunibus.24hourclock</string>
     <string name="preference_last_viewed_stop" translatable="false">com.malcolm.portsmouthunibus.lastviewed</string>
     <string name="preferences_transient_last_image_viewed" translatable="false">com.malcolm.portsmouthunibus.transient.image</string>
+    <string name="preferences_analytics_off">Analytics and crash reporting will not be collected from this device. Please consider enabling this as it allows for more improvements to be made to the app.</string>
+    <string name="preferences_analytics_on">Allow crash reporting and analytics to be collected. This is used to improve the app and not to identify users or for advertising.</string>
+
+
 
     <string-array name="preferences_night_mode_list">
         <item>Automatic</item>
@@ -146,7 +154,6 @@
     <string name="onboarding2_subtitle">Get started quickly with the Portsmouth Uni Bus app by using the walkthrough.</string>
     <string name="onboarding2_yes">Sure</string>
     <string name="onboarding2_no">No thanks</string>
-
 
     <string-array name="bus_stops_home">
         <item

@@ -3,8 +3,8 @@ package com.malcolm.portsmouthunibus.ui.detail;
 
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.annotation.NonNull;
 
 import com.malcolm.portsmouthunibus.App;
 import com.malcolm.unibusutilities.entity.Times;

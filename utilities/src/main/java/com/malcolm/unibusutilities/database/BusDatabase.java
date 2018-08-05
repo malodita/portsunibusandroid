@@ -1,12 +1,6 @@
 package com.malcolm.unibusutilities.database;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.malcolm.unibusutilities.entity.Bus;
@@ -15,6 +9,13 @@ import com.malcolm.unibusutilities.helper.TermDateUtils;
 import com.malcolm.unibusutilities.utils.AppExecutors;
 
 import java.util.Calendar;
+
+import androidx.annotation.NonNull;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 @Database(entities = Bus.class, exportSchema = false, version = 6)
 public abstract class BusDatabase extends RoomDatabase {
@@ -45,7 +46,7 @@ public abstract class BusDatabase extends RoomDatabase {
     }
 
     private static BusDatabase createRoomDatabase(Context context, String name){
-        android.arch.persistence.room.RoomDatabase.Builder<BusDatabase> builder =
+        androidx.room.RoomDatabase.Builder<BusDatabase> builder =
                 Room.databaseBuilder(context.getApplicationContext()
                         , BusDatabase.class, name)
                         .addCallback(new Callback() {

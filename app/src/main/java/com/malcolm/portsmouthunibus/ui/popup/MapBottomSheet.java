@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.utilities.ImageGenerator;
 import com.squareup.picasso.RequestCreator;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -58,7 +58,7 @@ public class MapBottomSheet extends BottomSheetDialogFragment {
             if (isPackageInstalled("com.google.android.apps.maps", getContext().getPackageManager())) {
                 Uri nav = Uri.parse("geo:0,0?q="
                         + location.latitude + "," + location.longitude +
-                        "(" + title.getText() + ")");
+                        "(" + title.getText() + ")&mode=w");
                 Intent i = new Intent(ACTION_VIEW, nav);
                 if (i.resolveActivity(getContext().getPackageManager()) != null) {
                     startActivity(i);

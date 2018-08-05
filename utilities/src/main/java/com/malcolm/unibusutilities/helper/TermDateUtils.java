@@ -1,7 +1,6 @@
 package com.malcolm.unibusutilities.helper;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * A simple class that can be used to check the holiday dates
@@ -108,17 +109,17 @@ public final class TermDateUtils {
     @NonNull
     public static String getTimetableName(){
         if (isWeekendInHoliday() || isHoliday()){
-            return "Out of Term Timetable";
+            return "Out of Term";
         } else if (isWeekend()){
-            return "Weekend Timetable";
+            return "Weekend";
         } else if (isBankHoliday()){
             if (isHoliday()){
-                return "Out of Term Timetable";
+                return "Out of Term";
             } else {
-                return "Term Timetable";
+                return "Term Time";
             }
         } else {
-            return "Term Timetable";
+            return "Term Time";
         }
     }
 

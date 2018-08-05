@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:hardwareAccelerated="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.New.DayNight"
         tools:ignore="GoogleAppIndexingWarning">
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
@@ -29,7 +29,7 @@
 
         <activity
             android:name=".ui.HomeActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.New.DayNight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -46,7 +46,7 @@
             android:label="@string/title_activity_detail"
             android:parentActivityName=".ui.HomeActivity"
             android:taskAffinity=""
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.New.DayNight">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.malcolm.portsmouthunibus.ui.HomeActivity"/>
@@ -56,7 +56,7 @@
             android:name=".settings.SettingsActivity"
             android:label="Settings"
             android:parentActivityName=".ui.HomeActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.New.DayNight">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.malcolm.portsmouthunibus.ui.HomeActivity"/>

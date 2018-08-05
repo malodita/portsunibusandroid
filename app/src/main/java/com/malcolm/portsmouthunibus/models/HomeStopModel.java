@@ -1,7 +1,5 @@
 package com.malcolm.portsmouthunibus.models;
 
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +9,8 @@ import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.utilities.ImageGenerator;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +68,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
             holder.layout.setVisibility(View.VISIBLE);
             switch (Integer.valueOf(timeHero)) {
                 case 0:
-                    holder.timeHero.setText(R.string.arrival_now);
+                    holder.timeHero.setText(holder.arrivalNow);
                     break;
                 case 1:
                     holder.timeHero.setText(String.format(holder.nextDeparture, timeHero, holder.oneMinute));
@@ -79,7 +79,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
             }
         } else if (Integer.valueOf(timeHero) == Integer.MAX_VALUE) {
             holder.image.setImageDrawable(null);
-            holder.error.setText(R.string.error_no_buses_home);
+            holder.error.setText(holder.stringError);
             holder.error.setVisibility(View.VISIBLE);
             holder.layout.setVisibility(View.GONE);
         } else {
@@ -87,7 +87,7 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
                     .into(holder.image);
             holder.error.setVisibility(View.GONE);
             holder.layout.setVisibility(View.VISIBLE);
-            holder.timeHero.setText(R.string.time_hour_plus);
+            holder.timeHero.setText(holder.hourPlus);
         }
     }
 
@@ -146,6 +146,10 @@ public class HomeStopModel extends EpoxyModelWithHolder<HomeStopModel.HomeStopHo
         String nextDepartureStop;
         @BindString(R.string.error_no_buses_home)
         String stringError;
+        @BindString(R.string.arrival_now)
+        String arrivalNow;
+        @BindString(R.string.time_hour_plus_text)
+        String hourPlus;
 
         @Override
         protected void bindView(View itemView) {

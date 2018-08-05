@@ -2,6 +2,8 @@
 <resources>
 
     <!--Todo: Enable when final version of components is out-->
-    <!--<style name="AppTheme.New.DayNight" parent="AppTheme.New.Night"/>-->
+    <style name="AppTheme.New.DayNight" parent="AppTheme.New.Night"/>
+
+    <style name="AppTheme.New.DayNight.Widget.BottomNavigationView" parent=""/>
 
 </resources>

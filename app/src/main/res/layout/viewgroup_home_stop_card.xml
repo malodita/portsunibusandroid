@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -18,7 +18,8 @@
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    style="?attr/materialCardViewStyle">
 
     <TextView
         android:id="@+id/home_error_text"
@@ -29,7 +30,7 @@
         android:paddingRight="@dimen/margin"
         android:scrollHorizontally="false"
         android:textAlignment="center"
-        android:textSize="@dimen/text_title_size"
+        style="?attr/textAppearanceHeadline5"
         android:layout_gravity="center"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,16 +38,16 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="No stop selected"
-        tools:visibility="visible"/>
+        tools:visibility="gone"/>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/home_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin"
         android:visibility="visible"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/home_image"
@@ -57,33 +58,34 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:scaleType="centerCrop"
-            tools:src="@drawable/adj_lidl"/>
+            tools:src="@drawable/adj_lidl"
+            tools:ignore="contentDescription"/>
 
         <TextView
             android:id="@+id/home_time_hero_intro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:gravity="start|top"
+            style="?attr/textAppearanceOverline"
             android:paddingLeft="@dimen/margin"
             android:paddingRight="@dimen/margin"
             android:text="@string/home_next_bus_uni"
-            android:textSize="@dimen/text_primary_size"
             app:layout_constraintBottom_toTopOf="@+id/home_time_hero"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_image"/>
 
         <TextView
             android:id="@+id/home_time_hero"
+            style="?attr/textAppearanceHeadline5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
+            android:paddingLeft="@dimen/margin"
+            android:paddingRight="@dimen/margin"
             app:layout_constraintBottom_toTopOf="@+id/home_bus_stop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_time_hero_intro"
-            tools:text="10 minutes"
-            android:paddingLeft="@dimen/margin"
-            android:paddingRight="@dimen/margin"/>
+            tools:text="10 minutes"/>
 
         <TextView
             android:id="@+id/home_bus_stop"
@@ -93,8 +95,10 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_time_hero"
             tools:text="From Goldsmith Avenue adj Lidl"
-            android:paddingLeft="@dimen/margin"
-            android:paddingRight="@dimen/margin"/>
+            style="?attr/textAppearanceCaption"
+            android:paddingTop="4dp"
+            android:paddingStart="@dimen/margin"
+            android:paddingEnd="@dimen/margin"/>
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

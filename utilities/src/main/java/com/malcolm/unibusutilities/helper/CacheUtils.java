@@ -3,7 +3,7 @@ package com.malcolm.unibusutilities.helper;
 import android.content.Context;
 import android.location.Location;
 import android.os.Process;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.malcolm.unibusutilities.entity.DirectionsApi;
 

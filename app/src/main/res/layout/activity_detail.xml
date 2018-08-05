@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,21 +9,23 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/image_placeholder"
         android:elevation="4dp"
+        app:liftOnScroll="true"
         android:id="@+id/app_bar_layout">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="@color/icons"
-            app:expandedTitleTextAppearance="@style/AppTheme.ActionBar.Headline"
             app:expandedTitleGravity="start|bottom|center"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppTheme.New.CollapsibleToolbar.Expanded.Title"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.AppTheme.New.CollapsibleToolbar.Collapsed.Title">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -35,19 +37,21 @@
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
                 android:transitionName="@string/transition_image"/>
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:elevation="4dp"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="enterAlways"
-                app:titleTextColor="@color/icons"/>
+                app:titleTextColor="@color/icons">
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+            </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -55,4 +59,4 @@
         android:layoutAnimation="@anim/recyclerview_layout_animation"
         tools:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -3,12 +3,14 @@ package com.malcolm.portsmouthunibus.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.malcolm.portsmouthunibus.App;
 import com.malcolm.portsmouthunibus.R;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -27,7 +29,10 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         sharedPreferences = getSharedPreferences(getString(R.string.preferences_name), Context.MODE_PRIVATE);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         Toolbar toolbar = findViewById(R.id.app_bar_settings);
+        TextView toolbarText = findViewById(R.id.app_bar_settings_text);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbarText.setText(R.string.action_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }

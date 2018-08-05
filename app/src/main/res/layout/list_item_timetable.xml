@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/time"
@@ -15,8 +16,7 @@
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="4dp"
-            android:fontFamily="@font/rubik"
-            android:textSize="16.26sp"
+            style="?attr/textAppearanceSubtitle1"
             app:layout_constraintBottom_toTopOf="@+id/destination"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,8 +28,7 @@
             android:layout_width="352dp"
             android:layout_height="20dp"
             android:layout_marginBottom="4dp"
-            android:fontFamily="@font/rubik"
-            android:textSize="16.26sp"
+            style="?attr/textAppearanceBody1"
             app:layout_constraintBottom_toTopOf="@+id/via"
             app:layout_constraintStart_toStartOf="@+id/time"
             app:layout_constraintTop_toBottomOf="@+id/time"
@@ -42,11 +41,10 @@
             android:layout_height="20dp"
             android:layout_marginBottom="8dp"
             app:layout_goneMarginBottom="8dp"
-            android:fontFamily="@font/rubik_medium"
-            android:textSize="12.19sp"
+            style="?attr/textAppearanceCaption"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/destination"
             app:layout_constraintTop_toBottomOf="@+id/destination"
             tools:text="TextView"
             />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

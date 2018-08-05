@@ -1,8 +1,8 @@
 package com.malcolm.portsmouthunibus.settings;
 
 import android.content.Context;
-import android.support.v7.preference.DialogPreference;
-import android.support.v7.preference.PreferenceViewHolder;
+import androidx.preference.DialogPreference;
+import androidx.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 
 import com.malcolm.portsmouthunibus.R;
