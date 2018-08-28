@@ -28,7 +28,7 @@ public class App extends Application {
         refWatcher = LeakCanary.install(this);
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
         String nightMode = sharedPreferences.getString(getString(R.string.preferences_night_mode_new), "0");
-        boolean analytics = sharedPreferences.getBoolean(getString(R.string.preferences_analytics), false);
+        boolean analytics = sharedPreferences.getBoolean(getString(R.string.preferences_analytics), true);
         firebase = FirebaseAnalytics.getInstance(this);
         if (!BuildConfig.DEBUG) {// TODO: 14/07/2018 remove when testing. Should have crash reporting enabled
             if (analytics) {

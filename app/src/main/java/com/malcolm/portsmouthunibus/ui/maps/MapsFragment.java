@@ -221,10 +221,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         MapBottomSheet sheet = new MapBottomSheet();
         sheet.setArguments(bundle);
         sheet.show(getActivity().getSupportFragmentManager(), BOTTOMSHEET);
-/*        marker.showInfoWindow();
-        Bundle bundle = new Bundle();
-        bundle.putString(getString(R.string.firebase_property_stop_id), marker.getTitle());
-        firebaseAnalytics.logEvent(getString(R.string.firebase_event_map_marker_click), bundle);*/
         return true;
     }
 }

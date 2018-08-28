@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Portsmouth University Bus</string>
+    <string name="app_name" translatable="false">Portsmouth Uni Bus</string>
     <string name="minutes">minutes</string>
     <string name="metres_away">metres away</string>
     <string name="title_activity_detail">Stop Times</string>
@@ -20,6 +20,21 @@
     <string name="next_departure">Next departure</string>
     <string name="dialog_create_shortcut">Do you wish to create a shortcut for the selected stop</string>
 
+    <!--Strings related to onboarding-->
+    <string name="onboarding_select_stop">Select your default home stop</string>
+    <string name="onboarding_location_title">Be informed when the next bus is while you wait</string>
+    <string name="onboarding_location_description">This feature and more requires location permission</string>
+    <string name="onboarding_map_title">See directions to where your closest stop is</string>
+    <string name="onboarding_map_description">Would you like to use the map feature?</string>
+    <string name="onboarding_night_title">Night mode </string>
+    <string name="onboarding_finish">Get started</string>
+    <string name="onboarding_no">No thanks</string>
+    <string name="onboarding_yes">Okay</string>
+    <string name="onboarding_sure">Sure</string>
+
+
+
+
     <!--Strings related to cards-->
     <string name="detail_toolbar_title">"%1$s to %2$s</string>
     <string name="home_next_bus_union">Next bus to Union</string>
@@ -34,13 +49,8 @@
     <string name="favorited">Favorited</string>
 
 
-
-
-
-
     <!--Strings related to transitions and animations-->
     <string name="transition_image">imageTransition</string>
-
 
 
     <!--Strings related to errors & hints-->
@@ -73,17 +83,15 @@
     <string name="preferences_maps_card" translatable="false">com.malcolm.portsmouthunibus.mapscard</string>
     <string name="preferences_favourite" translatable="false">com.malcolm.portsmouthunibus.favourite</string>
     <string name="preferences_night_mode_new" translatable="false">com.malcolm.portsmouthunibus.nightmode.new</string>
-    <string name="preferences_night_mode" translatable="false">com.malcolm.portsmouthunibus.nightmode</string>
-    <string name="preferences_onboarding" translatable="false">com.malcolm.portsmouthunibus.onboarding</string>
-    <string name="preferences_onboarding_2" translatable="false">com.malcolm.portsmouthunibus.onboarding2</string>
     <string name="preferences_onboarding_3" translatable="false">com.malcolm.portsmouthunibus.onboarding3</string>
+    <string name="preferences_new_onboarding" translatable="false">com.malcolm.portsmouthunibus.new.onboarding</string>
+    <!--todo: Remove new moniker from onboarding once finished-->
     <string name="preferences_shortcuts_reset" translatable="false">com.malcolm.portsmouthunibus.shortcuts</string>
     <string name="preferences_24hourclock" translatable="false">com.malcolm.portsmouthunibus.24hourclock</string>
     <string name="preference_last_viewed_stop" translatable="false">com.malcolm.portsmouthunibus.lastviewed</string>
     <string name="preferences_transient_last_image_viewed" translatable="false">com.malcolm.portsmouthunibus.transient.image</string>
-    <string name="preferences_analytics_off">Analytics and crash reporting will not be collected from this device. Please consider enabling this as it allows for more improvements to be made to the app.</string>
-    <string name="preferences_analytics_on">Allow crash reporting and analytics to be collected. This is used to improve the app and not to identify users or for advertising.</string>
-
+    <string name="preferences_analytics_off">Analytics relating to app usage will not be collected from this device.</string>
+    <string name="preferences_analytics_on">Allow analytics to be collected. This is used to improve the app for the future.</string>
 
 
     <string-array name="preferences_night_mode_list">
@@ -111,7 +119,6 @@
     <string name="intent_stop_via" translatable="false">com.malcolm.portsmouthunibus.VIEW.CALLING.STOP.VIA</string>
 
 
-
     <!--Strings related to firebase analytics-->
     <string name="firebase_property_stop_id" translatable="false">stopId</string>
     <string name="firebase_property_list_position" translatable="false">listPosition</string>
@@ -120,8 +127,9 @@
     <string name="firebase_event_shortcut_created" translatable="false">shortcut_created</string>
     <string name="firebase_event_home_stop_changed" translatable="false">home_stop_changed</string>
     <string name="firebase_event_home_shortcut_used" translatable="false">home_shortcut_used</string>
+    <string name="firebase_event_home_navigation_request" translatable="false">home_navigation_request</string>
+    <string name="firebase_event_maps_navigation_request" translatable="false">maps_navigation_request</string>
     <string name="firebase_event_specific_shortcut_used" translatable="false">specific_shortcut_used</string>
-    <string name="firebase_event_map_marker_click" translatable="false">map_marker_click</string>
     <string name="firebase_event_timetable_detail_request" translatable="false">timetable_detail_requested</string>
     <string name="firebase_event_timetable_changed_stop" translatable="false">timetable_changed_stop</string>
 
@@ -149,11 +157,13 @@
     </string-array>
 
     <string name="onboarding_subtitle">Helping you be on time, all the time.</string>
-    <string name="onboarding_finish">Get started</string>
     <string name="onboarding_permission">Grant permission</string>
     <string name="onboarding2_subtitle">Get started quickly with the Portsmouth Uni Bus app by using the walkthrough.</string>
     <string name="onboarding2_yes">Sure</string>
     <string name="onboarding2_no">No thanks</string>
+    <string name="onboarding_night_mode">Night mode</string>
+    <string name="onboarding_night_mode_auto">Set automatically</string>
+
 
     <string-array name="bus_stops_home">
         <item
@@ -220,6 +230,8 @@
 
     <string-array name="bus_stops_shortcuts_short">
         <item
+            >Eastney</item>
+        <item
             >Langstone</item>
         <item
             >Locksway Road</item>
@@ -239,11 +251,11 @@
             >Goldsmith opp Lidl</item>
         <item
             >Milton Park</item>
-        <item
-            >Eastney</item>
     </string-array>
 
     <string-array name="bus_stops_shortcuts_long">
+        <item
+            >IMS Eastney</item>
         <item
             >Langstone</item>
         <item
@@ -264,8 +276,6 @@
             >Goldsmith Avenue opp Lidl</item>
         <item
             >Milton Park</item>
-        <item
-            >IMS Eastney</item>
     </string-array>
 
     <string-array name="bus_stops_all">

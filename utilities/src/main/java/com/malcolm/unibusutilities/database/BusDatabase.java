@@ -30,7 +30,6 @@ public abstract class BusDatabase extends RoomDatabase {
     public abstract Bus.BusDao busDao();
     private static final AppExecutors appExecutors = AppExecutors.getInstance();
 
-    // FIXME: 04/07/2018 dynamic database loading needed
     public synchronized static BusDatabase getInstance(Context context){
         if (instance == null){
             currentName = getDBName();
@@ -141,7 +140,7 @@ public abstract class BusDatabase extends RoomDatabase {
         database.setVersion(1);
     }
 
-    private static String getDBName() {
+    public static String getDBName() {
         Calendar calendar = Calendar.getInstance();
         String name;
         if (TermDateUtils.isHoliday() || TermDateUtils.isWeekendInHoliday()) {

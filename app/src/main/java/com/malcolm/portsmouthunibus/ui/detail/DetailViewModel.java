@@ -3,8 +3,6 @@ package com.malcolm.portsmouthunibus.ui.detail;
 
 
 import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.annotation.NonNull;
 
 import com.malcolm.portsmouthunibus.App;
 import com.malcolm.unibusutilities.entity.Times;
@@ -12,12 +10,17 @@ import com.malcolm.unibusutilities.repository.MainRepository;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
 public class DetailViewModel extends AndroidViewModel {
 
     private List<Times> list;
     private MainRepository repository;
 
-    public DetailViewModel(@NonNull Application application) {
+    private DetailViewModel(Application application) {
         super(application);
         repository = ((App) application).getMainRepository();
     }
@@ -40,6 +43,23 @@ public class DetailViewModel extends AndroidViewModel {
 
     public void setList(List<Times> list) {
         this.list = list;
+    }
+
+    public static class Factory extends ViewModelProvider.NewInstanceFactory{
+
+        @NonNull private final Application application;
+
+        Factory(@NonNull Application application) {
+            this.application = application;
+        }
+
+        @NonNull
+        @Override
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            //noinspection unchecked
+            return (T) new DetailViewModel(application);
+        }
+
     }
 }
 

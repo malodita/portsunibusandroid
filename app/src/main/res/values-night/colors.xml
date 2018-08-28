@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--New colours-->
-    <color name="primaryColor">#3c023c</color>
-    <color name="primaryLightColor">#692f67</color>
+    <color name="primaryColor">#2d012d</color>
+    <color name="primaryLightColor">#480d50</color>
     <color name="primaryDarkColor">#1d0018</color>
-    <color name="secondaryColor">#d1d1d1</color>   <!--505457-->
+    <color name="secondaryColor">#ffffff</color>   <!--505457-->
     <color name="secondaryLightColor">#ffffff</color> <!--7c8084-->
     <color name="secondaryDarkColor">#a0a0a0</color>
     <color name="primaryTextColor">@color/textview_primary_color</color>
@@ -15,9 +15,9 @@
     <color name="background">#121212</color>
     <color name="card_background">#212121</color>
     <color name="button">#00A0FF</color>
-    <color name="selector_on">#00A0FF</color>
-    <color name="selector_off">#C2005588</color>
-    <color name="scrollbar">#005588</color>
+    <color name="selector_on">#FFFFFF</color>
+    <color name="selector_off">#c2505050</color>
+    <color name="scrollbar">#ffffff</color>
     <color name="primary_text">#ffffffff</color>
     <color name="secondary_text">#99ffffff</color>
     <color name="text_disabled">#61ffffff</color>

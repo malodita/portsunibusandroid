@@ -2,15 +2,16 @@ package com.malcolm.portsmouthunibus.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.malcolm.portsmouthunibus.App;
 import com.malcolm.portsmouthunibus.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -35,6 +36,9 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         toolbarText.setText(R.string.action_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Drawable backArrow = getResources().getDrawable(R.drawable.ic_arrow_back);
+        backArrow.setTint(ContextCompat.getColor(this, R.color.toolbar_text));
+        getSupportActionBar().setHomeAsUpIndicator(backArrow);
     }
 
     @Override
@@ -42,9 +46,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         if (s.equals(getString(R.string.preferences_night_mode_new))) {
             App.nightModeSwitching(Integer.valueOf(sharedPreferences.getString(s, "0")));
         } else if (s.equals(getString(R.string.preferences_analytics))){
-            App.analyticsSwitching(sharedPreferences.getBoolean(s, false));
-            Toast.makeText(this, "Crashlytics requires the app to restart to change settings"
-                    , Toast.LENGTH_SHORT).show();
+            App.analyticsSwitching(sharedPreferences.getBoolean(s, true));
         }
     }
 

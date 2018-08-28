@@ -1,14 +1,10 @@
 package com.malcolm.unibusutilities.repository;
 
 import android.app.Application;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.NonNull;
 
 import com.malcolm.unibusutilities.database.BusDatabase;
 import com.malcolm.unibusutilities.entity.Bus;
@@ -21,6 +17,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -49,19 +49,26 @@ public class MainRepository {
     private InstantRunnable instantStop;
     private MediatorLiveData<Location> locationLiveData;
     private androidx.lifecycle.Observer<Location> locationObserver;
+    private static String databaseName;
 
 
     private MainRepository(final BusDatabase database, Application application) {
         busDao = database.busDao();
-
         locationRepository = LocationRepository.getInstance(application);
     }
 
     public static synchronized MainRepository getInstance(Application application, BusDatabase database) {
         if (instance == null) {
             instance = new MainRepository(database, application);
+            databaseName = BusDatabase.getDBName();
+            return instance;
+        } else {
+            if (!databaseName.equals(BusDatabase.getDBName())){
+                instance = new MainRepository(database, application);
+                databaseName = BusDatabase.getDBName();
+            }
+            return instance;
         }
-        return instance;
     }
 
     public LiveData<StopAndTime> getInstantCountdown() {

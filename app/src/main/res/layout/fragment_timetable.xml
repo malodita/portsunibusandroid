@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/timetableFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.malcolm.portsmouthunibus.ui.timetable.TimetableFragment">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/timetable_layout"
@@ -56,7 +55,7 @@
             android:layout_margin="16dp"
             android:gravity="center"
             android:text="@string/error_no_timetable_selected"
-            android:textSize="@dimen/text_primary_size"
+            style="?attr/textAppearanceSubtitle1"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +90,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="130dp"
         android:visibility="invisible"
-        app:background="@color/card_background"
         app:cardElevation="2dp"
         app:layout_behavior="@string/fab_transformation_sheet_behavior">
 
@@ -101,7 +99,6 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true"
-            android:scrollbars="none"
-            android:background="@color/card_background"/>
+            android:scrollbars="none"/>
     </com.google.android.material.transformation.TransformationChildCard>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

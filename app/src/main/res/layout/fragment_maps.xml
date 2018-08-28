@@ -12,9 +12,9 @@
         android:layout_gravity="center_vertical"
         android:gravity="center"
         android:padding="@dimen/activity_margin"
+        style="?attr/textAppearanceSubtitle1"
         android:textAlignment="center"
         android:textSize="@dimen/text_title_size"
-        android:textStyle="italic"
         android:visibility="gone"
         />
 </LinearLayout>

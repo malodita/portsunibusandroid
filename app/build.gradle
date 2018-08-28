@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-
 // Create a variable called keystorePropertiesFile, and initialize it to your
 // keystore.properties file, in the rootProject folder.
 def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -12,10 +11,7 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
-def supportLibraryVersion = "27.1.1"
 def googlePlayServicesVersion = "15.0.0"
-def lifecycle_version = "1.1.1"
-def room_version = "1.1.1"
 
 
 
@@ -30,13 +26,12 @@ android {
         }
     }
     compileSdkVersion 28
-    buildToolsVersion '28.0.1'
     defaultConfig {
         applicationId "com.malcolm.portsmouthunibus"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 30
-        versionName '2.0alpha'
+        versionName '2.0beta2'
         vectorDrawables.useSupportLibrary = true
         signingConfig signingConfigs.config
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -47,14 +42,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             it.buildConfigField 'String', 'API_KEY', APIKEYRELEASE
             signingConfig signingConfigs.config
-            manifestPlaceholders = [MAPS_API_KEY     : keystoreProperties['NEW_MAPS_API_KEY'],
-                                    AWARENESS_API_KEY: keystoreProperties['AWARENESS_RELEASE_API_KEY'],
+            manifestPlaceholders = [MAPS_API_KEY       : keystoreProperties['NEW_MAPS_API_KEY'],
+                                    AWARENESS_API_KEY  : keystoreProperties['AWARENESS_RELEASE_API_KEY'],
                                     CRASHLYTICS_API_KEY: keystoreProperties['CRASHLYTICS_API_KEY']]
         }
         debug {
             it.buildConfigField 'String', 'API_KEY', APIKEYDEBUG
-            manifestPlaceholders = [MAPS_API_KEY     : keystoreProperties['NEW_MAPS_DEBUG_API_KEY'],
-                                    AWARENESS_API_KEY: keystoreProperties['AWARENESS_DEBUG_API_KEY'],
+            manifestPlaceholders = [MAPS_API_KEY       : keystoreProperties['NEW_MAPS_DEBUG_API_KEY'],
+                                    AWARENESS_API_KEY  : keystoreProperties['AWARENESS_DEBUG_API_KEY'],
                                     CRASHLYTICS_API_KEY: keystoreProperties['CRASHLYTICS_API_KEY']]
             applicationIdSuffix ".debug"
         }
@@ -71,41 +66,38 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    //implementation 'com.android.support:design:28.0.0-alpha3'
-    //implementation 'com.google.android.gms:play-services-awareness:10.2.1'
     implementation project(':utilities')
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'androidx.cardview:cardview:1.0.0-beta01'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0-beta01'
-    implementation 'androidx.fragment:fragment:1.0.0-beta01'
-    implementation 'com.google.android.material:material:1.0.0-beta01'
-    implementation 'androidx.vectordrawable:vectordrawable:1.0.0-beta01'
-    implementation 'androidx.legacy:legacy-preference-v14:1.0.0-beta01'
-    implementation 'androidx.palette:palette:1.0.0-beta01'
+    implementation 'androidx.appcompat:appcompat:1.0.0-rc01'
+    implementation 'androidx.cardview:cardview:1.0.0-rc01'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0-rc01'
+    implementation 'androidx.fragment:fragment:1.0.0-rc01'
+    implementation 'com.google.android.material:material:1.0.0-rc01'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.0-rc01'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0-rc01'
+    implementation 'androidx.palette:palette:1.0.0-rc01'
     implementation "com.google.android.gms:play-services-location:${googlePlayServicesVersion}"
     implementation "com.google.android.gms:play-services-maps:${googlePlayServicesVersion}"
     implementation 'com.google.maps.android:android-maps-utils:0.4.4'
     implementation "com.google.firebase:firebase-core:${googlePlayServicesVersion}"
-    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     implementation 'com.github.daniel-stoneuk:material-about-library:2.2.1'
     implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
     implementation 'com.airbnb.android:epoxy:2.14.0'
-    implementation 'com.airbnb.android:lottie:2.5.5'
+    implementation 'com.airbnb.android:lottie:2.5.6'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.pacioianu.david:ink-page-indicator:1.2.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
-    implementation 'androidx.room:room-runtime:2.0.0-beta01'
-    androidTestImplementation 'androidx.room:room-testing:2.0.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
+    implementation 'androidx.room:room-runtime:2.0.0-rc01'
+    androidTestImplementation 'androidx.room:room-testing:2.0.0-rc01'
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
-     annotationProcessor 'com.airbnb.android:epoxy-processor:2.14.0'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0-beta01'
-    annotationProcessor 'androidx.room:room-compiler:2.0.0-beta01'
+    annotationProcessor 'com.airbnb.android:epoxy-processor:2.14.0'
+    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0-rc01'
+    annotationProcessor 'androidx.room:room-compiler:2.0.0-rc01'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -113,7 +105,7 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.1') {
         transitive = true
     }
-    implementation  'com.google.dagger:dagger:2.13'
+    implementation 'com.google.dagger:dagger:2.13'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
 }
 
@@ -121,6 +113,3 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.firebase-crash'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'io.fabric'
-
-
-

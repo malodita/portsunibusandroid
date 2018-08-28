@@ -53,7 +53,8 @@
     <PreferenceCategory
         android:title="Other">
         <SwitchPreference
-            android:title="Allow crash reporting and analytics."
+            android:title="Allow analytics."
+            android:defaultValue="true"
             android:key="@string/preferences_analytics"
             android:summaryOn="@string/preferences_analytics_on"
             android:summaryOff="@string/preferences_analytics_off"/>

@@ -63,7 +63,8 @@ public class DetailActivity extends AppCompatActivity implements Palette.Palette
         setupToolbar(i);
         boolean timeFormat = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE)
                 .getBoolean(getString(R.string.preferences_24hourclock), true);
-        DetailViewModel viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+        DetailViewModel.Factory factory = new DetailViewModel.Factory(getApplication());
+        DetailViewModel viewModel = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
         List<Times> array;
         if (viewModel.getList() == null){
             array = viewModel.fetchList(listPosition, timeFormat);

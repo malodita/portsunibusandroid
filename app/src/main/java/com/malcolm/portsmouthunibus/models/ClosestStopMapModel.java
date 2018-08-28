@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.maps.android.PolyUtil;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.utilities.TimeUtils;
@@ -27,6 +29,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresPermission;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import butterknife.BindString;
 import butterknife.BindView;
 
 /**
@@ -168,6 +171,10 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
             targetLocation = new LatLng(decodedList.get(last).latitude, decodedList.get(last).longitude);
             TimeUtils.markStop(googleMap, targetLocation);
             holder.navigateButton.setOnClickListener(l -> {
+                FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(holder.timeHero.getContext());
+                Bundle bundle = new Bundle();
+                bundle.putString(holder.firebaseStopId, holder.closestStop.toString());
+                analytics.logEvent(holder.firebaseHomeRequest, bundle);
                 String string = "geo:0,0?q=" + targetLocation.latitude +
                         "," + targetLocation.longitude + "(Nearest Stop)";
                 Uri uri = Uri.parse(string);
@@ -221,5 +228,10 @@ public class ClosestStopMapModel extends EpoxyModelWithHolder<ClosestStopMapMode
         ConstraintLayout layout;
         @BindView(R.id.closest_stop_button_nav)
         Button navigateButton;
+
+        @BindString(R.string.firebase_property_stop_id)
+        String firebaseStopId;
+        @BindString(R.string.firebase_event_home_navigation_request)
+        String firebaseHomeRequest;
     }
 }

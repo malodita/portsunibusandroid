@@ -7,7 +7,7 @@
     android:id="@+id/home_stop_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="140dp"
+    android:minHeight="160dp"
     android:layout_marginLeft="@dimen/card_margin"
     android:layout_marginTop="@dimen/card_margin"
     android:layout_marginRight="@dimen/card_margin"
@@ -52,7 +52,7 @@
         <ImageView
             android:id="@+id/home_image"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="160dp"
             app:layout_constraintBottom_toTopOf="@id/home_time_hero_intro"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

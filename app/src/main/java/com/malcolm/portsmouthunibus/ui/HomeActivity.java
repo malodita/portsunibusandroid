@@ -16,28 +16,23 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.malcolm.portsmouthunibus.BuildConfig;
 import com.malcolm.portsmouthunibus.R;
 import com.malcolm.portsmouthunibus.settings.SettingsActivity;
 import com.malcolm.portsmouthunibus.ui.home.HomeFragment;
-import com.malcolm.portsmouthunibus.ui.intro.IntroActivity;
 import com.malcolm.portsmouthunibus.ui.maps.MapsFragment;
-import com.malcolm.portsmouthunibus.ui.popup.QuickStartBottomSheet;
+import com.malcolm.portsmouthunibus.ui.onboarding.IntroActivity;
 import com.malcolm.portsmouthunibus.ui.popup.StopBottomSheet;
 import com.malcolm.portsmouthunibus.ui.timetable.TimetableFragment;
 import com.malcolm.unibusutilities.helper.TermDateUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,7 +47,7 @@ import butterknife.ButterKnife;
 
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        StopBottomSheet.DialogListener, QuickStartBottomSheet.DialogButtonSelectedListener {
+        StopBottomSheet.DialogListener {
     //Initialise local variables
     private static final String TAG = "HomeActivity";
     private static final String HOMESHORTCUT = "com.malcolm.portsmouthunibus.VIEW.TIMETABLE";
@@ -68,6 +63,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     BottomNavigationView bottomBar;
     @BindView(R.id.placeholder)
     CoordinatorLayout layout;
+    @BindView(R.id.scrim)
+    View scrim;
     private FirebaseAnalytics firebaseAnalytics;
     private SharedPreferences sharedPreferences;
 
@@ -77,41 +74,37 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         sharedPreferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
-        boolean onboarding = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding), false);
         //If initial app onboarding has happened or not to set the content screen
-        if (!onboarding && !BuildConfig.DEBUG) {
-            startOnboarding();
-        } else {
-            boolean onboarding2 = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
-            setContentView(R.layout.activity_home);
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]
-                        {Manifest.permission.INTERNET}, 0);
-            }
-            if (savedInstanceState == null) {
-                isGooglePlayServicesAvailable(this);
-            }
-            ButterKnife.bind(this);
-            toolbar.inflateMenu(R.menu.action_bar_items);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            toolbar.setTitle(R.string.app_name);
-            if (!onboarding2) {
-                QuickStartBottomSheet sheet = new QuickStartBottomSheet();
-                sheet.setCancelable(false);
-                sheet.show(getSupportFragmentManager(), QUICKSTART);
-            }
-            boolean shortcutUsed = shortcutCheck(getIntent(), bottomBar);
-            if (!shortcutUsed && savedInstanceState == null){
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.placeholder, new HomeFragment(), HOMEFRAGMENTTAG)
-                        .commitNow();
-                bottomBar.setSelectedItemId(R.id.tab_place);
-            }
-            bottomBar.setOnNavigationItemSelectedListener(this);
+        boolean onboarding = sharedPreferences.getBoolean(getString(R.string.preferences_new_onboarding), false);
+        if (!onboarding){
+            Intent i = new Intent(this, IntroActivity.class);
+            startActivity(i);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
         }
+        setContentView(R.layout.activity_home);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]
+                    {Manifest.permission.INTERNET}, 0);
+        }
+        if (savedInstanceState == null) {
+            isGooglePlayServicesAvailable(this);
+        }
+        ButterKnife.bind(this);
+        toolbar.inflateMenu(R.menu.action_bar_items);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle(R.string.app_name);
+        boolean shortcutUsed = shortcutCheck(getIntent(), bottomBar);
+        if (!shortcutUsed && savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.placeholder, new HomeFragment(), HOMEFRAGMENTTAG)
+                    .commitNow();
+            bottomBar.setSelectedItemId(R.id.tab_place);
+        }
+        bottomBar.setOnNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -119,15 +112,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    /**
-     * Opens the onboarding IntroActivity for first time use. May also be configured to show if new
-     * features are added by changing shared preferences
-     */
-    void startOnboarding() {
-        Intent view = new Intent(this, IntroActivity.class);
-        startActivity(view);
-        finish();
-    }
 
     /**
      * Google play services check, if the app fails it will prompt the user to update or install
@@ -161,7 +145,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
      */
     @TargetApi(Build.VERSION_CODES.N_MR1)
     private boolean shortcutCheck(Intent intent, BottomNavigationView bottomBar) {
-        if (intent.getAction() == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1){
+        if (intent.getAction() == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
             return false;
         }
         ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
@@ -203,104 +187,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     }
 
 
-    private void startQuickStart(Toolbar toolbar) {
-        /*TapTargetView.showFor(this, TapTarget.forToolbarMenuItem(toolbar, R.id.default_stop_icon
-                , "Home is where the heart is", "Tap to set your home stop")
-                .targetCircleColor(R.color.primary)
-                .outerCircleColor(R.color.onboarding_2_outer_circle)
-                .textColor(R.color.textview_inverse_color)
-                .transparentTarget(true)
-                .drawShadow(true)
-                .cancelable(false), new TapTargetView.Listener() {
-            @Override
-            public void onTargetClick(TapTargetView view) {
-                StopBottomSheet sheet = new StopBottomSheet();
-                sheet.setCancelable(false);
-                sheet.show(getSupportFragmentManager(), BOTTOMSHEET);
-                super.onTargetClick(view);
-            }
-        });*/
-    }
-
-    private void startOnboardingSequence(final BottomNavigationView bottomBar){
-        TapTargetSequence sequence = new TapTargetSequence(this);
-        List<TapTarget> targets = new ArrayList<>();
-        targets.add(TapTarget.forView(bottomBar.findViewById(R.id.tab_timetable),
-                "Timetable tab", "Views the timetables for all the stops for that day")
-                .targetCircleColor(R.color.primary)
-                .outerCircleColor(R.color.onboarding_2_outer_circle)
-                .textColor(R.color.textview_inverse_color)
-                .transparentTarget(true)
-                .drawShadow(true)
-                .cancelable(true)
-                .id(1));
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            targets.add(TapTarget.forView(bottomBar.findViewById(R.id.tab_find),
-                    "If you want to see stop locations", "Enable the location permission for the app in your phone settings")
-                    .targetCircleColor(R.color.primary)
-                    .outerCircleColor(R.color.onboarding_2_outer_circle)
-                    .textColor(R.color.textview_inverse_color)
-                    .cancelable(true)
-                    .transparentTarget(true)
-                    .drawShadow(true)
-                    .id(2));
-        } else {
-            targets.add(TapTarget.forView(bottomBar.findViewById(R.id.tab_find),
-                    "Maps tab", "Views all the stop locations")
-                    .targetCircleColor(R.color.primary)
-                    .outerCircleColor(R.color.onboarding_2_outer_circle)
-                    .textColor(R.color.textview_inverse_color)
-                    .transparentTarget(true)
-                    .drawShadow(true)
-                    .cancelable(false)
-                    .id(3));
-        }
-        targets.add(TapTarget.forView(bottomBar.findViewById(R.id.tab_place),
-                "Don't forget", "Buses can sometimes run late, especially at rush hour!")
-                .targetCircleColor(R.color.primary)
-                .outerCircleColor(R.color.onboarding_2_outer_circle)
-                .textColor(R.color.textview_inverse_color)
-                .transparentTarget(true)
-                .cancelable(true)
-                .drawShadow(true)
-                .id(5));
-        sequence.targets(targets);
-        sequence.listener(new TapTargetSequence.Listener() {
-            @Override
-            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-                if (targetClicked){
-                    switch (lastTarget.id()){
-                        case 1:
-                            bottomBar.setSelectedItemId(R.id.tab_timetable);
-                            break;
-                        case 3:
-                            bottomBar.setSelectedItemId(R.id.tab_find);
-                            break;
-                        case 4:
-                            bottomBar.setSelectedItemId(R.id.tab_place);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-            @Override
-            public void onSequenceFinish() {
-                sharedPreferences.edit()
-                        .putBoolean(getString(R.string.preferences_onboarding_2), true)
-                        .apply();
-            }
-            @Override
-            public void onSequenceCanceled(TapTarget lastTarget) {
-                sharedPreferences.edit()
-                        .putBoolean(getString(R.string.preferences_onboarding_2), true)
-                        .apply();
-            }
-        });
-        sequence.start();
-    }
-
     /**
      * Method to make a firebase analytics event
      *
@@ -321,7 +207,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         TimetableFragment timetableFragment = (TimetableFragment) manager.findFragmentByTag(TIMETABLETAG);
         MapsFragment mapsFragment = (MapsFragment) manager.findFragmentByTag(MAPSTAG);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.tab_place:
                 toolbar.setTitle(R.string.app_name);
                 toolbar.setSubtitle(null);
@@ -376,27 +262,12 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         return true;
     }
 
-    @Override
-    public void onButtonSelected(boolean positive) {
-        if (positive){
-            startQuickStart(toolbar);
-        } else {
-            sharedPreferences.edit()
-                    .putBoolean(getString(R.string.preferences_onboarding_2), true)
-                    .apply();
-        }
-    }
-
 
     @Override
     public void onItemSelected(int position) {
         int current = sharedPreferences.getInt(getString(R.string.preferences_home_bus_stop), -1);
-        boolean quickstart = sharedPreferences.getBoolean(getString(R.string.preferences_onboarding_2), false);
         if (position == current) {
             return;
-        }
-        if (current == -1 && !quickstart){
-            startOnboardingSequence(bottomBar);
         }
         String[] array = getResources().getStringArray(R.array.bus_stops_home);
         //firebaseLog(getString(R.string.firebase_event_home_stop_changed), getString(R.string.firebase_property_stop_id), array[position]);
@@ -405,11 +276,11 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 getSupportFragmentManager().findFragmentByTag(TIMETABLETAG).isVisible()) {
             TimetableFragment fragment = (TimetableFragment) getSupportFragmentManager().findFragmentByTag(TIMETABLETAG);
             Snackbar snackbar = Snackbar.make(fragment.getLayout(), "Home stop changed", Snackbar.LENGTH_SHORT);
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
+            snackbar.getView().setBackgroundColor(fragment.getFab().getBackgroundTintList().getDefaultColor());
             snackbar.show();
         } else {
             Snackbar snackbar = Snackbar.make(layout, "Home stop changed", Snackbar.LENGTH_SHORT);
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.primary));
             snackbar.show();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
@@ -438,7 +309,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final Drawable drawable = item.getIcon();
-        if (drawable instanceof Animatable){
+        if (drawable instanceof Animatable) {
             ((Animatable) drawable).start();
         }
         switch (item.getItemId()) {
@@ -479,7 +350,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         if (getSupportFragmentManager().findFragmentByTag(TIMETABLETAG) != null &&
                 getSupportFragmentManager().findFragmentByTag(TIMETABLETAG).isVisible()) {
             TimetableFragment fragment = (TimetableFragment) getSupportFragmentManager().findFragmentByTag(TIMETABLETAG);
-            if (fragment.getFab().isExpanded()){
+            if (fragment != null && fragment.getFab().isExpanded()) {
                 fragment.getFab().setExpanded(false);
                 return;
             }

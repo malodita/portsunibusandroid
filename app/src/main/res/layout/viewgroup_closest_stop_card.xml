@@ -85,14 +85,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/closest_stop_button_nav"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton.IconButton"
+                style="@style/AppTheme.New.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:text="@string/navigate"
-                android:textColor="@color/button"
                 app:icon="@drawable/ic_navigation_black_24dp"
-                app:iconTint="@color/button"
-                app:strokeColor="@color/button"
                 android:textAlignment="viewStart"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

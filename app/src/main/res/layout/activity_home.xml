@@ -16,6 +16,7 @@
         android:elevation="4dp"
         app:titleTextAppearance="?attr/toolbarStyle"
         app:subtitleTextAppearance="?attr/textAppearanceCaption"
+        tools:title="Portsmouth Uni Bus"
         style="?attr/toolbarStyle">
 
     </androidx.appcompat.widget.Toolbar>
@@ -40,5 +41,13 @@
             android:layout_height="match_parent"
             android:layout_above="@id/bottom_bar_view"
             android:layout_below="@id/app_bar"/>
+
+    <View
+        android:id="@+id/scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/scrimBackground"
+        android:visibility="invisible"
+        app:layout_behavior="@string/fab_transformation_scrim_behavior"/>
 
 </RelativeLayout>

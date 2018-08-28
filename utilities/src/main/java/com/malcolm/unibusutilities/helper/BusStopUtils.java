@@ -52,6 +52,14 @@ public final class BusStopUtils {
     public static final String UNIONSTOPTAG =  "Cambridge Road";
     public static final String IMSSTOPTAG = "IMS Eastney";
 
+    public static final String LANGSTONEINTROTAG = "Langstone";
+    public static final String LOCKSWAYINTROTAG = "Locksway Road";
+    public static final String ADJLIDLINTROTAG = "Goldsmith Avenue adj Lidl";
+    public static final String FAWCETTINTROTAG = "Goldsmith Avenue opp Station";
+    public static final String WINSTONINTROTAG = "Winston Churchill Avenue";
+
+
+
 
 
     /**

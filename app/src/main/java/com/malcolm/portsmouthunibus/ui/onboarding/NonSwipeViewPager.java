@@ -1,11 +1,10 @@
-package com.malcolm.portsmouthunibus.ui.intro;
+package com.malcolm.portsmouthunibus.ui.onboarding;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import androidx.viewpager.widget.ViewPager;
-
 
 public class NonSwipeViewPager extends ViewPager {
 

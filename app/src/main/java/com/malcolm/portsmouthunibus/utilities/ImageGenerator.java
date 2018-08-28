@@ -71,6 +71,23 @@ public final class ImageGenerator {
         }
     }
 
+    public static RequestCreator generateIntroStopImage(Context context, String stop) {
+        switch (stop) {
+            case BusStopUtils.LANGSTONEINTROTAG:
+                return Picasso.with(context).load(R.drawable.langstone);
+            case BusStopUtils.LOCKSWAYINTROTAG:
+                return Picasso.with(context).load(R.drawable.locksway_key);
+            case BusStopUtils.ADJLIDLINTROTAG:
+                return Picasso.with(context).load(R.drawable.lidl_key);
+            case BusStopUtils.FAWCETTINTROTAG:
+                return Picasso.with(context).load(R.drawable.fawcett_key);
+            case BusStopUtils.WINSTONINTROTAG:
+                return Picasso.with(context).load(R.drawable.winston_key);
+            default:
+                return Picasso.with(context).load(R.drawable.generic_day);
+        }
+    }
+
     public static RequestCreator generateImage(Context context, String provider) {
         int nightMode = context.getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK;
